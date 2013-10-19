@@ -26,23 +26,22 @@ var leftHeld, upHeld, rightHeld;
 
 //Initialize game variables
 var player, enemy;
-var glass, glassInst;
-var orbs, orbInst;
+var glass, glassInst, glassArr;
+var glass1, glass2, glass3, glass4, glass5;
+var orbs, orbInst, orbAni;
 var timerMsg;
-var depthMeter, randDepth;
+var depthMeter, randDepth, depthAni;
 var SEEK = true;  //CHANGE THIS TO TURN SEEKING ON AND OFF
 
 var gravity = 0.3;
 var playerAccel = 0;
 var accelSide = 0.05;
-var colBoxSize = 45;
+var colBoxSizeY = 60;
+var colBoxSizeX = 10;
 
 var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
-
-//ANIMATION TESTING
-var spriteSheet, testAni;
 
 //Key event initialization
 document.onkeydown = handleKeyDown;
@@ -61,20 +60,16 @@ function init()
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
 
-    //This is strictly for testing the "pushback" the player
-    //receives upon collision with an enemy
-
-    //Create the player
-    /*player = new createjs.Shape();
- player.graphics.beginFill("black").drawCircle(0, 0, radius);
- player.x = canvas.width / 2;
- player.y = canvas.height / 2;*/
-
-    player = new createjs.Bitmap("characterTestImage.png");
-    player.setTransform(canvas.width / 2, canvas.height / 2, 0.3, 0.3);
-    player.regX = player.image.width * 0.5;
-    player.regY = player.image.height * 0.5;
+    var playerAni = new createjs.SpriteSheet({images: ["Swimming.png"], frames: [[0,0,721,481,0,376.95,243.05],[721,0,721,481,0,376.95,243.05],[1442,0,721,481,0,376.95,243.05],[2163,0,721,481,0,376.95,243.05],[2884,0,721,481,0,376.95,243.05],[0,481,721,481,0,376.95,243.05],[721,481,721,481,0,376.95,243.05],[1442,481,721,481,0,376.95,243.05],[2163,481,721,481,0,376.95,243.05],[2884,481,721,481,0,376.95,243.05],[0,962,721,481,0,376.95,243.05],[721,962,721,481,0,376.95,243.05],[1442,962,721,481,0,376.95,243.05],[2163,962,721,481,0,376.95,243.05],[2884,962,721,481,0,376.95,243.05],[0,1443,721,481,0,376.95,243.05],[721,1443,721,481,0,376.95,243.05],[1442,1443,721,481,0,376.95,243.05],[2163,1443,721,481,0,376.95,243.05],[2884,1443,721,481,0,376.95,243.05],[0,1924,721,481,0,376.95,243.05],[721,1924,721,481,0,376.95,243.05]]});
+    player = new createjs.Sprite(playerAni);
+    player.x = canvas.width / 2;
+    player.y = canvas.height / 2;
+    player.scaleX = 0.3;
+    player.scaleY = 0.3;
 	stage.addChild(player);
+
+    orbAni = new createjs.SpriteSheet({images: ["orbAni.png"], frames: [[0,0,841,807,0,419.65,411.9],[841,0,841,807,0,419.65,411.9],[1682,0,841,807,0,419.65,411.9],[2523,0,841,807,0,419.65,411.9],[3364,0,841,807,0,419.65,411.9],[4205,0,841,807,0,419.65,411.9],[5046,0,841,807,0,419.65,411.9],[5887,0,841,807,0,419.65,411.9],[6728,0,841,807,0,419.65,411.9],[0,807,841,807,0,419.65,411.9],[841,807,841,807,0,419.65,411.9],[1682,807,841,807,0,419.65,411.9],[2523,807,841,807,0,419.65,411.9],[3364,807,841,807,0,419.65,411.9],[4205,807,841,807,0,419.65,411.9],[5046,807,841,807,0,419.65,411.9],[5887,807,841,807,0,419.65,411.9],[6728,807,841,807,0,419.65,411.9],[0,1614,841,807,0,419.65,411.9],[841,1614,841,807,0,419.65,411.9],[1682,1614,841,807,0,419.65,411.9],[2523,1614,841,807,0,419.65,411.9],[3364,1614,841,807,0,419.65,411.9],[4205,1614,841,807,0,419.65,411.9],[5046,1614,841,807,0,419.65,411.9],[5887,1614,841,807,0,419.65,411.9],[6728,1614,841,807,0,419.65,411.9],[0,2421,841,807,0,419.65,411.9],[841,2421,841,807,0,419.65,411.9],[1682,2421,841,807,0,419.65,411.9],[2523,2421,841,807,0,419.65,411.9],[3364,2421,841,807,0,419.65,411.9],[4205,2421,841,807,0,419.65,411.9],[5046,2421,841,807,0,419.65,411.9],[5887,2421,841,807,0,419.65,411.9],[6728,2421,841,807,0,419.65,411.9],[0,3228,841,807,0,419.65,411.9],[841,3228,841,807,0,419.65,411.9],[1682,3228,841,807,0,419.65,411.9],[2523,3228,841,807,0,419.65,411.9],[3364,3228,841,807,0,419.65,411.9],[4205,3228,841,807,0,419.65,411.9],[5046,3228,841,807,0,419.65,411.9],[5887,3228,841,807,0,419.65,411.9],[6728,3228,841,807,0,419.65,411.9],[0,4035,841,807,0,419.65,411.9],[841,4035,841,807,0,419.65,411.9],[1682,4035,841,807,0,419.65,411.9]]});
+    depthAni = new createjs.SpriteSheet({images: ["depthAni.png"], frames: [[0,0,721,481,0,361.5,235.55],[721,0,721,481,0,361.5,235.55],[1442,0,721,481,0,361.5,235.55],[2163,0,721,481,0,361.5,235.55],[2884,0,721,481,0,361.5,235.55],[0,481,721,481,0,361.5,235.55],[721,481,721,481,0,361.5,235.55],[1442,481,721,481,0,361.5,235.55],[2163,481,721,481,0,361.5,235.55],[2884,481,721,481,0,361.5,235.55],[0,962,721,481,0,361.5,235.55],[721,962,721,481,0,361.5,235.55],[1442,962,721,481,0,361.5,235.55],[2163,962,721,481,0,361.5,235.55],[2884,962,721,481,0,361.5,235.55],[0,1443,721,481,0,361.5,235.55],[721,1443,721,481,0,361.5,235.55],[1442,1443,721,481,0,361.5,235.55],[2163,1443,721,481,0,361.5,235.55],[2884,1443,721,481,0,361.5,235.55]]});
 
     //Create the timer
     timerMsg = new createjs.Text('30', 'Bold 25px Arial', 'black');
@@ -96,8 +91,13 @@ function init()
     }
 
     //Initialize the Depth Meter
-    depthMeter = new createjs.Shape();
-    depthMeter.graphics.beginFill("black").drawRect(650, 20, 25, 150);
+    //depthMeter = new createjs.Shape();
+    //depthMeter.graphics.beginFill("black").drawRect(650, 20, 25, 150);
+    depthMeter = new createjs.Sprite(depthAni);
+    depthMeter.x = 700;
+    depthMeter.y = 100;
+    depthMeter.scaleX = 0.5;
+    depthMeter.scaleY = 0.5;
     stage.addChild(depthMeter);
 
     var randDelay = 60;
@@ -121,23 +121,9 @@ function init()
 
 	//Create the glass
 	glass = new Array();
-	
 	createGlassWave();
 
-	//Create the orbs
-
-	/*glass[0].target = glass[1];
-	glass[1].target = glass[0];*/
-
-    //ANIMATION
-    /*spriteSheet = new createjs.SpriteSheet({images: ["Breaking.png"], frames: [[0,0,740,506,0,360,249.4],[740,0,740,506,0,360,249.4],[1480,0,740,506,0,360,249.4],[2220,0,740,506,0,360,249.4],[2960,0,740,506,0,360,249.4],[0,506,740,506,0,360,249.4],[740,506,740,506,0,360,249.4],[1480,506,740,506,0,360,249.4],[2220,506,740,506,0,360,249.4],[2960,506,740,506,0,360,249.4],[0,1012,740,506,0,360,249.4],[740,1012,740,506,0,360,249.4],[1480,1012,740,506,0,360,249.4],[2220,1012,740,506,0,360,249.4],[2960,1012,740,506,0,360,249.4],[0,1518,740,506,0,360,249.4],[740,1518,740,506,0,360,249.4],[1480,1518,740,506,0,360,249.4],[2220,1518,740,506,0,360,249.4],[2960,1518,740,506,0,360,249.4],[0,2024,740,506,0,360,249.4],[740,2024,740,506,0,360,249.4],[1480,2024,740,506,0,360,249.4],[2220,2024,740,506,0,360,249.4],[2960,2024,740,506,0,360,249.4],[0,2530,740,506,0,360,249.4]]});
-    testAni = new createjs.Sprite(spriteSheet);
-    testAni.x = 300;
-    testAni.y = 300;
-    stage.addChild(testAni);*/
-
 	orbs = new Array();
-	
 	createOrb();
 
     //Set the update loop
@@ -250,10 +236,10 @@ function tick()
 
 	for(var i = 0; i < glass.length; i++)
 	{
-		if(player.x - colBoxSize < glass[i].x
-			&& player.x + colBoxSize > glass[i].x
-			&& player.y - colBoxSize < glass[i].y
-			&& player.y + colBoxSize > glass[i].y)
+		if(player.x - colBoxSizeX < glass[i].x + 10
+			&& player.x + colBoxSizeX > glass[i].x + 10
+			&& player.y - colBoxSizeY < glass[i].y
+			&& player.y + colBoxSizeY > glass[i].y)
 		{
 			knockBack();
 		}
@@ -264,10 +250,10 @@ function tick()
 		for(var j = i+1; j < glass.length; j++)
 		{
 			if((!glass[i].frozen || !glass[j].frozen)
-				&& glass[i].x - colBoxSize < glass[j].x
-				&& glass[i].x + colBoxSize > glass[j].x
-				&& glass[i].y - colBoxSize < glass[j].y
-				&& glass[i].y + colBoxSize > glass[j].y)
+				&& glass[i].x - colBoxSizeX < glass[j].x + 10
+				&& glass[i].x + colBoxSizeX > glass[j].x + 10
+				&& glass[i].y - colBoxSizeY < glass[j].y
+				&& glass[i].y + colBoxSizeY > glass[j].y)
 			{
 				glass[i].frozen = true;
 				glass[j].frozen = true;
@@ -277,10 +263,10 @@ function tick()
 	
 	for(var i = 0; i < orbs.length; i++)
 	{
-		if(player.x - colBoxSize < orbs[i].x
-			&& player.x + colBoxSize > orbs[i].x
-			&& player.y - colBoxSize < orbs[i].y
-			&& player.y + colBoxSize > orbs[i].y)
+		if(player.x - colBoxSizeX < orbs[i].x
+			&& player.x + colBoxSizeX > orbs[i].x
+			&& player.y - colBoxSizeY < orbs[i].y
+			&& player.y + colBoxSizeY > orbs[i].y)
 		{
 			knockBack();
 			orbs.splice(i, 1);
@@ -293,6 +279,11 @@ function tick()
     if(upHeld)
     {
         player.y -= 0.5;
+        player.play();
+    }
+    else
+    {
+        player.stop();
     }
 
 	//Gravitate down
@@ -307,23 +298,29 @@ function tick()
     switch(randDepth)
     {
         case 0:
-            depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 150);
+            //depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 150);
+            depthMeter.gotoAndStop(0);
             break;
         case 1:
-            depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 125);
+            //depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 125);
+            depthMeter.gotoAndStop(4);
             break;
         case 2:
-            depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 100);
+            //depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 100);
+            depthMeter.gotoAndStop(8);
             break;
         case 3:
-            depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 75);
+            //depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 75);
+            depthMeter.gotoAndStop(12);
             break;
         case 4:
-            depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 50);
+            //depthMeter.graphics.clear().beginFill("black").drawRect(650, 20, 25, 50);
+            depthMeter.gotoAndStop(17);
             break;
     }
 
-    //testAni.play();
+    //depthMeter.play();
+    orbInst.play();
     stage.update();
 }
 
@@ -331,8 +328,29 @@ function createGlassWave()
 {
 	for(var i = 0; i < glassNumber; i++)
 	{
-		glassInst = new createjs.Shape();
-		glassInst.graphics.beginFill("red").drawCircle(0,0, radius);
+        var a = Math.floor(Math.random() * 4);
+         if(a == 0)
+         {
+             glassInst = new createjs.Bitmap("Shard01.png");
+         }
+        else if(a == 1)
+         {
+             glassInst = new createjs.Bitmap("Shard02.png");
+         }
+        else if(a == 2)
+         {
+             glassInst = new createjs.Bitmap("Shard03.png");
+         }
+        else if(a == 3)
+         {
+             glassInst = new createjs.Bitmap("Shard04.png");
+         }
+        else if(a == 4)
+         {
+             glassInst = new createjs.Bitmap("Shard05.png");
+         }
+        glassInst.scaleX = 0.3;
+        glassInst.scaleY = 0.3;
 		glassInst.x = (canvas.width / 2) + (Math.floor(Math.random()*4.5) *(canvas.width / 8) * ((Math.floor(Math.random()*2)*2)-1));
 		glassInst.y = canvas.height / 2 - 255;
 		glassInst.targetFound = false;
@@ -345,8 +363,9 @@ function createGlassWave()
 
 function createOrb()
 {
-	orbInst = new createjs.Shape();
-	orbInst.graphics.beginFill("blue").drawCircle(0,0, radius);
+//	orbInst = new createjs.Shape();
+//	orbInst.graphics.beginFill("blue").drawCircle(0,0, radius);
+    orbInst = new createjs.Sprite(orbAni);
 	orbInst.x = (canvas.width / 2) + 350 * ((Math.floor(Math.random()*2)*2)-1);
 	orbInst.y = (canvas.height / 2) + (Math.floor(Math.random()*3) *(canvas.height / 8) * ((Math.floor(Math.random()*2)*2)-1));
 	stage.addChild(orbInst);
