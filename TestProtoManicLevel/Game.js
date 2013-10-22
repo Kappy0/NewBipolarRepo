@@ -8,6 +8,8 @@
 
 var c = document.getElementById("canvas");
 var ctx=c.getContext("2d");
+
+var stage = new createjs.Stage(c);
 //ctx.fillStyle="#FF0000";
 //ctx.fillRect(0,0,150,75);
 
@@ -15,10 +17,20 @@ var ctx=c.getContext("2d");
 //Variables//
 /////////////////////////////////////////////////////////////////////
 
+var bpNewSprite = new createjs.SpriteSheet({animations: {brokenplatform: [1,35]}, images: ["Fixed_Platform_Break.png"], frames: [[0,0,192,380,0,96,189.05],[192,0,192,380,0,96,189.05],[384,0,192,380,0,96,189.05],[576,0,192,380,0,96,189.05],[768,0,192,380,0,96,189.05],[960,0,192,380,0,96,189.05],[1152,0,192,380,0,96,189.05],[1344,0,192,380,0,96,189.05],[1536,0,192,380,0,96,189.05],[1728,0,192,380,0,96,189.05],[0,380,192,380,0,96,189.05],[192,380,192,380,0,96,189.05],[384,380,192,380,0,96,189.05],[576,380,192,380,0,96,189.05],[768,380,192,380,0,96,189.05],[960,380,192,380,0,96,189.05],[1152,380,192,380,0,96,189.05],[1344,380,192,380,0,96,189.05],[1536,380,192,380,0,96,189.05],[1728,380,192,380,0,96,189.05],[0,760,192,380,0,96,189.05],[192,760,192,380,0,96,189.05],[384,760,192,380,0,96,189.05],[576,760,192,380,0,96,189.05],[768,760,192,380,0,96,189.05],[960,760,192,380,0,96,189.05],[1152,760,192,380,0,96,189.05],[1344,760,192,380,0,96,189.05],[1536,760,192,380,0,96,189.05],[1728,760,192,380,0,96,189.05],[0,1140,192,380,0,96,189.05],[192,1140,192,380,0,96,189.05],[384,1140,192,380,0,96,189.05],[576,1140,192,380,0,96,189.05],[768,1140,192,380,0,96,189.05],[960,1140,192,380,0,96,189.05]]});
+var bpSprite = new createjs.Sprite(bpNewSprite);
+stage.addChild(bpSprite);
+
 //Fractal Background & Reveal
 var backgroundImg = new Image();
 var pixelArray = createArray(720,480);
-backgroundImg.src = "background.png";
+var bgAnimationFrame = 0;
+backgroundImg.src = "Fractal Animation/Fractal_SpriteSheet.png";
+
+//createjs stuff, incase we decide to do this.. personally I could not get it working
+/*var bgAnimation = new createjs.SpriteSheet({images: ["Fractal Animation/Fractal_SpriteSheet.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55],[720,1443,720,481,0,360,239.55],[1440,1443,720,481,0,360,239.55],[2160,1443,720,481,0,360,239.55],[2880,1443,720,481,0,360,239.55],[0,1924,720,481,0,360,239.55],[720,1924,720,481,0,360,239.55],[1440,1924,720,481,0,360,239.55],[2160,1924,720,481,0,360,239.55],[2880,1924,720,481,0,360,239.55],[0,2405,720,481,0,360,239.55],[720,2405,720,481,0,360,239.55],[1440,2405,720,481,0,360,239.55],[2160,2405,720,481,0,360,239.55],[2880,2405,720,481,0,360,239.55],[0,2886,720,481,0,360,239.55]]});
+var bgSprite = new createjs.Sprite(bgAnimation,1);
+*/
 
 //Timer/Phase Ending
 var endManic = false;
@@ -28,9 +40,15 @@ var cTime = startTime;
 
 //Player
 var playerImg = new Image();
-playerImg.src = "square.png";
-var playerwidth = playerImg.clientWidth;
-var playerheight = playerImg.clientHeight;
+playerImg.src = "Manic_Fly/ManicFly_SpriteSheet.png";
+var playerImgFrame = 0;
+//398-329 = width
+//335-94 = height
+var playerWidth = 69 * (144/720);//(329*(144/720));
+var playerHeight = 241 * (96/480);//(94*(96/480));
+
+var playerwidth = 69;// playerImg.clientWidth;
+var playerheight = 241;//playerImg.clientHeight;
 var posX = 360-32;
 var posY = 240;
 var rightKeyDown = false;
@@ -45,10 +63,13 @@ var tempVel = 0;
 var tempPos = 0;
 var standstill = false;
 var acceleration = gravity/27;
-var jumpStrength = 8.5;
+var jumpStrength = 7.25;
 var friction = 1;
 var gameOver = false;
 
+//Broken Platforms
+var brokenPlatformImg = new Image();
+brokenPlatformImg.src = "Platforms/Fixed_Platform_Break_02.png"  ;
 //Platforms
 var platformGravity = 0;
 var platformImg = new Image();
@@ -62,8 +83,50 @@ var gravcheck = 0;
 
 //Person
 var personImg = new Image();
-personImg.src = "person.png";
+personImg.src = "New Smaller Person.png";
+//var personframe = 1;
 var personCounter = 6;
+
+function init()
+{
+    var platformSheet = new createjs.SpriteSheet({images: ["New Smaller Person.png"], frames: [[0,0,164,110,0,86.05,49.15],[164,0,164,110,0,86.05,49.15],[328,0,164,110,0,86.05,49.15],[492,0,164,110,0,86.05,49.15],[656,0,164,110,0,86.05,49.15],[820,0,164,110,0,86.05,49.15],[0,110,164,110,0,86.05,49.15],[164,110,164,110,0,86.05,49.15],[328,110,164,110,0,86.05,49.15],[492,110,164,110,0,86.05,49.15],[656,110,164,110,0,86.05,49.15],[820,110,164,110,0,86.05,49.15],[0,220,164,110,0,86.05,49.15],[164,220,164,110,0,86.05,49.15],[328,220,164,110,0,86.05,49.15],[492,220,164,110,0,86.05,49.15],[656,220,164,110,0,86.05,49.15],[820,220,164,110,0,86.05,49.15],[0,330,164,110,0,86.05,49.15],[164,330,164,110,0,86.05,49.15],[328,330,164,110,0,86.05,49.15],[492,330,164,110,0,86.05,49.15]]});
+    var platformAni = new Sprite(platformSheet);
+    stage.addChild(platformAni);
+}
+
+function brokenPlatform(x,y)
+{
+    this.bpx = x;
+    this.bpy = y;
+    this.frame = 1;
+    this.used = false;
+    this.vel = 0;
+    this.resetVals = function()
+    {
+        this.frame = 1;
+
+        this.vel = 0;
+    }
+    this.updateFall = function()
+    {
+        //fall if in place
+        if(this.used == true)
+        {
+
+            this.vel ++;
+            this.bpy += this.vel + platformGravity;
+        }
+
+        if(this.bpy > 480)
+        {
+            this.used = false;
+            this.bpx = -100;
+            this.bpy = -100;
+
+        }
+    }
+}
+
 function platform(x, y, num)
 {
     this.plx = x;
@@ -81,33 +144,59 @@ function platform(x, y, num)
     {
         this.ply = l;
     }
-    this.smash = function()
+    this.smash = function(byPlayer)
     {
+        if(bp1.used == false)
+        {
+            bp1.bpx = this.plx;
+            bp1.bpy = this.ply;
+            bp1.used = true;
+            bp1.resetVals();
+        }
+        else if(bp2.used == false)
+        {
+            bp2.bpx = this.plx;
+            bp2.bpy = this.ply;
+            bp2.used = true;
+            bp2.resetVals();
+        }
+
+
+		if(byPlayer)
+		{
+			bgAnimationFrame++;
+			if(bgAnimationFrame > 30)
+			{
+				bgAnimationFrame = 30;
+			}
+		}
+		
         if(this.nullify == false)
         {
-        if(this.plx > 360)
-        {
-        this.setpos((360 * Math.random()), -offset);
-        }
-        else if(this.plx < 360)
-        {
-
-            this.setpos(((360 * (1 + Math.random())) -96), -offset);          //96= width
-        }
-        offset += 80;
-        personCounter--;
+			if(this.plx > 360)
+			{
+				this.setpos((360 * Math.random()), -offset);
+			}
+			else if(this.plx < 360)
+			{
+	
+				this.setpos(((360 * (1 + Math.random())) -96), -offset);          //96= width
+			}
+			offset += 80;
+			personCounter--;
         }
         else
         {
-            this.setpos(-96, -32);
+            this.setpos(-200, -200);
         }
         if(person1.broken == 1)
         {
 
             if(this.personCheck == true)
             {
-                this.personCheck = false;
                 person1.broken = 0;
+                this.personCheck = false;
+
                 //alert("HIT");
             }
         }
@@ -142,7 +231,7 @@ function platform(x, y, num)
 
                         upSpeed+= jumpStrength * 1.1;
                         velocity = -upSpeed;
-                        this.smash();
+                        this.smash(true);
                     }
                 }
             }
@@ -156,6 +245,8 @@ function person(x,y,num)
     this.persx = x;
     this.persy = y;
     this.speed = 3;
+    this.number = 1;
+    this.frame = 1;
     this.broken = num;
     this.fall = function()
     {
@@ -181,6 +272,9 @@ var p2 = new platform(100, 100, 2);
 var p3 = new platform(600, 410, 3);
 var p4 = new platform(3, 350, 4);
 var p5 = new platform(500, 50, 5);
+
+var bp1 = new brokenPlatform(-100, -100) ;
+var bp2 = new brokenPlatform(-100, -100);
 
 //Create the person
 var person1 = new person(-200, 500, 2);
@@ -230,26 +324,37 @@ Game.draw = function()
     else
     {
         ctx.clearRect(0,0,720,480);
-        ctx.drawImage(backgroundImg,0,0);
-        //Cover background image here. This is really inefficient, needs to change later.
-    //    for(var x = 0; x < 720; x+=10)
-      //  {
-       //     for(var y = 0; y < 480; y+=10)
-         //   {
-        //        ctx.clearRect(x,y,10,10);
-        //    }
-      //  }
-        ctx.drawImage(platformImg, p1.plx, p1.ply); // draw platform 1
-        ctx.drawImage(platformImg, p2.plx, p2.ply); // draw platform 2
-        ctx.drawImage(platformImg, p3.plx, p3.ply); // draw platform 3
-        ctx.drawImage(platformImg, p4.plx, p4.ply); // draw platform 4
-        ctx.drawImage(platformImg, p5.plx, p5.ply); // draw platform 5
-        ctx.drawImage(personImg, person1.persx, person1.persy); // draw person1
-        ctx.drawImage(playerImg,posX,posY);
+		//This is cheating
+        ctx.drawImage(backgroundImg,(bgAnimationFrame%5)*-720,Math.floor(bgAnimationFrame/5)*-481);
+		
+        ctx.drawImage(brokenPlatformImg,0, 0, 190.6, 376, p1.plx, p1.ply, 130,150); // draw platform 1
+        ctx.drawImage(brokenPlatformImg,0, 0, 190.6, 376, p2.plx, p2.ply, 130,150); // draw platform 2
+        ctx.drawImage(brokenPlatformImg,0, 0, 190.6, 376, p3.plx, p3.ply, 130,150); // draw platform 3
+        ctx.drawImage(brokenPlatformImg,0, 0, 190.6, 376, p4.plx, p4.ply, 130,150); // draw platform 4
+        ctx.drawImage(brokenPlatformImg,0, 0, 190.6, 376, p5.plx, p5.ply, 130,150); // draw platform 5
 
+        ctx.drawImage(brokenPlatformImg,(bp1.frame %10)*107.2, Math.floor(bp1.frame / 10)*212,107.2,212, bp1.bpx, bp1.bpy, 100,100);
+        ctx.drawImage(brokenPlatformImg,(bp2.frame % 10)*190.6, Math.floor(bp2.frame / 10)*212,107.2,212, bp2.bpx, bp2.bpy, 100, 100);
+        ctx.drawImage(personImg, (person1.frame % 6)*277.833, Math.floor(person1.frame / 4)*185.5, person1.persx, person1.persy); // draw person1
+        //ctx.drawImage(personImg, person1.persx, person1.persy);
+        bp1.frame ++;
+        bp2.frame ++;
+
+
+        person1.frame =1;
+        if(person1.frame > 21)
+        {
+            person1.frame = 1;
+        }
+
+        //MODIFY PERSON USED DEPENDING ON PERSON.NUMBER
+
+	//	ctx.drawImage(playerImg,0,0,720,480,posX-(329*(144/720)),posY-(94*(96/480)),144,96);
+		ctx.drawImage(playerImg,(playerImgFrame%5) * 720,Math.floor(playerImgFrame/5)*480,720,480,posX-(329*(144/720)),posY-(94*(96/480)),144,96);
+     //   ctx.drawImage(playerImg,posX,posY);
+	 
+//329,94
         ctx.fillText((cTime).toString(),360 - 15,50);
-
-
     }
 }
 
@@ -264,7 +369,14 @@ Game.update = function()
  //   backgroundImg.putImageData(backgroundImageData,0,0,backgroundImg.width, backgroundImg.height);
 
     //Player movement stuff
-    if(posX + playerSpeed * friction < 720 - playerImg.width)
+//	posX += playerSpeed * friction;
+	//398-329 = width
+	//335-94 = height
+	//420 = end of player..
+	//720-420
+    bp1.updateFall();
+    bp2.updateFall();
+    if(posX + playerSpeed * friction < 720 - playerWidth)
     {
         if(posX + playerSpeed * friction > 0)
         {
@@ -277,8 +389,9 @@ Game.update = function()
     }
     else
     {
-        posX = 720 - playerImg.width;
+        posX = 720 - playerWidth;
     }
+	
     if(posY >= 480)
     {
         if(gameOver == false)
@@ -424,23 +537,23 @@ Game.update = function()
     p5.collision(posX, posY);
     if(p1.ply > 480)
     {
-        p1.smash();
+        p1.smash(false);
     }
     if(p2.ply > 480)
     {
-        p2.smash();
+        p2.smash(false);
     }
     if(p3.ply > 480)
     {
-        p3.smash();
+        p3.smash(false);
     }
     if(p4.ply > 480)
     {
-        p4.smash();
+        p4.smash(false);
     }
     if(p5.ply > 480)
     {
-        p5.smash();
+        p5.smash(false);
     }
     //Gravity adjusters for platforms, as well as offset adjusters
     if(platformGravity > 0)
@@ -467,6 +580,8 @@ Game.update = function()
         person1.fall();
     }
 
+    /*bp1.frame += .25;
+    bp2.frame += .25;*/
     if(endManic)
     {
         //ends game loop so that depressive phase can take over.
@@ -680,5 +795,17 @@ function createArray(length)
     return arr;
 }
 
+function frame()
+{
+
+    playerImgFrame ++;
+    if(playerImgFrame >= 14)
+    {
+        playerImgFrame = 1;
+    }
+}
+
 Game._intervalId = setInterval(Game.run,1000/Game.fps);
 Game._timerIntervalId = setInterval(Game.timerTick, 1000);
+Game._aniFrame = setInterval(Game.run,1000/24);
+
