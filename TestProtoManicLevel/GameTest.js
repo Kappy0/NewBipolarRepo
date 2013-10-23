@@ -41,13 +41,13 @@ var upKeyDown = false;
 var playerSpeed = 0;
 var maxPlayerSpeed = 10;
 var upSpeed = 0;
-var gravity = 5;
+var gravity = 10;
 var velocity = 0;
 var tempVel = 0;
 var tempPos = 0;
 var standstill = false;
 var acceleration = gravity/27;
-var jumpStrength = 7.25;
+var jumpStrength = 13//7.25;
 var friction = 1;
 var gameOver = false;
 
@@ -62,7 +62,7 @@ var plX = 720 - 64;
 var plY = 360;
 var platwidth = 96;
 var platheight = 32;
-var offset = 80;
+var offset = 40;
 var gravcheck = 0;
 
 //Person
@@ -94,6 +94,9 @@ var p5;
 
 var bp1;
 var bp2;
+
+var sparkleSheet;
+var sparkle1;
 
 var testAni;
 
@@ -171,6 +174,13 @@ function init()
 	person1s.x = -200;
 	person1s.y = 500;
     stage.addChild(person1s);
+
+    sparkleSheet = new createjs.SpriteSheet({images: ["VFX_Sparkle/Sparkle Animation.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55]]});
+    sparkle1 = new createjs.Sprite(sparkleSheet);
+    sparkle1.x = -100;
+    sparkle1.y = -100;
+    stage.addChild(sparkle1);
+
 	
 	//Create all the platforms
 	p1 = new platform(platformAni01, 1);
@@ -213,6 +223,14 @@ tick = function()
 	update();
 	flyingPlayer.play();
 	person1s.play();
+    bp1.bplatform.play();
+    bp2.bplatform.play();
+    sparkle1.play();
+    if(sparkle1.currentAnimationFrame == 11)
+    {
+        sparkle1.x = -100;
+        sparkle1.y = -100;
+    }
 	circle.x =/* platformAni01.x - 90;*/flyingPlayer.x - 52;
 	circle.y = /*platformAni01.y - 135;*/flyingPlayer.y - 29;
 	circle.graphics.beginFill("blue").drawCircle(50,50,2);
@@ -230,6 +248,7 @@ function brokenPlatform(bplat)
     {
         this.frame = 1;
 
+        this.bplatform.gotoAndStop("1");
         this.vel = 0;
     }
     this.updateFall = function()
@@ -286,6 +305,9 @@ function platform(platAni, num)
             bp2.resetVals();
         }
 
+        sparkle1.x = this.ani.x;
+        sparkle1.y = this.ani.y;
+        sparkle1.gotoAndPlay("1");
 
 		if(byPlayer)
 		{
@@ -300,19 +322,19 @@ function platform(platAni, num)
         {
 			if(this.ani.x > 360)
 			{
-				this.setpos((360 * Math.random()), -offset);
+				this.setpos(((360 * Math.random() + 104)), -offset);
 			}
 			else if(this.ani.x < 360)
 			{
 	
-				this.setpos(((360 * (1 + Math.random())) -96), -offset);          //96= width
+				this.setpos(((360 * (1 + Math.random()))-96), -offset);          //96= width
 			}
-			offset += 80;
+			offset += 40;
 			personCounter--;
         }
         else
         {
-            this.setpos(-200, -200);
+            stage.removeChild(this);
         }
         if(person1.broken == 1)
         {
@@ -330,8 +352,8 @@ function platform(platAni, num)
 
              if(person1.broken == 2)
             {
-                person1.sprite.x = this.ani.x;
-                person1.sprite.y = this.ani.y;
+                person1.sprite.x = this.ani.x+37;
+                person1.sprite.y = this.ani.y-97;
                 this.personCheck = true;
                 person1.broken = 1;
                 personCounter = 6;
@@ -373,7 +395,7 @@ function person(sparite, num)
     {
         //this.broken = 0;
 
-        if(this.sprite.y <=480)
+        if(this.sprite.y <=610)
         {
             this.speed ++;
             this.sprite.y += this.speed;
@@ -426,7 +448,7 @@ update = function()
     {
         if(gameOver == false)
         {
-            upSpeed += jumpStrength * 1.25;
+            upSpeed += jumpStrength * 0.8;
             velocity = -upSpeed;
             //platformGravity = 4;
             gravcheck = 30;
@@ -565,23 +587,23 @@ update = function()
     p3.collision(flyingPlayer.x, flyingPlayer.y);
     p4.collision(flyingPlayer.x, flyingPlayer.y);
     p5.collision(flyingPlayer.x, flyingPlayer.y);
-    if(platformAni01.y > 480)
+    if(p1.ani.y > 615)
     {
         p1.smash(false);
     }
-    if(platformAni02.y > 480)
+    if(p2.ani.y > 615)
     {
         p2.smash(false);
     }
-    if(platformAni03.y > 480)
+    if(p3.ani.y > 615)
     {
         p3.smash(false);
     }
-    if(platformAni04.y > 480)
+    if(p4.ani.y > 615)
     {
         p4.smash(false);
     }
-    if(platformAni05.y > 480)
+    if(p5.ani.y > 615)
     {
         p5.smash(false);
     }
@@ -599,7 +621,7 @@ update = function()
 
         }
 
-        if( offset > 80)
+        if( offset > 40)
         {
             offset -= platformGravity;
         }
@@ -616,6 +638,7 @@ update = function()
     {
         //ends game loop so that depressive phase can take over.
         //Be sure to play transition before doing this.
+        stage.removeAllChildren();
 
     }
 
@@ -627,9 +650,9 @@ function keyDownListener(e)
     if(e.keyCode == 87 || e.keyCode == 38)
     {
         //this is solely for testing jumping since we lack platforms currently.
-        upSpeed += jumpStrength;
-        velocity = -upSpeed;
-        upKeyDown = true;
+        //upSpeed += jumpStrength;
+        //velocity = -upSpeed;
+        //upKeyDown = true;
     }
     //d and right
     if((e.keyCode == 68 || e.keyCode == 39))
@@ -737,7 +760,7 @@ function keyDownListener(e)
 			else
 			{
             	playerSpeed = -maxPlayerSpeed;
-			}
+         }
         }
         if(playerSpeed < -maxPlayerSpeed)
         {
