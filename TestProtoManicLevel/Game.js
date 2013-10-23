@@ -6,10 +6,6 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var c = document.getElementById("canvas");
-//var ctx=c.getContext("2d");
-
-var stage = new createjs.Stage(c);
 //ctx.fillStyle="#FF0000";
 //ctx.fillRect(0,0,150,75);
 
@@ -17,15 +13,13 @@ var stage = new createjs.Stage(c);
 //Variables//
 /////////////////////////////////////////////////////////////////////
 
-var bpNewSprite = new createjs.SpriteSheet({animations: {brokenplatform: [1,35]}, images: ["Fixed_Platform_Break.png"], frames: [[0,0,192,380,0,96,189.05],[192,0,192,380,0,96,189.05],[384,0,192,380,0,96,189.05],[576,0,192,380,0,96,189.05],[768,0,192,380,0,96,189.05],[960,0,192,380,0,96,189.05],[1152,0,192,380,0,96,189.05],[1344,0,192,380,0,96,189.05],[1536,0,192,380,0,96,189.05],[1728,0,192,380,0,96,189.05],[0,380,192,380,0,96,189.05],[192,380,192,380,0,96,189.05],[384,380,192,380,0,96,189.05],[576,380,192,380,0,96,189.05],[768,380,192,380,0,96,189.05],[960,380,192,380,0,96,189.05],[1152,380,192,380,0,96,189.05],[1344,380,192,380,0,96,189.05],[1536,380,192,380,0,96,189.05],[1728,380,192,380,0,96,189.05],[0,760,192,380,0,96,189.05],[192,760,192,380,0,96,189.05],[384,760,192,380,0,96,189.05],[576,760,192,380,0,96,189.05],[768,760,192,380,0,96,189.05],[960,760,192,380,0,96,189.05],[1152,760,192,380,0,96,189.05],[1344,760,192,380,0,96,189.05],[1536,760,192,380,0,96,189.05],[1728,760,192,380,0,96,189.05],[0,1140,192,380,0,96,189.05],[192,1140,192,380,0,96,189.05],[384,1140,192,380,0,96,189.05],[576,1140,192,380,0,96,189.05],[768,1140,192,380,0,96,189.05],[960,1140,192,380,0,96,189.05]]});
-var bpSprite = new createjs.Sprite(bpNewSprite);
-stage.addChild(bpSprite);
+var c, stage;
 
 //Fractal Background & Reveal
-var backgroundImg = new Image();
-var pixelArray = createArray(720,480);
-var bgAnimationFrame = 0;
-backgroundImg.src = "Fractal Animation/Fractal_SpriteSheet.png";
+//var backgroundImg = new Image();
+//var pixelArray = createArray(720,480);
+//var bgAnimationFrame = 0;
+//backgroundImg.src = "Fractal Animation/Fractal_SpriteSheet.png";
 
 //createjs stuff, incase we decide to do this.. personally I could not get it working
 /*var bgAnimation = new createjs.SpriteSheet({images: ["Fractal Animation/Fractal_SpriteSheet.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55],[720,1443,720,481,0,360,239.55],[1440,1443,720,481,0,360,239.55],[2160,1443,720,481,0,360,239.55],[2880,1443,720,481,0,360,239.55],[0,1924,720,481,0,360,239.55],[720,1924,720,481,0,360,239.55],[1440,1924,720,481,0,360,239.55],[2160,1924,720,481,0,360,239.55],[2880,1924,720,481,0,360,239.55],[0,2405,720,481,0,360,239.55],[720,2405,720,481,0,360,239.55],[1440,2405,720,481,0,360,239.55],[2160,2405,720,481,0,360,239.55],[2880,2405,720,481,0,360,239.55],[0,2886,720,481,0,360,239.55]]});
@@ -39,8 +33,8 @@ var cTime = startTime;
 //var lastTime;
 
 //Player
-var playerImg = new Image();
-playerImg.src = "Manic_Fly/ManicFly_SpriteSheet.png";
+//var playerImg = new Image();
+//playerImg.src = "Manic_Fly/ManicFly_SpriteSheet.png";
 var playerImgFrame = 0;
 //398-329 = width
 //335-94 = height
@@ -67,12 +61,12 @@ var friction = 1;
 var gameOver = false;
 
 //Broken Platforms
-var brokenPlatformImg = new Image();
-brokenPlatformImg.src = "Platforms/Fixed_Platform_Break_02.png"  ;
+//var brokenPlatformImg = new Image();
+//brokenPlatformImg.src = "Platforms/Fixed_Platform_Break_02.png"  ;
 //Platforms
 var platformGravity = 0;
-var platformImg = new Image();
-platformImg.src = "platform.png";
+//var platformImg = new Image();
+//platformImg.src = "platform.png";
 var plX = 720 - 64;
 var plY = 360;
 var platwidth = 96;
@@ -81,74 +75,98 @@ var offset = 80;
 var gravcheck = 0;
 
 //Person
-var personImg = new Image();
-personImg.src = "New Smaller Person.png";
+//var personImg = new Image();
+//personImg.src = "New Smaller Person.png";
 //var personframe = 1;
 var personCounter = 6;
 
+//stuff
+var bpNewSprite, bpSprite;
+var platformSheet, platformAni01, platformAni02, platformAni03, platformAni04, platformAni05;
+var bplatformAni01, bplatformAni02;
+var playerImg, flyingplayer;
+var childsheet, person1s;
+var p1, p2, p3, p4, p5, bp1, bp2;
+var person1;
+
 function init()
 {
-    var platformSheet = new createjs.SpriteSheet({images: ["Platforms/Small Platform Break Animation.png"], frames: [[0,0,132,191,0,65,94.5],[132,0,132,191,0,65,94.5],[264,0,132,191,0,65,94.5],[396,0,132,191,0,65,94.5],[528,0,132,191,0,65,94.5],[660,0,132,191,0,65,94.5],[792,0,132,191,0,65,94.5],[924,0,132,191,0,65,94.5],[1056,0,132,191,0,65,94.5],[1188,0,132,191,0,65,94.5],[1320,0,132,191,0,65,94.5],[1452,0,132,191,0,65,94.5],[1584,0,132,191,0,65,94.5],[1716,0,132,191,0,65,94.5],[1848,0,132,191,0,65,94.5],[0,191,132,191,0,65,94.5],[132,191,132,191,0,65,94.5],[264,191,132,191,0,65,94.5],[396,191,132,191,0,65,94.5],[528,191,132,191,0,65,94.5],[660,191,132,191,0,65,94.5],[792,191,132,191,0,65,94.5],[924,191,132,191,0,65,94.5],[1056,191,132,191,0,65,94.5],[1188,191,132,191,0,65,94.5],[1320,191,132,191,0,65,94.5],[1452,191,132,191,0,65,94.5],[1584,191,132,191,0,65,94.5],[1716,191,132,191,0,65,94.5],[1848,191,132,191,0,65,94.5],[0,382,132,191,0,65,94.5],[132,382,132,191,0,65,94.5],[264,382,132,191,0,65,94.5],[396,382,132,191,0,65,94.5],[528,382,132,191,0,65,94.5],[660,382,132,191,0,65,94.5]]});
-    var platformAni01 = new Sprite(platformSheet);
+    if(!(!!document.createElement('canvas').getContext))
+    {
+        var wrapper = document.getElementById("canvasWrapper");
+        wrapper.innerHTML = "Your browser does not appear to support " +
+            "the HTML5 Canvas element";
+        return;
+    }
+
+    c = document.getElementById("canvas");
+    //var ctx=c.getContext("2d");
+
+    stage = new createjs.Stage(c);
+
+    platformSheet = new createjs.SpriteSheet({images: ["Platforms/Small Platform Break Animation.png"], frames: [[0,0,132,191,0,65,94.5],[132,0,132,191,0,65,94.5],[264,0,132,191,0,65,94.5],[396,0,132,191,0,65,94.5],[528,0,132,191,0,65,94.5],[660,0,132,191,0,65,94.5],[792,0,132,191,0,65,94.5],[924,0,132,191,0,65,94.5],[1056,0,132,191,0,65,94.5],[1188,0,132,191,0,65,94.5],[1320,0,132,191,0,65,94.5],[1452,0,132,191,0,65,94.5],[1584,0,132,191,0,65,94.5],[1716,0,132,191,0,65,94.5],[1848,0,132,191,0,65,94.5],[0,191,132,191,0,65,94.5],[132,191,132,191,0,65,94.5],[264,191,132,191,0,65,94.5],[396,191,132,191,0,65,94.5],[528,191,132,191,0,65,94.5],[660,191,132,191,0,65,94.5],[792,191,132,191,0,65,94.5],[924,191,132,191,0,65,94.5],[1056,191,132,191,0,65,94.5],[1188,191,132,191,0,65,94.5],[1320,191,132,191,0,65,94.5],[1452,191,132,191,0,65,94.5],[1584,191,132,191,0,65,94.5],[1716,191,132,191,0,65,94.5],[1848,191,132,191,0,65,94.5],[0,382,132,191,0,65,94.5],[132,382,132,191,0,65,94.5],[264,382,132,191,0,65,94.5],[396,382,132,191,0,65,94.5],[528,382,132,191,0,65,94.5],[660,382,132,191,0,65,94.5]]});
+    platformAni01 = new createjs.Sprite(platformSheet);
 	platformAni01.x = 400;
 	platformAni01.y = 270;
     stage.addChild(platformAni01);
 	
-    var platformAni02 = new Sprite(platformSheet);
+    platformAni02 = new createjs.Sprite(platformSheet);
 	platformAni02.x = 100;
 	platformAni02.y = 100;
     stage.addChild(platformAni02);
 	
-    var platformAni03 = new Sprite(platformSheet);
+    platformAni03 = new createjs.Sprite(platformSheet);
 	platformAni03.x = 600;
 	platformAni03.y = 410;
     stage.addChild(platformAni03);
 	
-    var platformAni04 = new Sprite(platformSheet);
+    platformAni04 = new createjs.Sprite(platformSheet);
 	platformAni04.x = 3;
 	platformAni04.y = 350;
     stage.addChild(platformAni04);
 	
-    var platformAni05 = new Sprite(platformSheet);
+    platformAni05 = new createjs.Sprite(platformSheet);
 	platformAni05.x = 500;
 	platformAni05.y = 50;
     stage.addChild(platformAni05);
 	
-    var bplatformAni01 = new Sprite(platformSheet);
+    bplatformAni01 = new createjs.Sprite(platformSheet);
 	bplatformAni01.x = -100;
 	bplatformAni01.y = -100;
     stage.addChild(bplatformAni01);
-	
-    var bplatformAni02 = new Sprite(platformSheet);
+
+    bplatformAni02 = new createjs.Sprite(platformSheet);
 	bplatformAni02.x = -100;
 	bplatformAni02.y = -100;
     stage.addChild(bplatformAni02);
 
-    var playerImg = new createjs.SpriteSheet({images: ["Manic_Fly/Small ManicFly Animation.png"], frames: [[0,0,141,94,0,72.95,41.55],[141,0,141,94,0,72.95,41.55],[282,0,141,94,0,72.95,41.55],[423,0,141,94,0,72.95,41.55],[564,0,141,94,0,72.95,41.55],[705,0,141,94,0,72.95,41.55],[846,0,141,94,0,72.95,41.55],[0,94,141,94,0,72.95,41.55],[141,94,141,94,0,72.95,41.55],[282,94,141,94,0,72.95,41.55],[423,94,141,94,0,72.95,41.55],[564,94,141,94,0,72.95,41.55],[705,94,141,94,0,72.95,41.55],[846,94,141,94,0,72.95,41.55],[0,188,141,94,0,72.95,41.55],[141,188,141,94,0,72.95,41.55],[282,188,141,94,0,72.95,41.55],[423,188,141,94,0,72.95,41.55],[564,188,141,94,0,72.95,41.55],[705,188,141,94,0,72.95,41.55]]});
-    var flyingPlayer = new createjs.Sprite(playerImg);
-	var flyingPlayer.x = 360-32;
-	var flyingPlayer.y = 240;
-    stage.addChild(flyingPlayer);
+    playerImg = new createjs.SpriteSheet({images: ["Manic_Fly/Small ManicFly Animation.png"], frames: [[0,0,141,94,0,72.95,41.55],[141,0,141,94,0,72.95,41.55],[282,0,141,94,0,72.95,41.55],[423,0,141,94,0,72.95,41.55],[564,0,141,94,0,72.95,41.55],[705,0,141,94,0,72.95,41.55],[846,0,141,94,0,72.95,41.55],[0,94,141,94,0,72.95,41.55],[141,94,141,94,0,72.95,41.55],[282,94,141,94,0,72.95,41.55],[423,94,141,94,0,72.95,41.55],[564,94,141,94,0,72.95,41.55],[705,94,141,94,0,72.95,41.55],[846,94,141,94,0,72.95,41.55],[0,188,141,94,0,72.95,41.55],[141,188,141,94,0,72.95,41.55],[282,188,141,94,0,72.95,41.55],[423,188,141,94,0,72.95,41.55],[564,188,141,94,0,72.95,41.55],[705,188,141,94,0,72.95,41.55]]});
+    flyingplayer = new createjs.Sprite(playerImg);
+    flyingplayer.x = 328;
+	flyingplayer.y = 240;
+    stage.addChild(flyingplayer);
 
-    var childsheet =  new createjs.SpriteSheet({images: ["Platforms/Small Person 01 Animation.png"], frames: [[0,0,124,83,0,66,38.1],[124,0,124,83,0,66,38.1],[248,0,124,83,0,66,38.1],[372,0,124,83,0,66,38.1],[0,83,124,83,0,66,38.1],[124,83,124,83,0,66,38.1],[248,83,124,83,0,66,38.1],[372,83,124,83,0,66,38.1],[0,166,124,83,0,66,38.1],[124,166,124,83,0,66,38.1],[248,166,124,83,0,66,38.1],[372,166,124,83,0,66,38.1],[0,249,124,83,0,66,38.1],[124,249,124,83,0,66,38.1],[248,249,124,83,0,66,38.1],[372,249,124,83,0,66,38.1],[0,332,124,83,0,66,38.1],[124,332,124,83,0,66,38.1],[248,332,124,83,0,66,38.1],[372,332,124,83,0,66,38.1],[0,415,124,83,0,66,38.1],[124,415,124,83,0,66,38.1]]});
-    var person1s = new createjs.Sprite(childsheet);
+    childsheet =  new createjs.SpriteSheet({images: ["Platforms/Small Person 01 Animation.png"], frames: [[0,0,124,83,0,66,38.1],[124,0,124,83,0,66,38.1],[248,0,124,83,0,66,38.1],[372,0,124,83,0,66,38.1],[0,83,124,83,0,66,38.1],[124,83,124,83,0,66,38.1],[248,83,124,83,0,66,38.1],[372,83,124,83,0,66,38.1],[0,166,124,83,0,66,38.1],[124,166,124,83,0,66,38.1],[248,166,124,83,0,66,38.1],[372,166,124,83,0,66,38.1],[0,249,124,83,0,66,38.1],[124,249,124,83,0,66,38.1],[248,249,124,83,0,66,38.1],[372,249,124,83,0,66,38.1],[0,332,124,83,0,66,38.1],[124,332,124,83,0,66,38.1],[248,332,124,83,0,66,38.1],[372,332,124,83,0,66,38.1],[0,415,124,83,0,66,38.1],[124,415,124,83,0,66,38.1]]});
+    person1s = new createjs.Sprite(childsheet);
 	person1s.x = -200;
 	person1s.y = 500;
     stage.addChild(person1s);
 	
 	//Create all the platforms
-var p1 = new platform(platformAni01, 1);
-var p2 = new platform(platformAni02, 2);
-var p3 = new platform(platformAni03, 3);
-var p4 = new platform(platformAni04, 4);
-var p5 = new platform(platformAni05, 5);
+p1 = new platform(platformAni01, 1);
+p2 = new platform(platformAni02, 2);
+p3 = new platform(platformAni03, 3);
+p4 = new platform(platformAni04, 4);
+p5 = new platform(platformAni05, 5);
 
-var bp1 = new brokenPlatform(bplatformAni01);
-var bp2 = new brokenPlatform(bplatformAni02);
+bp1 = new brokenPlatform(bplatformAni01);
+bp2 = new brokenPlatform(bplatformAni02);
 
 //Create the person
-var person1 = new person(person1s, 2);
-	
+person1 = new person(person1s, 2);
+
+    createjs.Ticker.setFPS(60);
+    createjs.Ticker.addEventListener("tick", tick);
 }
 
 function brokenPlatform(bplat)
@@ -274,10 +292,10 @@ function platform(platAni, num)
         //check for collision between player and platform
 
 
-        if(((flyingPlayer.x < (this.ani.x +96)) && (flyingPlayer.x > this.ani.x)) || (((flyingPlayer.x+32) < (this.ani.x +96)) && ((flyingPlayer.x +32) > this.ani.x)))
+        if(((flyingplayer.x < (this.ani.x +96)) && (flyingplayer.x > this.ani.x)) || (((flyingplayer.x+32) < (this.ani.x +96)) && ((flyingplayer.x +32) > this.ani.x)))
         {
 
-            if(((flyingPlayer.y+32) < (this.ani.y + 32)) && ((flyingPlayer.y+32) > (this.ani.y)))
+            if(((flyingplayer.y+32) < (this.ani.y + 32)) && ((flyingplayer.y+32) > (this.ani.y)))
             {
                 if(velocity >= 0)
                 {
@@ -352,10 +370,13 @@ Game.timerTick = function()
 }
 
 //Runs once per frame
-tick = function()
+function tick()
 {
     Game.update();
-    Game.draw();
+    //Game.draw();
+    flyingplayer.play();
+    person1s.play();
+    stage.update();
 }
 
 Game.draw = function()
@@ -395,8 +416,6 @@ Game.draw = function()
 	//	ctx.drawImage(playerImg,0,0,720,480,flyingPlayer.x-(329*(144/720)),flyingPlayer.y-(94*(96/480)),144,96);
 		//ctx.drawImage(playerImg,(playerImgFrame%5) * 720,Math.floor(playerImgFrame/5)*480,720,480,flyingPlayer.x-(329*(144/720)),flyingPlayer.y-(94*(96/480)),144,96);
      //   ctx.drawImage(playerImg,flyingPlayer.x,flyingPlayer.y);
-	    flyingplayer.play();
-        person1s.play();
 //329,94
         //ctx.fillText((cTime).toString(),360 - 15,50);
     }
@@ -421,23 +440,23 @@ Game.update = function()
 	//720-420
     bp1.updateFall();
     bp2.updateFall();
-    if(flyingPlayer.x + playerSpeed * friction < 720 - playerWidth)
+    if(flyingplayer.x + playerSpeed * friction < 720 - playerWidth)
     {
-        if(flyingPlayer.x + playerSpeed * friction > 0)
+        if(flyingplayer.x + playerSpeed * friction > 0)
         {
-            flyingPlayer.x += playerSpeed * friction;
+            flyingplayer.x += playerSpeed * friction;
         }
         else
         {
-            flyingPlayer.x = 0;
+            flyingplayer.x = 0;
         }
     }
     else
     {
-        flyingPlayer.x = 720 - playerWidth;
+        flyingplayer.x = 720 - playerWidth;
     }
 	
-    if(flyingPlayer.y >= 480)
+    if(flyingplayer.y >= 480)
     {
         if(gameOver == false)
         {
@@ -452,18 +471,18 @@ Game.update = function()
         }
     }
 
-    if(flyingPlayer.y <= 120)
+    if(flyingplayer.y <= 120)
     {
         //gravity = 6;
 
             if(standstill == false)
             {
                 tempVel = velocity;
-                tempPos = flyingPlayer.y;
+                tempPos = flyingplayer.y;
                 standstill = true;
             }
             velocity = 0;
-            flyingPlayer.y = 120;
+            flyingplayer.y = 120;
             tempVel = tempVel + acceleration;
             tempPos = tempPos + tempVel - upSpeed;
         upSpeed --;
@@ -471,7 +490,7 @@ Game.update = function()
             {
                 velocity = tempVel;
                 //flyingPlayer.y = tempPos;
-                flyingPlayer.y += velocity - upSpeed;
+                flyingplayer.y += velocity - upSpeed;
                 standstill = false;
             }
         if(standstill == true)
@@ -485,7 +504,7 @@ Game.update = function()
     else
     {
         velocity = velocity + acceleration;
-        flyingPlayer.y += velocity - upSpeed;
+        flyingplayer.y += velocity - upSpeed;
         upSpeed--;
         //gravity = 2
              if(gravcheck > 0)
@@ -575,11 +594,11 @@ Game.update = function()
     {
         upSpeed = 0;
     }
-    p1.collision(flyingPlayer.x, flyingPlayer.y);
-    p2.collision(flyingPlayer.x, flyingPlayer.y);
-    p3.collision(flyingPlayer.x, flyingPlayer.y);
-    p4.collision(flyingPlayer.x, flyingPlayer.y);
-    p5.collision(flyingPlayer.x, flyingPlayer.y);
+    p1.collision(flyingplayer.x, flyingplayer.y);
+    p2.collision(flyingplayer.x, flyingplayer.y);
+    p3.collision(flyingplayer.x, flyingplayer.y);
+    p4.collision(flyingplayer.x, flyingplayer.y);
+    p5.collision(flyingplayer.x, flyingplayer.y);
     if(platformAni01.y > 480)
     {
         p1.smash(false);
