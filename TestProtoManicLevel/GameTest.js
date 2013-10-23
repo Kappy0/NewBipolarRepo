@@ -39,7 +39,7 @@ var rightKeyDown = false;
 var leftKeyDown = false;
 var upKeyDown = false;
 var playerSpeed = 0;
-var maxPlayerSpeed = 6;
+var maxPlayerSpeed = 10;
 var upSpeed = 0;
 var gravity = 5;
 var velocity = 0;
@@ -641,15 +641,15 @@ function keyDownListener(e)
           //  playerSpeed ++;
 			if(cTime > 40)
 			{
-            	playerSpeed = 0;
+            	playerSpeed = 4;
 			}
 			else if(cTime > 30)
 			{
-				playerSpeed += 2;
+				playerSpeed = 6;
 			}
 			else if(cTime > 10)
 			{
-				playerSpeed++;
+				playerSpeed = 8;
 			}
 			else
 			{
@@ -668,36 +668,15 @@ function keyDownListener(e)
 		//	}
 			if(cTime >= 30)
 			{
-				if(playerSpeed >= 3)
-				{
-					playerSpeed++;
-				}
-				else
-				{
-					playerSpeed = 3;
-				}
+				playerSpeed = 4;
 			}
 			else if(cTime >= 20)
 			{
-				if(playerSpeed >= 4)
-				{
-					playerSpeed++;
-				}
-				else
-				{
-					playerSpeed = 4;
-				}
+				playerSpeed = 6;
 			}
 			else if(cTime >= 10)
 			{
-				if(playerSpeed >= 5)
-				{
-					playerSpeed++;
-				}
-				else
-				{
-					playerSpeed = 5;
-				}
+				playerSpeed = 8;
 			}
 			else
 			{
@@ -718,15 +697,15 @@ function keyDownListener(e)
             //playerSpeed = -maxPlayerSpeed;
 			if(cTime > 40)
 			{
-            	playerSpeed = 0;
+            	playerSpeed = -4;
 			}
 			else if(cTime > 30)
 			{
-				playerSpeed -= 2;
+				playerSpeed = -6;
 			}
 			else if(cTime > 10)
 			{
-				playerSpeed --;
+				playerSpeed = -8;
 			}
 			else
 			{
@@ -745,36 +724,15 @@ function keyDownListener(e)
 		//	}
 			if(cTime >= 30)
 			{
-				if(playerSpeed <= 3)
-				{
-					playerSpeed--;
-				}
-				else
-				{
-					playerSpeed = -3;
-				}
+				playerSpeed = -4;
 			}
 			else if(cTime >= 20)
 			{
-				if(playerSpeed <= 4)
-				{
-					playerSpeed--;
-				}
-				else
-				{
-					playerSpeed = -4;
-				}
+				playerSpeed = -6;
 			}
 			else if(cTime >= 10)
 			{
-				if(playerSpeed <= 5)
-				{
-					playerSpeed--;
-				}
-				else
-				{
-					playerSpeed = -5;
-				}
+				playerSpeed = -8;
 			}
 			else
 			{
