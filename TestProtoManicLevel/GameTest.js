@@ -406,20 +406,20 @@ update = function()
 	//720-420
     bp1.updateFall();
     bp2.updateFall();
-    if(flyingPlayer.x - 60 + playerSpeed * friction < 720 - playerWidth)
+    if(flyingPlayer.x - 9 + playerSpeed * friction < 720 - playerWidth)
     {
-        if(flyingPlayer.x - 60 + playerSpeed * friction > 0)
+        if(flyingPlayer.x - 9 + playerSpeed * friction > 0)
         {
             flyingPlayer.x += playerSpeed * friction;
         }
         else
         {
-            flyingPlayer.x = -60;
+            flyingPlayer.x = 9;
         }
     }
     else
     {
-        flyingPlayer.x = 720 - 61;//playerWidth;
+        flyingPlayer.x = 720-9;//playerWidth;
     }
 	
     if(flyingPlayer.y >= 480)
