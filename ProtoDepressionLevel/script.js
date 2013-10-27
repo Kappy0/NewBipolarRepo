@@ -8,8 +8,7 @@
 
 //Setting up variables for the canvas, stage, and
 //other elements for the game to run
-var canvas, stage, bounds;
-var g;
+var canvas, stage;
 
 //Radius for drawing player circle **PROTOYPE ONLY**
 var radius = 10;
@@ -39,7 +38,7 @@ var accelSide = 0.05;
 var colBoxSizeY = 60;
 var colBoxSizeX = 10;
 
-var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
+var glassNumber = 5;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
 
@@ -47,7 +46,7 @@ var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
 document.onkeydown = handleKeyDown;
 document.onkeyup = handleKeyUp;
 
-function init()
+function dInit()
 {
     if(!(!!document.createElement('canvas').getContext))
     {
@@ -349,8 +348,8 @@ function createGlassWave()
          {
              glassInst = new createjs.Bitmap("Shard05.png");
          }
-        glassInst.scaleX = 0.3;
-        glassInst.scaleY = 0.3;
+        //glassInst.scaleX = 0.3;
+        //glassInst.scaleY = 0.3;
 		glassInst.x = (canvas.width / 2) + (Math.floor(Math.random()*4.5) *(canvas.width / 8) * ((Math.floor(Math.random()*2)*2)-1));
 		glassInst.y = canvas.height / 2 - 255;
 		glassInst.targetFound = false;
