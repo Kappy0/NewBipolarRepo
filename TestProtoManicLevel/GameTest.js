@@ -41,15 +41,20 @@ var upKeyDown = false;
 var playerSpeed = 0;
 var maxPlayerSpeed = 10;
 var upSpeed = 0;
-var gravity = 10;
+var gravity = 10.5;
 var velocity = 0;
 var tempVel = 0;
 var tempPos = 0;
 var standstill = false;
 var acceleration = gravity/27;
-var jumpStrength = 13//7.25;
+var jumpStrength = 12//7.25;
 var friction = 1;
 var gameOver = false;
+var goSpring;
+var springAcceleration = 20/27;
+var lockControls = false;
+var xVelocity = 0;
+var xDist;
 
 //Broken Platforms
 //var brokenPlatformImg = new Image();
@@ -78,6 +83,8 @@ var platformAni02;
 var platformAni03;
 var platformAni04;
 var platformAni05;
+var platformArray = new Array();
+var closestPlatform;
 
 var bplatformAni01;
 var bplatformAni02;
@@ -200,6 +207,12 @@ function init()
 	
 	circle = new createjs.Shape();
 	stage.addChild(circle);
+    platformArray[0] = p1;
+    platformArray[1] = p2;
+    platformArray[2] = p3;
+    platformArray[3] = p4;
+    platformArray[4] = p5;
+    goSpring = false;
 }
 
 //Runs once per second.
@@ -428,11 +441,20 @@ update = function()
 	//720-420
     bp1.updateFall();
     bp2.updateFall();
+    platformArray[0] = p1;
+    platformArray[1] = p2;
+    platformArray[2] = p3;
+    platformArray[3] = p4;
+    platformArray[4] = p5;
     if(flyingPlayer.x - 9 + playerSpeed * friction < 720 - playerWidth)
     {
         if(flyingPlayer.x - 9 + playerSpeed * friction > 0)
         {
-            flyingPlayer.x += playerSpeed * friction;
+            if(goSpring == false)
+            {
+                flyingPlayer.x += playerSpeed * friction;
+            }
+
         }
         else
         {
@@ -443,20 +465,108 @@ update = function()
     {
         flyingPlayer.x = 720-9;//playerWidth;
     }
-	
-    if(flyingPlayer.y >= 480)
+
+    var i = 0;
+    if(flyingPlayer.y >= 450)
     {
         if(gameOver == false)
         {
-            upSpeed += jumpStrength * 0.8;
+            /////////////////////////////////Old Controls for offscreen///////////////////////Re-engage if spring effect is not working///////////////////////////////
+            /*upSpeed += jumpStrength * 0.8;
             velocity = -upSpeed;
             //platformGravity = 4;
-            gravcheck = 30;
-        }
+            gravcheck = 30;  */
+            ////////////////////////////////New Controls. Comment out if not working////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////Note: The platform grab controls seem strange now, it's because the player reacts strangely when the old left/right controls kick in.
+            ////////////////////////////////////////////// I will adjust this when I have time, as I am currently needing to work on other projects
+            ////////////////////////////////////////////// ---Mitch
+            if(goSpring == false)
+            {
+            for(i; i<5; i++)
+            {
+                if(platformArray[i].ani.y < 270)
+                {
+                    if(i != 4)
+                    {
+                        if(Math.sqrt((flyingPlayer.y - platformArray[i].ani.y)^2 + (flyingPlayer.x - platformArray[i].ani.x)^2) < Math.sqrt((flyingPlayer.y - platformArray[i+1].ani.y)^2 + (flyingPlayer.x - platformArray[i+1].ani.x)^2))
+                        {
+                            closestPlatform = platformArray[i];
+                        }
+                        else
+                        {
+                            closestPlatform = platformArray[i+1];
+                        }
+                    }
+                    else
+                    {
+                        if(Math.sqrt((flyingPlayer.y - platformArray[4].ani.y)^2 + (flyingPlayer.x - platformArray[4].ani.x)^2) < Math.sqrt((flyingPlayer.y - closestPlatform.ani.y)^2 + (flyingPlayer.x - closestPlatform.ani.x)^2))
+                        {
+                            closestPlatform = platformArray[4];
+                        }
+                    }
+                }
+            }
+                goSpring = true;
+
+            }
+
+        }  //////////////////////////////////////////////End of new controls///////////////////////////////////////
         else
         {
             endManic = true;
         }
+    }
+
+    if(goSpring == true)
+    {
+
+        lockControls = true;
+        velocity-= springAcceleration;
+        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
+         if(xDist != 0)
+         {
+         xDist = xDist / 10;
+
+         }
+         if(closestPlatform.ani.x > flyingPlayer.x)
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }
+         else if(closestPlatform.ani.x == flyingPlayer.x)
+         {
+         flyingPlayer.x = closestPlatform.ani.x;
+         }
+         else
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }*/
+        if(flyingPlayer.x < closestPlatform.ani.x)
+        {
+            flyingPlayer.x += 10;
+        }
+        if(flyingPlayer.x > closestPlatform.ani.x)
+        {
+            flyingPlayer.x -= 10;
+        }
+        //Collide with platform for further propelling
+        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
+        {
+            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)) && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
+            {
+
+                upSpeed+= jumpStrength * 1.1;
+                velocity = -upSpeed;
+                xVelocity = 0;
+                goSpring = false;
+                lockControls = false;
+                closestPlatform.smash(false);
+
+            }
+        }
+
     }
 
     if(flyingPlayer.y <= 120)
@@ -491,9 +601,13 @@ update = function()
     }
     else
     {
+
         velocity = velocity + acceleration;
+
         flyingPlayer.y += velocity - upSpeed;
         upSpeed--;
+
+
         //gravity = 2
              if(gravcheck > 0)
              {
@@ -646,6 +760,8 @@ update = function()
 
 function keyDownListener(e)
 {
+    if(lockControls == false)
+    {
     //w and up
     if(e.keyCode == 87 || e.keyCode == 38)
     {
@@ -767,10 +883,13 @@ function keyDownListener(e)
             playerSpeed = -maxPlayerSpeed;
         }
     }
+    }
 }
 
 function keyUpListener(e)
 {
+    if(lockControls == false)
+    {
     //w and up
     if(e.keyCode == 87 || 38)
     {
@@ -785,6 +904,7 @@ function keyUpListener(e)
     else if((e.keyCode == 65 || e.keyCode == 37))
     {
        leftKeyDown = false;
+    }
     }
 }
 
