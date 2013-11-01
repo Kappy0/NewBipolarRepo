@@ -54,6 +54,8 @@ var goSpring;
 var springAcceleration = 20/27;
 var lockControls = false;
 var xVelocity = 0;
+var xAcceleration = 0;
+var xFriction = 0;
 var xDist;
 
 //Broken Platforms
@@ -92,6 +94,11 @@ var bplatformAni02;
 var playerImg;
 var flyingPlayer;
 var childSheet;
+var childSheet2;
+var childSheet3;
+var childSheet4;
+var childSheet5;
+var cArray = new Array();
 
 var p1;
 var p2;
@@ -181,6 +188,16 @@ function init()
 	person1s.x = -200;
 	person1s.y = 500;
     stage.addChild(person1s);
+
+    childSheet2 = new createjs.SpriteSheet({images: ["Platforms/Person 02.png"], frames: [[0,0,283,189,0,153.5,79.55],[283,0,283,189,0,153.5,79.55],[566,0,283,189,0,153.5,79.55],[849,0,283,189,0,153.5,79.55],[1132,0,283,189,0,153.5,79.55],[1415,0,283,189,0,153.5,79.55],[1698,0,283,189,0,153.5,79.55],[0,189,283,189,0,153.5,79.55],[283,189,283,189,0,153.5,79.55],[566,189,283,189,0,153.5,79.55],[849,189,283,189,0,153.5,79.55],[1132,189,283,189,0,153.5,79.55],[1415,189,283,189,0,153.5,79.55],[1698,189,283,189,0,153.5,79.55],[0,378,283,189,0,153.5,79.55],[283,378,283,189,0,153.5,79.55]]});
+    childSheet3 = new createjs.SpriteSheet({images: ["Platforms/Person 03.png"], frames: [[0,0,295,197,0,153,94.6],[295,0,295,197,0,153,94.6],[590,0,295,197,0,153,94.6],[885,0,295,197,0,153,94.6],[1180,0,295,197,0,153,94.6],[1475,0,295,197,0,153,94.6],[0,197,295,197,0,153,94.6],[295,197,295,197,0,153,94.6],[590,197,295,197,0,153,94.6],[885,197,295,197,0,153,94.6],[1180,197,295,197,0,153,94.6],[1475,197,295,197,0,153,94.6],[0,394,295,197,0,153,94.6],[295,394,295,197,0,153,94.6],[590,394,295,197,0,153,94.6],[885,394,295,197,0,153,94.6],[1180,394,295,197,0,153,94.6],[1475,394,295,197,0,153,94.6],[0,591,295,197,0,153,94.6],[295,591,295,197,0,153,94.6],[590,591,295,197,0,153,94.6],[885,591,295,197,0,153,94.6],[1180,591,295,197,0,153,94.6],[1475,591,295,197,0,153,94.6],[0,788,295,197,0,153,94.6],[295,788,295,197,0,153,94.6]]});
+    childSheet4 = new createjs.SpriteSheet({images: ["Platforms/Person 04.png"], frames: [[0,0,267,178,0,131.5,88.75],[267,0,267,178,0,131.5,88.75],[534,0,267,178,0,131.5,88.75],[801,0,267,178,0,131.5,88.75],[1068,0,267,178,0,131.5,88.75],[1335,0,267,178,0,131.5,88.75],[1602,0,267,178,0,131.5,88.75],[0,178,267,178,0,131.5,88.75],[267,178,267,178,0,131.5,88.75],[534,178,267,178,0,131.5,88.75],[801,178,267,178,0,131.5,88.75],[1068,178,267,178,0,131.5,88.75],[1335,178,267,178,0,131.5,88.75],[1602,178,267,178,0,131.5,88.75],[0,356,267,178,0,131.5,88.75],[267,356,267,178,0,131.5,88.75],[534,356,267,178,0,131.5,88.75],[801,356,267,178,0,131.5,88.75],[1068,356,267,178,0,131.5,88.75],[1335,356,267,178,0,131.5,88.75],[1602,356,267,178,0,131.5,88.75],[0,534,267,178,0,131.5,88.75],[267,534,267,178,0,131.5,88.75],[534,534,267,178,0,131.5,88.75]]});
+    childSheet5 = new createjs.SpriteSheet({images: ["Platforms/Person 05.png"], frames: [[0,0,265,177,0,132,88.6],[265,0,265,177,0,132,88.6],[530,0,265,177,0,132,88.6],[795,0,265,177,0,132,88.6],[1060,0,265,177,0,132,88.6],[1325,0,265,177,0,132,88.6],[1590,0,265,177,0,132,88.6],[0,177,265,177,0,132,88.6],[265,177,265,177,0,132,88.6],[530,177,265,177,0,132,88.6],[795,177,265,177,0,132,88.6],[1060,177,265,177,0,132,88.6],[1325,177,265,177,0,132,88.6],[1590,177,265,177,0,132,88.6],[0,354,265,177,0,132,88.6],[265,354,265,177,0,132,88.6],[530,354,265,177,0,132,88.6],[795,354,265,177,0,132,88.6],[1060,354,265,177,0,132,88.6],[1325,354,265,177,0,132,88.6],[1590,354,265,177,0,132,88.6],[0,531,265,177,0,132,88.6],[265,531,265,177,0,132,88.6]]});
+    cArray[1] = childsheet;
+    cArray[2] = childSheet2;
+    cArray[3] = childSheet3;
+    cArray[4] = childSheet4;
+    cArray[5] = childSheet5;
 
     sparkleSheet = new createjs.SpriteSheet({images: ["VFX_Sparkle/Sparkle Animation.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55]]});
     sparkle1 = new createjs.Sprite(sparkleSheet);
@@ -403,7 +420,10 @@ function person(sparite, num)
     this.speed = 3;
     this.number = 1;
     this.frame = 1;
+    this.change = false;
+    this.i = 1;
     this.broken = num;
+
     this.fall = function()
     {
         //this.broken = 0;
@@ -412,10 +432,31 @@ function person(sparite, num)
         {
             this.speed ++;
             this.sprite.y += this.speed;
+            this.change = false;
         }
         else
         {
             this.broken = 2;
+            if(this.change == false)
+            {
+                this.change = true;
+                this.i ++;
+                if(this.i > 5)
+                {
+                    this.i = 1;
+                }
+                this.sprite.spriteSheet = cArray[this.i];
+                if(this.i > 1)
+                {
+                    this.sprite.scaleX = .5;
+                    this.sprite.scaleY = .5;
+                }
+                else
+                {
+                    this.sprite.scaleX = 1;
+                    this.sprite.scaleY = 1;
+                }
+            }
             this.speed = 3;
 
         }
@@ -620,6 +661,14 @@ update = function()
         gravcheck --;
 
     }
+    /*if(leftKeyDown == false && rightKeyDown == false)
+    {
+        playerSpeed -= playerSpeed * (1/8);
+        if(playerSpeed < (playerSpeed / 8))
+        {
+            playerSpeed
+        }
+    }  */
     //Remove platforms as time ticks on
     if(cTime < 40)
     {
@@ -794,6 +843,8 @@ function keyDownListener(e)
 			{
 				playerSpeed = maxPlayerSpeed;
 			}
+
+
         }
         else
         {
@@ -821,17 +872,23 @@ function keyDownListener(e)
 			{
             	playerSpeed = maxPlayerSpeed;
 			}
+
         }
         if(playerSpeed > maxPlayerSpeed)
         {
             playerSpeed = maxPlayerSpeed;
+        }
+        xVelocity += xAcceleration - xFriction;
+        if(xVelocity > maxPlayerSpeed)
+        {
+            xVelocity = maxPlayerSpeed;
         }
     }
     //a and left
     else if((e.keyCode == 65 || e.keyCode == 37))
     {
         leftKeyDown = true;
-        if(playerSpeed > 0)
+       if(playerSpeed > 0)
         {
             //playerSpeed = -maxPlayerSpeed;
 			if(cTime > 40)
@@ -840,7 +897,7 @@ function keyDownListener(e)
 			}
 			else if(cTime > 30)
 			{
-				playerSpeed = -6;
+				playerSpeed  -6;
 			}
 			else if(cTime > 10)
 			{
