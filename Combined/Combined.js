@@ -35,9 +35,8 @@ var KEYCODE_RIGHT = 39;
 var leftHeld, upHeld, rightHeld;
 
 //Initialize game variables
-var player, enemy;
-var glass, glassInst, glassArr;
-var glass1, glass2, glass3, glass4, glass5;
+var player;
+var glass, glassInst;
 var orbs, orbInst, orbAni, numOrbs = 0;
 var timerMsg;
 var dBackground;
@@ -47,12 +46,14 @@ var SEEK = true;  //CHANGE THIS TO TURN SEEKING ON AND OFF
 var dGravity = 0.3;
 var playerAccel = 0;
 var accelSide = 0.03;
-var colBoxSizeY = 60;
+var colBoxSizeY = 25;
 var colBoxSizeX = 10;
+var colBoxShape;
 
 var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
+var dBackgroundMusic;
 
 function dInit()
 {
@@ -78,11 +79,13 @@ function dInit()
     player = new createjs.Sprite(playerAni);
     player.x = canvas.width / 2;
     player.y = (canvas.height / 2) + 150;
-//    player.scaleX = 0.3;
-//    player.scaleY = 0.3;
     dstage.addChild(player);
 
-    orbAni = new createjs.SpriteSheet({images: ["orbAni.png"], frames: [[0,0,841,807,0,419.65,411.9],[841,0,841,807,0,419.65,411.9],[1682,0,841,807,0,419.65,411.9],[2523,0,841,807,0,419.65,411.9],[3364,0,841,807,0,419.65,411.9],[4205,0,841,807,0,419.65,411.9],[5046,0,841,807,0,419.65,411.9],[5887,0,841,807,0,419.65,411.9],[6728,0,841,807,0,419.65,411.9],[0,807,841,807,0,419.65,411.9],[841,807,841,807,0,419.65,411.9],[1682,807,841,807,0,419.65,411.9],[2523,807,841,807,0,419.65,411.9],[3364,807,841,807,0,419.65,411.9],[4205,807,841,807,0,419.65,411.9],[5046,807,841,807,0,419.65,411.9],[5887,807,841,807,0,419.65,411.9],[6728,807,841,807,0,419.65,411.9],[0,1614,841,807,0,419.65,411.9],[841,1614,841,807,0,419.65,411.9],[1682,1614,841,807,0,419.65,411.9],[2523,1614,841,807,0,419.65,411.9],[3364,1614,841,807,0,419.65,411.9],[4205,1614,841,807,0,419.65,411.9],[5046,1614,841,807,0,419.65,411.9],[5887,1614,841,807,0,419.65,411.9],[6728,1614,841,807,0,419.65,411.9],[0,2421,841,807,0,419.65,411.9],[841,2421,841,807,0,419.65,411.9],[1682,2421,841,807,0,419.65,411.9],[2523,2421,841,807,0,419.65,411.9],[3364,2421,841,807,0,419.65,411.9],[4205,2421,841,807,0,419.65,411.9],[5046,2421,841,807,0,419.65,411.9],[5887,2421,841,807,0,419.65,411.9],[6728,2421,841,807,0,419.65,411.9],[0,3228,841,807,0,419.65,411.9],[841,3228,841,807,0,419.65,411.9],[1682,3228,841,807,0,419.65,411.9],[2523,3228,841,807,0,419.65,411.9],[3364,3228,841,807,0,419.65,411.9],[4205,3228,841,807,0,419.65,411.9],[5046,3228,841,807,0,419.65,411.9],[5887,3228,841,807,0,419.65,411.9],[6728,3228,841,807,0,419.65,411.9],[0,4035,841,807,0,419.65,411.9],[841,4035,841,807,0,419.65,411.9],[1682,4035,841,807,0,419.65,411.9]]});
+//    colBoxShape = new createjs.Shape();
+//    colBoxShape.graphics.beginFill("white").drawRect(player.x, player.y, 10, 60);
+//    dstage.addChild(colBoxShape);
+
+    orbAni = new createjs.SpriteSheet({images: ["orbAni.png"], frames: [[0,0,721,481,0,355.5,230.5],[721,0,721,481,0,355.5,230.5],[1442,0,721,481,0,355.5,230.5],[2163,0,721,481,0,355.5,230.5],[2884,0,721,481,0,355.5,230.5],[3605,0,721,481,0,355.5,230.5],[4326,0,721,481,0,355.5,230.5],[5047,0,721,481,0,355.5,230.5],[5768,0,721,481,0,355.5,230.5],[6489,0,721,481,0,355.5,230.5],[7210,0,721,481,0,355.5,230.5],[0,481,721,481,0,355.5,230.5],[721,481,721,481,0,355.5,230.5],[1442,481,721,481,0,355.5,230.5],[2163,481,721,481,0,355.5,230.5],[2884,481,721,481,0,355.5,230.5],[3605,481,721,481,0,355.5,230.5],[4326,481,721,481,0,355.5,230.5],[5047,481,721,481,0,355.5,230.5],[5768,481,721,481,0,355.5,230.5],[6489,481,721,481,0,355.5,230.5],[7210,481,721,481,0,355.5,230.5],[0,962,721,481,0,355.5,230.5],[721,962,721,481,0,355.5,230.5],[1442,962,721,481,0,355.5,230.5],[2163,962,721,481,0,355.5,230.5],[2884,962,721,481,0,355.5,230.5],[3605,962,721,481,0,355.5,230.5],[4326,962,721,481,0,355.5,230.5],[5047,962,721,481,0,355.5,230.5],[5768,962,721,481,0,355.5,230.5],[6489,962,721,481,0,355.5,230.5],[7210,962,721,481,0,355.5,230.5],[0,1443,721,481,0,355.5,230.5],[721,1443,721,481,0,355.5,230.5],[1442,1443,721,481,0,355.5,230.5],[2163,1443,721,481,0,355.5,230.5],[2884,1443,721,481,0,355.5,230.5],[3605,1443,721,481,0,355.5,230.5],[4326,1443,721,481,0,355.5,230.5],[5047,1443,721,481,0,355.5,230.5],[5768,1443,721,481,0,355.5,230.5],[6489,1443,721,481,0,355.5,230.5],[7210,1443,721,481,0,355.5,230.5],[0,1924,721,481,0,355.5,230.5],[721,1924,721,481,0,355.5,230.5],[1442,1924,721,481,0,355.5,230.5],[2163,1924,721,481,0,355.5,230.5]]});
     depthAni = new createjs.SpriteSheet({images: ["depthAni.png"], frames: [[0,0,355,237,0,177.45,114.5],[355,0,355,237,0,177.45,114.5],[710,0,355,237,0,177.45,114.5],[1065,0,355,237,0,177.45,114.5],[1420,0,355,237,0,177.45,114.5],[0,237,355,237,0,177.45,114.5],[355,237,355,237,0,177.45,114.5],[710,237,355,237,0,177.45,114.5],[1065,237,355,237,0,177.45,114.5],[1420,237,355,237,0,177.45,114.5],[0,474,355,237,0,177.45,114.5],[355,474,355,237,0,177.45,114.5],[710,474,355,237,0,177.45,114.5],[1065,474,355,237,0,177.45,114.5],[1420,474,355,237,0,177.45,114.5],[0,711,355,237,0,177.45,114.5],[355,711,355,237,0,177.45,114.5],[710,711,355,237,0,177.45,114.5],[1065,711,355,237,0,177.45,114.5],[1420,711,355,237,0,177.45,114.5]]});
 
     //Create the timer
@@ -105,14 +108,10 @@ function dInit()
     }
 
     //Initialize the Depth Meter
-    //depthMeter = new createjs.Shape();
-    //depthMeter.graphics.beginFill("black").drawRect(650, 20, 25, 150);
     depthMeter = new createjs.Sprite(depthAni);
     depthMeter.x = 700;
     depthMeter.y = 100;
     depthMeter.rotation = 180;
-//    depthMeter.scaleX = 0.5;
-//    depthMeter.scaleY = 0.5;
     dstage.addChild(depthMeter);
 
     var randDelay = 60;
@@ -141,6 +140,7 @@ function dInit()
     orbs = new Array();
     createOrb();
 
+
     //Set the update loop
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", dTick);
@@ -151,6 +151,8 @@ function dInit()
 //Game Loop
 function dTick()
 {
+    //colBoxShape.graphics.clear().beginFill("white").drawRect(player.x - 10, player.y - 25, 20, 50);
+
     var ticks = createjs.Ticker.getTicks(true);
 
     if(ticks % glassSpawnInterval == 0)
@@ -249,9 +251,9 @@ function dTick()
 
     for(var i = 0; i < glass.length; i++)
     {
-        if(player.x - colBoxSizeX < glass[i].x + 10
-            && player.x + colBoxSizeX > glass[i].x + 10
-            && player.y - colBoxSizeY < glass[i].y
+        if(player.x - colBoxSizeX < glass[i].x + 20
+            && player.x + colBoxSizeX > glass[i].x - 10
+            && player.y - colBoxSizeY < glass[i].y + 35
             && player.y + colBoxSizeY > glass[i].y)
         {
             knockBack();
@@ -263,7 +265,7 @@ function dTick()
         for(var j = i+1; j < glass.length; j++)
         {
             if((!glass[i].frozen || !glass[j].frozen)
-                && glass[i].x - colBoxSizeX < glass[j].x + 10
+                && glass[i].x - colBoxSizeX < glass[j].x - 10
                 && glass[i].x + colBoxSizeX > glass[j].x + 10
                 && glass[i].y - colBoxSizeY < glass[j].y
                 && glass[i].y + colBoxSizeY > glass[j].y)
@@ -276,9 +278,9 @@ function dTick()
 
     for(var i = 0; i < orbs.length; i++)
     {
-        if(player.x - colBoxSizeX < orbs[i].x
-            && player.x + colBoxSizeX > orbs[i].x
-            && player.y - colBoxSizeY < orbs[i].y
+        if(player.x - colBoxSizeX < orbs[i].x - 2
+            && player.x + colBoxSizeX > orbs[i].x + 2
+            && player.y - colBoxSizeY < orbs[i].y + 2
             && player.y + colBoxSizeY > orbs[i].y)
         {
             knockBack();
@@ -332,7 +334,7 @@ function dTick()
             break;
     }
 
-    //depthMeter.play();
+    dBackgroundMusic = createjs.Sound.play("dBackgroundMID", {loop:-1});
     orbInst.play();
     dstage.update();
 }
