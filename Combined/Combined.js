@@ -1,8 +1,9 @@
-var canvas, stage;
+var canvas, stage, whichStage;
 
 function init()
 {
 	canvas = document.getElementById("canvas");
+	mInit();
 }
 
 /*
@@ -52,11 +53,13 @@ var colBoxShape;
 
 var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
+var glassSpawnHeight = 275;
 var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
 var dBackgroundMusic;
 
 function dInit()
 {
+	whichStage = 1;
     //Key event initialization
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
@@ -304,6 +307,26 @@ function dTick()
     //Gravitate down
     gravitate(player);
 
+	if(player.x > canvas.width - 11)
+	{
+		player.x = canvas.width - 11;
+	}
+	
+	if(player.x < 12)
+	{
+		player.x = 12;
+	}
+	
+	if(player.y > canvas.height - 20)
+	{
+		player.y = canvas.height - 20;
+	}
+	
+	if(player.y < 30)
+	{
+		player.y = 30;
+	}
+	
     for(var i = 0; i < glass.length; i++)
     {
         gravitate(glass[i]);
@@ -367,7 +390,7 @@ function createGlassWave()
         //glassInst.scaleX = 0.3;
         //glassInst.scaleY = 0.3;
         glassInst.x = (canvas.width / 2) + (Math.floor(Math.random()*4.5) *(canvas.width / 8) * ((Math.floor(Math.random()*2)*2)-1));
-        glassInst.y = canvas.height / 2 - 255;
+        glassInst.y = canvas.height / 2 - glassSpawnHeight;
         glassInst.targetFound = false;
         glassInst.frozen = false;
         dstage.addChild(glassInst);
@@ -590,6 +613,7 @@ var testAni;
 
 function mInit()
 {
+	whichStage = 0;
 	if(!(!!document.createElement('canvas').getContext))
 	{
 		var wrapper = document.getElementById("canvasWrapper");
@@ -1126,8 +1150,11 @@ update = function()
     {
         //ends game loop so that depressive phase can take over.
         //Be sure to play transition before doing this.
-        mstage.removeAllChildren();
-
+		if(whichStage != 1)
+		{
+			dInit();
+		}
+		mstage.removeAllChildren();
     }
 
 }
@@ -1145,7 +1172,8 @@ function keyDownListener(e)
     //d and right
     if((e.keyCode == 68 || e.keyCode == 39))
     {
-        rightKeyDown = true;
+        rightKeyDown =
+		true;
         if(playerSpeed < 0)
         {
            // playerSpeed = maxPlayerSpeed
