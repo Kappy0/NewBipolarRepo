@@ -12,7 +12,6 @@ function init()
 *
 */
 
-var isManic = false;
 var pStage;
 var timesJumped = 0;
 
@@ -159,9 +158,12 @@ function partyTick()
 		//End party phase, transition to manic.
 		playerGravity = 0;
 		partyJump.y += -1;
-		isManic = true;
 		//Start fade out to manic here...
-		
+		if(partyJump.y <= -200)
+		{
+			createjs.Ticker.removeEventListener("tick", partyTick);
+			mInit();
+		}
 	//	velocity = -5;
 	}
 	
@@ -858,73 +860,85 @@ function mInit()
 	document.onkeydown = keyDownListener;
 	document.onkeyup = keyUpListener;
 
-	canvas = document.getElementById("canvas");
+	//canvas = document.getElementById("canvas");
 	mstage = new createjs.Stage(canvas);
+	
+	cTime = startTime;
 	
 	//Sprites
 	bgAnimation = new createjs.SpriteSheet({images: ["Fractal Animation/Fractal_SpriteSheet.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55],[720,1443,720,481,0,360,239.55],[1440,1443,720,481,0,360,239.55],[2160,1443,720,481,0,360,239.55],[2880,1443,720,481,0,360,239.55],[0,1924,720,481,0,360,239.55],[720,1924,720,481,0,360,239.55],[1440,1924,720,481,0,360,239.55],[2160,1924,720,481,0,360,239.55],[2880,1924,720,481,0,360,239.55],[0,2405,720,481,0,360,239.55],[720,2405,720,481,0,360,239.55],[1440,2405,720,481,0,360,239.55],[2160,2405,720,481,0,360,239.55],[2880,2405,720,481,0,360,239.55],[0,2886,720,481,0,360,239.55]]});
 	bgSprite = new createjs.Sprite(bgAnimation,0);
 	bgSprite.x = 360;
 	bgSprite.y = 240;
-	mstage.addChild(bgSprite);
+	stage.addChild(bgSprite);
 
 	bpNewSprite = new createjs.SpriteSheet({animations: {brokenplatform: [1,35]}, images: ["Fixed_Platform_Break.png"], frames: [[0,0,192,380,0,96,189.05],[192,0,192,380,0,96,189.05],[384,0,192,380,0,96,189.05],[576,0,192,380,0,96,189.05],[768,0,192,380,0,96,189.05],[960,0,192,380,0,96,189.05],[1152,0,192,380,0,96,189.05],[1344,0,192,380,0,96,189.05],[1536,0,192,380,0,96,189.05],[1728,0,192,380,0,96,189.05],[0,380,192,380,0,96,189.05],[192,380,192,380,0,96,189.05],[384,380,192,380,0,96,189.05],[576,380,192,380,0,96,189.05],[768,380,192,380,0,96,189.05],[960,380,192,380,0,96,189.05],[1152,380,192,380,0,96,189.05],[1344,380,192,380,0,96,189.05],[1536,380,192,380,0,96,189.05],[1728,380,192,380,0,96,189.05],[0,760,192,380,0,96,189.05],[192,760,192,380,0,96,189.05],[384,760,192,380,0,96,189.05],[576,760,192,380,0,96,189.05],[768,760,192,380,0,96,189.05],[960,760,192,380,0,96,189.05],[1152,760,192,380,0,96,189.05],[1344,760,192,380,0,96,189.05],[1536,760,192,380,0,96,189.05],[1728,760,192,380,0,96,189.05],[0,1140,192,380,0,96,189.05],[192,1140,192,380,0,96,189.05],[384,1140,192,380,0,96,189.05],[576,1140,192,380,0,96,189.05],[768,1140,192,380,0,96,189.05],[960,1140,192,380,0,96,189.05]]});
 	bpSprite = new createjs.Sprite(bpNewSprite);
-	mstage.addChild(bpSprite);
+	stage.addChild(bpSprite);
 	
 	platformSheet = new createjs.SpriteSheet({images: ["Platforms/Small Platform Break Animation.png"], frames: [[0,0,132,191,0,65,94.5],[132,0,132,191,0,65,94.5],[264,0,132,191,0,65,94.5],[396,0,132,191,0,65,94.5],[528,0,132,191,0,65,94.5],[660,0,132,191,0,65,94.5],[792,0,132,191,0,65,94.5],[924,0,132,191,0,65,94.5],[1056,0,132,191,0,65,94.5],[1188,0,132,191,0,65,94.5],[1320,0,132,191,0,65,94.5],[1452,0,132,191,0,65,94.5],[1584,0,132,191,0,65,94.5],[1716,0,132,191,0,65,94.5],[1848,0,132,191,0,65,94.5],[0,191,132,191,0,65,94.5],[132,191,132,191,0,65,94.5],[264,191,132,191,0,65,94.5],[396,191,132,191,0,65,94.5],[528,191,132,191,0,65,94.5],[660,191,132,191,0,65,94.5],[792,191,132,191,0,65,94.5],[924,191,132,191,0,65,94.5],[1056,191,132,191,0,65,94.5],[1188,191,132,191,0,65,94.5],[1320,191,132,191,0,65,94.5],[1452,191,132,191,0,65,94.5],[1584,191,132,191,0,65,94.5],[1716,191,132,191,0,65,94.5],[1848,191,132,191,0,65,94.5],[0,382,132,191,0,65,94.5],[132,382,132,191,0,65,94.5],[264,382,132,191,0,65,94.5],[396,382,132,191,0,65,94.5],[528,382,132,191,0,65,94.5],[660,382,132,191,0,65,94.5]]});
     platformAni01 = new createjs.Sprite(platformSheet);
 	platformAni01.x = 400;
 	platformAni01.y = 270;
-    mstage.addChild(platformAni01);
+    stage.addChild(platformAni01);
 	
     platformAni02 = new createjs.Sprite(platformSheet);
 	platformAni02.x = 100;
 	platformAni02.y = 100;
-    mstage.addChild(platformAni02);
+    stage.addChild(platformAni02);
 	
     platformAni03 = new createjs.Sprite(platformSheet);
 	platformAni03.x = 600;
 	platformAni03.y = 410;
-    mstage.addChild(platformAni03);
+    stage.addChild(platformAni03);
 	
     platformAni04 = new createjs.Sprite(platformSheet);
 	platformAni04.x = 3;
 	platformAni04.y = 350;
-    mstage.addChild(platformAni04);
+    stage.addChild(platformAni04);
 	
     platformAni05 = new createjs.Sprite(platformSheet);
 	platformAni05.x = 500;
 	platformAni05.y = 50;
-    mstage.addChild(platformAni05);
+    stage.addChild(platformAni05);
 	
     bplatformAni01 = new createjs.Sprite(platformSheet);
 	bplatformAni01.x = -100;
 	bplatformAni01.y = -100;
-    mstage.addChild(bplatformAni01);
+    stage.addChild(bplatformAni01);
 	
     bplatformAni02 = new createjs.Sprite(platformSheet);
 	bplatformAni02.x = -100;
 	bplatformAni02.y = -100;
-    mstage.addChild(bplatformAni02);
+    stage.addChild(bplatformAni02);
 
     playerImg = new createjs.SpriteSheet({images: ["Manic_Fly/Small ManicFly Animation.png"], frames: [[0,0,141,94,0,72.95,41.55],[141,0,141,94,0,72.95,41.55],[282,0,141,94,0,72.95,41.55],[423,0,141,94,0,72.95,41.55],[564,0,141,94,0,72.95,41.55],[705,0,141,94,0,72.95,41.55],[846,0,141,94,0,72.95,41.55],[0,94,141,94,0,72.95,41.55],[141,94,141,94,0,72.95,41.55],[282,94,141,94,0,72.95,41.55],[423,94,141,94,0,72.95,41.55],[564,94,141,94,0,72.95,41.55],[705,94,141,94,0,72.95,41.55],[846,94,141,94,0,72.95,41.55],[0,188,141,94,0,72.95,41.55],[141,188,141,94,0,72.95,41.55],[282,188,141,94,0,72.95,41.55],[423,188,141,94,0,72.95,41.55],[564,188,141,94,0,72.95,41.55],[705,188,141,94,0,72.95,41.55]]});
     flyingPlayer = new createjs.Sprite(playerImg);
 	flyingPlayer.x = 360-32;
 	flyingPlayer.y = 240;
-    mstage.addChild(flyingPlayer);
+    stage.addChild(flyingPlayer);
 
     childsheet =  new createjs.SpriteSheet({images: ["Platforms/Small Person 01 Animation.png"], frames: [[0,0,124,83,0,66,38.1],[124,0,124,83,0,66,38.1],[248,0,124,83,0,66,38.1],[372,0,124,83,0,66,38.1],[0,83,124,83,0,66,38.1],[124,83,124,83,0,66,38.1],[248,83,124,83,0,66,38.1],[372,83,124,83,0,66,38.1],[0,166,124,83,0,66,38.1],[124,166,124,83,0,66,38.1],[248,166,124,83,0,66,38.1],[372,166,124,83,0,66,38.1],[0,249,124,83,0,66,38.1],[124,249,124,83,0,66,38.1],[248,249,124,83,0,66,38.1],[372,249,124,83,0,66,38.1],[0,332,124,83,0,66,38.1],[124,332,124,83,0,66,38.1],[248,332,124,83,0,66,38.1],[372,332,124,83,0,66,38.1],[0,415,124,83,0,66,38.1],[124,415,124,83,0,66,38.1]]});
     person1s = new createjs.Sprite(childsheet);
 	person1s.x = -200;
 	person1s.y = 500;
-    mstage.addChild(person1s);
+    stage.addChild(person1s);
+
+    childSheet2 = new createjs.SpriteSheet({images: ["Platforms/Person 02.png"], frames: [[0,0,283,189,0,153.5,79.55],[283,0,283,189,0,153.5,79.55],[566,0,283,189,0,153.5,79.55],[849,0,283,189,0,153.5,79.55],[1132,0,283,189,0,153.5,79.55],[1415,0,283,189,0,153.5,79.55],[1698,0,283,189,0,153.5,79.55],[0,189,283,189,0,153.5,79.55],[283,189,283,189,0,153.5,79.55],[566,189,283,189,0,153.5,79.55],[849,189,283,189,0,153.5,79.55],[1132,189,283,189,0,153.5,79.55],[1415,189,283,189,0,153.5,79.55],[1698,189,283,189,0,153.5,79.55],[0,378,283,189,0,153.5,79.55],[283,378,283,189,0,153.5,79.55]]});
+    childSheet3 = new createjs.SpriteSheet({images: ["Platforms/Person 03.png"], frames: [[0,0,295,197,0,153,94.6],[295,0,295,197,0,153,94.6],[590,0,295,197,0,153,94.6],[885,0,295,197,0,153,94.6],[1180,0,295,197,0,153,94.6],[1475,0,295,197,0,153,94.6],[0,197,295,197,0,153,94.6],[295,197,295,197,0,153,94.6],[590,197,295,197,0,153,94.6],[885,197,295,197,0,153,94.6],[1180,197,295,197,0,153,94.6],[1475,197,295,197,0,153,94.6],[0,394,295,197,0,153,94.6],[295,394,295,197,0,153,94.6],[590,394,295,197,0,153,94.6],[885,394,295,197,0,153,94.6],[1180,394,295,197,0,153,94.6],[1475,394,295,197,0,153,94.6],[0,591,295,197,0,153,94.6],[295,591,295,197,0,153,94.6],[590,591,295,197,0,153,94.6],[885,591,295,197,0,153,94.6],[1180,591,295,197,0,153,94.6],[1475,591,295,197,0,153,94.6],[0,788,295,197,0,153,94.6],[295,788,295,197,0,153,94.6]]});
+    childSheet4 = new createjs.SpriteSheet({images: ["Platforms/Person 04.png"], frames: [[0,0,267,178,0,131.5,88.75],[267,0,267,178,0,131.5,88.75],[534,0,267,178,0,131.5,88.75],[801,0,267,178,0,131.5,88.75],[1068,0,267,178,0,131.5,88.75],[1335,0,267,178,0,131.5,88.75],[1602,0,267,178,0,131.5,88.75],[0,178,267,178,0,131.5,88.75],[267,178,267,178,0,131.5,88.75],[534,178,267,178,0,131.5,88.75],[801,178,267,178,0,131.5,88.75],[1068,178,267,178,0,131.5,88.75],[1335,178,267,178,0,131.5,88.75],[1602,178,267,178,0,131.5,88.75],[0,356,267,178,0,131.5,88.75],[267,356,267,178,0,131.5,88.75],[534,356,267,178,0,131.5,88.75],[801,356,267,178,0,131.5,88.75],[1068,356,267,178,0,131.5,88.75],[1335,356,267,178,0,131.5,88.75],[1602,356,267,178,0,131.5,88.75],[0,534,267,178,0,131.5,88.75],[267,534,267,178,0,131.5,88.75],[534,534,267,178,0,131.5,88.75]]});
+    childSheet5 = new createjs.SpriteSheet({images: ["Platforms/Person 05.png"], frames: [[0,0,265,177,0,132,88.6],[265,0,265,177,0,132,88.6],[530,0,265,177,0,132,88.6],[795,0,265,177,0,132,88.6],[1060,0,265,177,0,132,88.6],[1325,0,265,177,0,132,88.6],[1590,0,265,177,0,132,88.6],[0,177,265,177,0,132,88.6],[265,177,265,177,0,132,88.6],[530,177,265,177,0,132,88.6],[795,177,265,177,0,132,88.6],[1060,177,265,177,0,132,88.6],[1325,177,265,177,0,132,88.6],[1590,177,265,177,0,132,88.6],[0,354,265,177,0,132,88.6],[265,354,265,177,0,132,88.6],[530,354,265,177,0,132,88.6],[795,354,265,177,0,132,88.6],[1060,354,265,177,0,132,88.6],[1325,354,265,177,0,132,88.6],[1590,354,265,177,0,132,88.6],[0,531,265,177,0,132,88.6],[265,531,265,177,0,132,88.6]]});
+    cArray[1] = childsheet;
+    cArray[2] = childSheet2;
+    cArray[3] = childSheet3;
+    cArray[4] = childSheet4;
+    cArray[5] = childSheet5;
 
     sparkleSheet = new createjs.SpriteSheet({images: ["VFX_Sparkle/Sparkle Animation.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55]]});
     sparkle1 = new createjs.Sprite(sparkleSheet);
     sparkle1.x = -100;
     sparkle1.y = -100;
-    mstage.addChild(sparkle1);
+    stage.addChild(sparkle1);
 
 	
 	//Create all the platforms
@@ -941,28 +955,29 @@ function mInit()
 	person1 = new person(person1s, 2);
 		
     createjs.Ticker.setFPS(60);
-    createjs.Ticker.addEventListener("tick", mTick);
+    createjs.Ticker.addEventListener("tick", tick);
 	
-	//circle = new createjs.Shape();
-//	mstage.addChild(circle);
+	circle = new createjs.Shape();
+	stage.addChild(circle);
+    platformArray[0] = p1;
+    platformArray[1] = p2;
+    platformArray[2] = p3;
+    platformArray[3] = p4;
+    platformArray[4] = p5;
+    goSpring = false;
 }
 
 //Runs once per second.
 timerTick = function()
 {
-	if(isManic)
+	cTime--;
+
+	if(cTime < 0)
 	{
-		cTime--;
-	
-		if(cTime < 0)
-		{
-			//Transition to depression phase.
-	
-			gameOver = true;
-			//When transition is done set the following variables below.
-			//cTime = startTime;
-	
-		}
+		//Transition to depression phase.
+		gameOver = true;
+		//When transition is done set the following variables below.
+		//cTime = startTime;
 	}
 }
 
@@ -979,9 +994,9 @@ mTick = function()
         sparkle1.x = -100;
         sparkle1.y = -100;
     }
-	circle.x =/* platformAni01.x - 90;*/flyingPlayer.x - 52;
-	circle.y = /*platformAni01.y - 135;*/flyingPlayer.y - 29;
-	circle.graphics.beginFill("blue").drawCircle(50,50,2);
+//	circle.x =/* platformAni01.x - 90;*/flyingPlayer.x - 52;
+//	circle.y = /*platformAni01.y - 135;*/flyingPlayer.y - 29;
+//	circle.graphics.beginFill("blue").drawCircle(50,50,2);
 	bgSprite.gotoAndStop(bgAnimationFrame);
 	mstage.update();
 }
@@ -992,6 +1007,7 @@ function brokenPlatform(bplat)
     this.frame = 1;
     this.used = false;
     this.vel = 0;
+	
     this.resetVals = function()
     {
         this.frame = 1;
@@ -1004,7 +1020,6 @@ function brokenPlatform(bplat)
         //fall if in place
         if(this.used == true)
         {
-
             this.vel ++;
             this.bplatform.y += this.vel + platformGravity;
         }
@@ -1138,22 +1153,45 @@ function person(sparite, num)
     this.speed = 3;
     this.number = 1;
     this.frame = 1;
+    this.change = false;
+    this.i = 1;
     this.broken = num;
+	
     this.fall = function()
     {
         //this.broken = 0;
 
         if(this.sprite.y <=610)
         {
-            this.speed ++;
+                this.speed ++;
             this.sprite.y += this.speed;
+            this.change = false;
         }
         else
         {
             this.broken = 2;
+            if(this.change == false)
+            {
+                this.change = true;
+                this.i ++;
+                if(this.i > 5)
+                {
+                    this.i = 1;
+                }
+                this.sprite.spriteSheet = cArray[this.i];
+                if(this.i > 1)
+                {
+                    this.sprite.scaleX = .5;
+                    this.sprite.scaleY = .5;
+                }
+                else
+                {
+                    this.sprite.scaleX = 1;
+                    this.sprite.scaleY = 1;
+                }
+            }
             this.speed = 3;
-
-        }
+		}
 
     }
 }
@@ -1176,6 +1214,11 @@ update = function()
 	//720-420
     bp1.updateFall();
     bp2.updateFall();
+	platformArray[0] = p1;
+    platformArray[1] = p2;
+    platformArray[2] = p3;
+    platformArray[3] = p4;
+    platformArray[4] = p5;
     if(flyingPlayer.x - 9 + playerSpeed * friction < 720 - playerWidth)
     {
         if(flyingPlayer.x - 9 + playerSpeed * friction > 0)
@@ -1192,19 +1235,109 @@ update = function()
         flyingPlayer.x = 720-9;//playerWidth;
     }
 	
-    if(flyingPlayer.y >= 480)
+	var i = 0;
+    if(flyingPlayer.y >= 450)
     {
         if(gameOver == false)
         {
-            upSpeed += jumpStrength * 0.8;
+            /////////////////////////////////Old Controls for offscreen///////////////////////Re-engage if spring effect is not working///////////////////////////////
+            /*upSpeed += jumpStrength * 0.8;
             velocity = -upSpeed;
             //platformGravity = 4;
-            gravcheck = 30;
+            gravcheck = 30;  */
+            ////////////////////////////////New Controls. Comment out if not working////////////////////////////////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////Note: The platform grab controls seem strange now, it's because the player reacts strangely when the old left/right controls kick in.
+            ////////////////////////////////////////////// I will adjust this when I have time, as I am currently needing to work on other projects
+            ////////////////////////////////////////////// ---Mitch
+            if(goSpring == false)
+            {
+            for(i; i<5; i++)
+            {
+                if(platformArray[i].ani.y < 270)
+                {
+                    if(i != 4)
+                    {
+                        if(Math.sqrt((flyingPlayer.y - platformArray[i].ani.y)^2 + (flyingPlayer.x - platformArray[i].ani.x)^2) < Math.sqrt((flyingPlayer.y - platformArray[i+1].ani.y)^2 + (flyingPlayer.x - platformArray[i+1].ani.x)^2))
+                        {
+                            closestPlatform = platformArray[i];
+                        }
+                        else
+                        {
+                            closestPlatform = platformArray[i+1];
+                        }
+                    }
+                    else
+                    {
+                        if(Math.sqrt((flyingPlayer.y - platformArray[4].ani.y)^2 + (flyingPlayer.x - platformArray[4].ani.x)^2) < Math.sqrt((flyingPlayer.y - closestPlatform.ani.y)^2 + (flyingPlayer.x - closestPlatform.ani.x)^2))
+                        {
+                            closestPlatform = platformArray[4];
+                        }
+                    }
+                }
+            }
+                goSpring = true;
+
+            }
         }
         else
         {
             endManic = true;
+			//Should fade out before this, but for now instant transfer...
+		//	dInit();
+	//		createjs.Ticker.removeEventListener("tick", mTick);
         }
+    }
+
+	if(goSpring == true)
+    {
+
+        lockControls = true;
+        velocity-= springAcceleration;
+        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
+         if(xDist != 0)
+         {
+         xDist = xDist / 10;
+
+         }
+         if(closestPlatform.ani.x > flyingPlayer.x)
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }
+         else if(closestPlatform.ani.x == flyingPlayer.x)
+         {
+         flyingPlayer.x = closestPlatform.ani.x;
+         }
+         else
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }*/
+        if(flyingPlayer.x < closestPlatform.ani.x)
+        {
+            flyingPlayer.x += 10;
+        }
+        if(flyingPlayer.x > closestPlatform.ani.x)
+        {
+            flyingPlayer.x -= 10;
+        }
+        //Collide with platform for further propelling
+        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
+        {
+            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)) && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
+            {
+
+                upSpeed+= jumpStrength * 1.1;
+                velocity = -upSpeed;
+                xVelocity = 0;
+                goSpring = false;
+                lockControls = false;
+                closestPlatform.smash(false);
+
+            }
+        }
+
     }
 
     if(flyingPlayer.y <= 120)
@@ -1243,14 +1376,14 @@ update = function()
         flyingPlayer.y += velocity - upSpeed;
         upSpeed--;
         //gravity = 2
-             if(gravcheck > 0)
-             {
-            platformGravity = - velocity;
-             }
+		if(gravcheck > 0)
+		{
+			platformGravity = - velocity;
+		}
         else
-             {
-                 platformGravity = 0;
-             }
+		{
+			platformGravity = 0;
+		}
         gravcheck --;
 
     }
@@ -1386,10 +1519,11 @@ update = function()
     {
         //ends game loop so that depressive phase can take over.
         //Be sure to play transition before doing this.
-		if(whichStage != 1)
-		{
-			dInit();
-		}
+	//	if(whichStage != 1)
+	//	{
+		dInit();
+	//	}
+		createjs.Ticker.removeEventListener("tick", mTick);
 		mstage.removeAllChildren();
     }
 
@@ -1397,6 +1531,8 @@ update = function()
 
 function keyDownListener(e)
 {
+    if(lockControls == false)
+    {
     //w and up
     if(e.keyCode == 87 || e.keyCode == 38)
     {
@@ -1408,8 +1544,7 @@ function keyDownListener(e)
     //d and right
     if((e.keyCode == 68 || e.keyCode == 39))
     {
-        rightKeyDown =
-		true;
+        rightKeyDown = true;
         if(playerSpeed < 0)
         {
            // playerSpeed = maxPlayerSpeed
@@ -1430,6 +1565,8 @@ function keyDownListener(e)
 			{
 				playerSpeed = maxPlayerSpeed;
 			}
+
+
         }
         else
         {
@@ -1457,17 +1594,23 @@ function keyDownListener(e)
 			{
             	playerSpeed = maxPlayerSpeed;
 			}
+
         }
         if(playerSpeed > maxPlayerSpeed)
         {
             playerSpeed = maxPlayerSpeed;
+        }
+        xVelocity += xAcceleration - xFriction;
+        if(xVelocity > maxPlayerSpeed)
+        {
+            xVelocity = maxPlayerSpeed;
         }
     }
     //a and left
     else if((e.keyCode == 65 || e.keyCode == 37))
     {
         leftKeyDown = true;
-        if(playerSpeed > 0)
+       if(playerSpeed > 0)
         {
             //playerSpeed = -maxPlayerSpeed;
 			if(cTime > 40)
@@ -1476,7 +1619,7 @@ function keyDownListener(e)
 			}
 			else if(cTime > 30)
 			{
-				playerSpeed = -6;
+				playerSpeed  -6;
 			}
 			else if(cTime > 10)
 			{
@@ -1519,24 +1662,28 @@ function keyDownListener(e)
             playerSpeed = -maxPlayerSpeed;
         }
     }
+    }
 }
 
 function keyUpListener(e)
 {
-    //w and up
-    if(e.keyCode == 87 || 38)
+    if(lockControls == false)
     {
-        upKeyDown = false;
-    }
-    //d and right
-    if((e.keyCode == 68 || e.keyCode == 39))
-    {
-       rightKeyDown = false;
-    }
-    //a and left
-    else if((e.keyCode == 65 || e.keyCode == 37))
-    {
-       leftKeyDown = false;
+		//w and up
+		if(e.keyCode == 87 || 38)
+		{
+			upKeyDown = false;
+		}
+		//d and right
+		if((e.keyCode == 68 || e.keyCode == 39))
+		{
+		   rightKeyDown = false;
+		}
+		//a and left
+		else if((e.keyCode == 65 || e.keyCode == 37))
+		{
+		   leftKeyDown = false;
+		}
     }
 }
 
