@@ -3,7 +3,235 @@ var canvas, stage, whichStage;
 function init()
 {
 	canvas = document.getElementById("canvas");
-	mInit();
+	pInit();
+}
+
+/*
+*
+* Party Phase
+*
+*/
+
+var isManic = false;
+var pStage;
+var timesJumped = 0;
+
+var partyBackground;
+
+var partyJumpSheet;
+var partyJump;
+
+var partyJumpSheet02;
+var partyJump02;
+
+var partyJumpSheet03;
+var partyJump03;
+
+var partyJumpSheet04;
+var partyJump04;
+
+var partyJumpSheet05;
+var partyJump05;
+
+var partyJumpSheet06;
+var partyJump06;
+
+
+var pGroundHeight = 350;
+var pJumping = false;
+var partyVelocity = 0;
+var pJumpSpeed = -13;
+var partyGravity = 10;
+var playerGravity = 10;
+
+function pInit()
+{
+	whichStage = 0;
+	document.onkeydown = keyDown;
+    document.onkeyup = keyUp;
+	
+	if(!(!!document.createElement('canvas').getContext))
+    {
+        var wrapper = document.getElementById("canvasWrapper");
+        wrapper.innerHTML = "Your browser does not appear to support " +
+            "the HTML5 Canvas element";
+        return;
+    }
+    pStage = new createjs.Stage(canvas);
+	
+	partyBackground = new createjs.Bitmap("Party_Background.png");
+    partyBackground.y = 0;
+	partyBackground.x = 0;
+    pStage.addChild(partyBackground);
+	
+	partyJumpSheet = new createjs.SpriteSheet({images: ["Jumping_SpriteSheet.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55],[720,1443,720,481,0,360,239.55],[1440,1443,720,481,0,360,239.55],[2160,1443,720,481,0,360,239.55],[2880,1443,720,481,0,360,239.55],[0,1924,720,481,0,360,239.55],[720,1924,720,481,0,360,239.55],[1440,1924,720,481,0,360,239.55],[2160,1924,720,481,0,360,239.55],[2880,1924,720,481,0,360,239.55],[0,2405,720,481,0,360,239.55],[720,2405,720,481,0,360,239.55],[1440,2405,720,481,0,360,239.55],[2160,2405,720,481,0,360,239.55],[2880,2405,720,481,0,360,239.55],[0,2886,720,481,0,360,239.55],[720,2886,720,481,0,360,239.55],[1440,2886,720,481,0,360,239.55],[2160,2886,720,481,0,360,239.55],[2880,2886,720,481,0,360,239.55],[0,3367,720,481,0,360,239.55],[720,3367,720,481,0,360,239.55],[1440,3367,720,481,0,360,239.55],[2160,3367,720,481,0,360,239.55]]});
+	partyJump = new createjs.Sprite(partyJumpSheet);
+	partyJump.x = 350;
+	partyJump.y = 350;
+	partyJump.scaleX = 0.7;
+	partyJump.scaleY = 0.7;
+    pStage.addChild(partyJump);
+	
+	partyJumpSheet06 = new createjs.SpriteSheet({images: ["P01 Jumping.png"], frames: [[0,0,496,331,0,266.45,159.45],[496,0,496,331,0,266.45,159.45],[992,0,496,331,0,266.45,159.45],[1488,0,496,331,0,266.45,159.45],[1984,0,496,331,0,266.45,159.45],[2480,0,496,331,0,266.45,159.45],[2976,0,496,331,0,266.45,159.45],[3472,0,496,331,0,266.45,159.45],[0,331,496,331,0,266.45,159.45],[496,331,496,331,0,266.45,159.45],[992,331,496,331,0,266.45,159.45],[1488,331,496,331,0,266.45,159.45],[1984,331,496,331,0,266.45,159.45],[2480,331,496,331,0,266.45,159.45],[2976,331,496,331,0,266.45,159.45],[3472,331,496,331,0,266.45,159.45],[0,662,496,331,0,266.45,159.45],[496,662,496,331,0,266.45,159.45],[992,662,496,331,0,266.45,159.45],[1488,662,496,331,0,266.45,159.45],[1984,662,496,331,0,266.45,159.45],[2480,662,496,331,0,266.45,159.45],[2976,662,496,331,0,266.45,159.45],[3472,662,496,331,0,266.45,159.45],[0,993,496,331,0,266.45,159.45],[496,993,496,331,0,266.45,159.45],[992,993,496,331,0,266.45,159.45],[1488,993,496,331,0,266.45,159.45],[1984,993,496,331,0,266.45,159.45],[2480,993,496,331,0,266.45,159.45],[2976,993,496,331,0,266.45,159.45],[3472,993,496,331,0,266.45,159.45],[0,1324,496,331,0,266.45,159.45],[496,1324,496,331,0,266.45,159.45],[992,1324,496,331,0,266.45,159.45],[1488,1324,496,331,0,266.45,159.45],[1984,1324,496,331,0,266.45,159.45]]});
+	partyJump06 = new createjs.Sprite(partyJumpSheet06);
+	partyJump06.x = 550;
+	partyJump06.y = 350;
+	partyJump06.scaleX = -1;
+    pStage.addChild(partyJump06);
+	
+	partyJumpSheet02 = new createjs.SpriteSheet({images: ["P02 Jump.png"], frames: [[0,0,457,305,0,256.9,147.95],[457,0,457,305,0,256.9,147.95],[914,0,457,305,0,256.9,147.95],[1371,0,457,305,0,256.9,147.95],[1828,0,457,305,0,256.9,147.95],[2285,0,457,305,0,256.9,147.95],[2742,0,457,305,0,256.9,147.95],[3199,0,457,305,0,256.9,147.95],[0,305,457,305,0,256.9,147.95],[457,305,457,305,0,256.9,147.95],[914,305,457,305,0,256.9,147.95],[1371,305,457,305,0,256.9,147.95],[1828,305,457,305,0,256.9,147.95],[2285,305,457,305,0,256.9,147.95],[2742,305,457,305,0,256.9,147.95],[3199,305,457,305,0,256.9,147.95],[0,610,457,305,0,256.9,147.95],[457,610,457,305,0,256.9,147.95],[914,610,457,305,0,256.9,147.95],[1371,610,457,305,0,256.9,147.95],[1828,610,457,305,0,256.9,147.95],[2285,610,457,305,0,256.9,147.95],[2742,610,457,305,0,256.9,147.95],[3199,610,457,305,0,256.9,147.95],[0,915,457,305,0,256.9,147.95],[457,915,457,305,0,256.9,147.95],[914,915,457,305,0,256.9,147.95],[1371,915,457,305,0,256.9,147.95],[1828,915,457,305,0,256.9,147.95],[2285,915,457,305,0,256.9,147.95],[2742,915,457,305,0,256.9,147.95],[3199,915,457,305,0,256.9,147.95],[0,1220,457,305,0,256.9,147.95]]});
+	partyJump02 = new createjs.Sprite(partyJumpSheet02);
+	partyJump02.x = 100;
+	partyJump02.y = 350;
+    pStage.addChild(partyJump02);
+	
+	partyJumpSheet03 = new createjs.SpriteSheet({images: ["P03 Jump.png"], frames: [[0,0,454,303,0,248,141],[454,0,454,303,0,248,141],[908,0,454,303,0,248,141],[1362,0,454,303,0,248,141],[1816,0,454,303,0,248,141],[2270,0,454,303,0,248,141],[2724,0,454,303,0,248,141],[3178,0,454,303,0,248,141],[3632,0,454,303,0,248,141],[0,303,454,303,0,248,141],[454,303,454,303,0,248,141],[908,303,454,303,0,248,141],[1362,303,454,303,0,248,141],[1816,303,454,303,0,248,141],[2270,303,454,303,0,248,141],[2724,303,454,303,0,248,141],[3178,303,454,303,0,248,141],[3632,303,454,303,0,248,141],[0,606,454,303,0,248,141],[454,606,454,303,0,248,141],[908,606,454,303,0,248,141],[1362,606,454,303,0,248,141],[1816,606,454,303,0,248,141],[2270,606,454,303,0,248,141],[2724,606,454,303,0,248,141],[3178,606,454,303,0,248,141],[3632,606,454,303,0,248,141],[0,909,454,303,0,248,141],[454,909,454,303,0,248,141],[908,909,454,303,0,248,141],[1362,909,454,303,0,248,141],[1816,909,454,303,0,248,141],[2270,909,454,303,0,248,141],[2724,909,454,303,0,248,141],[3178,909,454,303,0,248,141]]});
+	partyJump03 = new createjs.Sprite(partyJumpSheet03);
+	partyJump03.x = 200;
+	partyJump03.y = 350;
+    pStage.addChild(partyJump03);
+	
+	partyJumpSheet04 = new createjs.SpriteSheet({images: ["P04 Jump.png"], frames: [[0,0,403,269,0,184,127.45],[403,0,403,269,0,184,127.45],[806,0,403,269,0,184,127.45],[1209,0,403,269,0,184,127.45],[1612,0,403,269,0,184,127.45],[2015,0,403,269,0,184,127.45],[2418,0,403,269,0,184,127.45],[2821,0,403,269,0,184,127.45],[3224,0,403,269,0,184,127.45],[3627,0,403,269,0,184,127.45],[0,269,403,269,0,184,127.45],[403,269,403,269,0,184,127.45],[806,269,403,269,0,184,127.45],[1209,269,403,269,0,184,127.45],[1612,269,403,269,0,184,127.45],[2015,269,403,269,0,184,127.45],[2418,269,403,269,0,184,127.45],[2821,269,403,269,0,184,127.45],[3224,269,403,269,0,184,127.45],[3627,269,403,269,0,184,127.45],[0,538,403,269,0,184,127.45],[403,538,403,269,0,184,127.45],[806,538,403,269,0,184,127.45],[1209,538,403,269,0,184,127.45],[1612,538,403,269,0,184,127.45],[2015,538,403,269,0,184,127.45],[2418,538,403,269,0,184,127.45],[2821,538,403,269,0,184,127.45],[3224,538,403,269,0,184,127.45],[3627,538,403,269,0,184,127.45],[0,807,403,269,0,184,127.45],[403,807,403,269,0,184,127.45],[806,807,403,269,0,184,127.45],[1209,807,403,269,0,184,127.45],[1612,807,403,269,0,184,127.45]]});
+	partyJump04 = new createjs.Sprite(partyJumpSheet04);
+	partyJump04.x = 600;
+	partyJump04.y = 350;
+    pStage.addChild(partyJump04);
+	
+	partyJumpSheet05 = new createjs.SpriteSheet({images: ["P05 Jumping.png"], frames: [[0,0,475,317,0,266.1,149.1],[475,0,475,317,0,266.1,149.1],[950,0,475,317,0,266.1,149.1],[1425,0,475,317,0,266.1,149.1],[1900,0,475,317,0,266.1,149.1],[2375,0,475,317,0,266.1,149.1],[2850,0,475,317,0,266.1,149.1],[3325,0,475,317,0,266.1,149.1],[0,317,475,317,0,266.1,149.1],[475,317,475,317,0,266.1,149.1],[950,317,475,317,0,266.1,149.1],[1425,317,475,317,0,266.1,149.1],[1900,317,475,317,0,266.1,149.1],[2375,317,475,317,0,266.1,149.1],[2850,317,475,317,0,266.1,149.1],[3325,317,475,317,0,266.1,149.1],[0,634,475,317,0,266.1,149.1],[475,634,475,317,0,266.1,149.1],[950,634,475,317,0,266.1,149.1],[1425,634,475,317,0,266.1,149.1],[1900,634,475,317,0,266.1,149.1],[2375,634,475,317,0,266.1,149.1],[2850,634,475,317,0,266.1,149.1],[3325,634,475,317,0,266.1,149.1],[0,951,475,317,0,266.1,149.1],[475,951,475,317,0,266.1,149.1],[950,951,475,317,0,266.1,149.1],[1425,951,475,317,0,266.1,149.1],[1900,951,475,317,0,266.1,149.1],[2375,951,475,317,0,266.1,149.1],[2850,951,475,317,0,266.1,149.1],[3325,951,475,317,0,266.1,149.1],[0,1268,475,317,0,266.1,149.1],[475,1268,475,317,0,266.1,149.1]]});
+	partyJump05 = new createjs.Sprite(partyJumpSheet05);
+	partyJump05.x = 150;
+	partyJump05.y = 350;
+    pStage.addChild(partyJump05);
+	
+	//Update loop
+	createjs.Ticker.setFPS(60);
+    createjs.Ticker.addEventListener("tick", partyTick);
+}
+
+function partyTick()
+{
+	//Update
+	
+	//Jump
+	if(upKeyDown)
+	{
+		if(!pJumping)
+		{
+			timesJumped++;
+			pJumping = true;
+			partyJump.gotoAndPlay(0);
+			partyJump02.gotoAndPlay(0);
+			partyJump03.gotoAndPlay(0);
+			partyJump04.gotoAndPlay(0);
+			partyJump05.gotoAndPlay(0);
+			partyJump06.gotoAndPlay(0);
+			partyVelocity = pJumpSpeed;
+		}
+		if(partyJump.currentFrame >= 33)
+		{
+			partyJump.stop();
+			partyJump02.stop();
+			partyJump03.stop();
+			partyJump04.stop();
+			partyJump05.stop();
+			partyJump06.stop();
+			//jumping = false;
+			partyVelocity = 0;
+		}
+	}
+	else
+	{
+		if(partyJump.currentFrame >= 33)
+		{
+			partyJump.stop();
+			partyJump02.stop();
+			partyJump03.stop();
+			partyJump04.stop();
+			partyJump05.stop();
+			partyJump06.stop();
+	//		jumping = false;
+			partyVelocity = 0;
+		}
+	}
+	
+	if(timesJumped >= 3)
+	{
+		//End party phase, transition to manic.
+		playerGravity = 0;
+		partyJump.y += -1;
+		isManic = true;
+		//Start fade out to manic here...
+		
+	//	velocity = -5;
+	}
+	
+	partyJump.y += partyVelocity;
+	partyJump02.y += partyVelocity;
+	partyJump03.y += partyVelocity;
+	partyJump04.y += partyVelocity;
+	partyJump05.y += partyVelocity;
+	partyJump06.y += partyVelocity;
+	
+	if(partyJump.y < pGroundHeight)
+	{
+		partyJump.y += playerGravity;
+	}
+	
+	if(partyJump02.y < pGroundHeight)
+	{
+		partyJump02.y += partyGravity;
+		partyJump03.y += partyGravity;
+		partyJump04.y += partyGravity;
+		partyJump05.y += partyGravity;
+		partyJump06.y += partyGravity;
+	}
+	else
+	{
+		pJumping = false;
+	}
+	
+	//Draw
+	
+	pStage.update();
+}
+
+function keyDown(e)
+{
+    //w and up
+    if(e.keyCode == 87 || e.keyCode == 38)
+    {
+        upKeyDown = true;
+    }
+	
+    //d and right
+    if((e.keyCode == 68 || e.keyCode == 39))
+    {
+        rightKeyDown = true;
+    }
+    //a and left
+    else if((e.keyCode == 65 || e.keyCode == 37))
+    {
+		leftKeyDown = true;
+    }
+}
+
+function keyUp(e)
+{
+    //w and up
+    if(e.keyCode == 87 || 38)
+    {
+        upKeyDown = false;
+    }
+    //d and right
+    if((e.keyCode == 68 || e.keyCode == 39))
+    {
+       rightKeyDown = false;
+    }
+    //a and left
+    else if((e.keyCode == 65 || e.keyCode == 37))
+    {
+       leftKeyDown = false;
+    }
 }
 
 /*
@@ -58,7 +286,7 @@ var dBackgroundMusic;
 
 function dInit()
 {
-	whichStage = 1;
+	whichStage = 2;
     //Key event initialization
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
@@ -618,7 +846,7 @@ var testAni;
 
 function mInit()
 {
-	whichStage = 0;
+	whichStage = 1;
 	if(!(!!document.createElement('canvas').getContext))
 	{
 		var wrapper = document.getElementById("canvasWrapper");
@@ -715,24 +943,27 @@ function mInit()
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", mTick);
 	
-	circle = new createjs.Shape();
-	mstage.addChild(circle);
+	//circle = new createjs.Shape();
+//	mstage.addChild(circle);
 }
 
 //Runs once per second.
 timerTick = function()
 {
-    cTime--;
-
-    if(cTime < 0)
-    {
-        //Transition to depression phase.
-
-        gameOver = true;
-        //When transition is done set the following variables below.
-        //cTime = startTime;
-
-    }
+	if(isManic)
+	{
+		cTime--;
+	
+		if(cTime < 0)
+		{
+			//Transition to depression phase.
+	
+			gameOver = true;
+			//When transition is done set the following variables below.
+			//cTime = startTime;
+	
+		}
+	}
 }
 
 mTick = function()
