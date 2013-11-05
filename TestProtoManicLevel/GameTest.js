@@ -51,7 +51,7 @@ var jumpStrength = 12//7.25;
 var friction = 1;
 var gameOver = false;
 var goSpring;
-var springAcceleration = 20/27;
+var springAcceleration = 25/27;
 var lockControls = false;
 var xVelocity = 0;
 var xAcceleration = 0;
@@ -111,8 +111,10 @@ var bp2;
 
 var sparkleSheet;
 var sparkle1;
+var sparkleStop = true;
 
 var testAni;
+var text;
 
 document.onkeydown = keyDownListener;
 document.onkeyup = keyUpListener;
@@ -199,11 +201,19 @@ function init()
     cArray[4] = childSheet4;
     cArray[5] = childSheet5;
 
-    sparkleSheet = new createjs.SpriteSheet({images: ["VFX_Sparkle/Sparkle Animation.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55]]});
+    sparkleSheet = new createjs.SpriteSheet({images: ["VFX_Sparkle/Sparkle_SpriteSheet.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55]]});
     sparkle1 = new createjs.Sprite(sparkleSheet);
     sparkle1.x = -100;
     sparkle1.y = -100;
     stage.addChild(sparkle1);
+    sparkle1.scaleX = .5;
+    sparkle1.scaleY = .5;
+    sparkle2 = new createjs.Sprite(sparkleSheet);
+    sparkle2.x = -200;
+    sparkle2.y = -200;
+    stage.addChild(sparkle2);
+    sparkle2.scaleX = .5;
+    sparkle2.scaleY = .5;
 
 	
 	//Create all the platforms
@@ -215,6 +225,8 @@ function init()
 	
 	bp1 = new brokenPlatform(bplatformAni01);
 	bp2 = new brokenPlatform(bplatformAni02);
+
+    closestPlatform = p5;
 	
 	//Create the person
 	person1 = new person(person1s, 2);
@@ -230,7 +242,11 @@ function init()
     platformArray[3] = p4;
     platformArray[4] = p5;
     goSpring = false;
+
+    text = new createjs.Text(cTime, "20px Arial", "#ff7700");
+    stage.addChild(text);
 }
+
 
 //Runs once per second.
 timerTick = function()
@@ -255,12 +271,7 @@ tick = function()
 	person1s.play();
     bp1.bplatform.play();
     bp2.bplatform.play();
-    sparkle1.play();
-    if(sparkle1.currentAnimationFrame == 11)
-    {
-        sparkle1.x = -100;
-        sparkle1.y = -100;
-    }
+
 	circle.x =/* platformAni01.x - 90;*/flyingPlayer.x - 52;
 	circle.y = /*platformAni01.y - 135;*/flyingPlayer.y - 29;
 	circle.graphics.beginFill("blue").drawCircle(50,50,2);
@@ -337,7 +348,8 @@ function platform(platAni, num)
 
         sparkle1.x = this.ani.x;
         sparkle1.y = this.ani.y;
-        sparkle1.gotoAndPlay("1");
+        sparkleStop = false;
+
 
 		if(byPlayer)
 		{
@@ -364,6 +376,8 @@ function platform(platAni, num)
         }
         else
         {
+            closestPlatform = p5;
+            sparkleStop = true;
             stage.removeChild(this);
         }
         if(person1.broken == 1)
@@ -402,8 +416,9 @@ function platform(platAni, num)
                 {
                     if(standstill == false)
                     {
-                        upSpeed+= jumpStrength * 1.1;
+                        upSpeed = jumpStrength * 1.1;
                         velocity = -upSpeed;
+
                         this.smash(true);
                     }
                 }
@@ -480,6 +495,7 @@ update = function()
 	//335-94 = height
 	//420 = end of player..
 	//720-420
+    text.text = cTime;
     bp1.updateFall();
     bp2.updateFall();
     platformArray[0] = p1;
@@ -487,13 +503,13 @@ update = function()
     platformArray[2] = p3;
     platformArray[3] = p4;
     platformArray[4] = p5;
-    if(flyingPlayer.x - 9 + playerSpeed * friction < 720 - playerWidth)
+    if(flyingPlayer.x - 9 + playerSpeed < 720 - playerWidth)
     {
-        if(flyingPlayer.x - 9 + playerSpeed * friction > 0)
+        if(flyingPlayer.x - 9 + playerSpeed > 0)
         {
             if(goSpring == false)
             {
-                flyingPlayer.x += playerSpeed * friction;
+                flyingPlayer.x += playerSpeed;
             }
 
         }
@@ -508,7 +524,7 @@ update = function()
     }
 
     var i = 0;
-    if(flyingPlayer.y >= 450)
+    if(flyingPlayer.y >= 420)  //imaginary spring floor
     {
         if(gameOver == false)
         {
@@ -526,28 +542,24 @@ update = function()
             {
             for(i; i<5; i++)
             {
-                if(platformArray[i].ani.y < 270)
+                if(platformArray[i].ani.y < 300 /*&& platformArray[i].ani.y > 120*/)
                 {
-                    if(i != 4)
+                    if(closestPlatform.ani.y > 300)
                     {
-                        if(Math.sqrt((flyingPlayer.y - platformArray[i].ani.y)^2 + (flyingPlayer.x - platformArray[i].ani.x)^2) < Math.sqrt((flyingPlayer.y - platformArray[i+1].ani.y)^2 + (flyingPlayer.x - platformArray[i+1].ani.x)^2))
-                        {
-                            closestPlatform = platformArray[i];
-                        }
-                        else
-                        {
-                            closestPlatform = platformArray[i+1];
-                        }
+                        closestPlatform = platformArray[i];
+                     //   alert("Reset platform to: " + i + " | y: " + platformArray[i].ani.y);
                     }
                     else
                     {
-                        if(Math.sqrt((flyingPlayer.y - platformArray[4].ani.y)^2 + (flyingPlayer.x - platformArray[4].ani.x)^2) < Math.sqrt((flyingPlayer.y - closestPlatform.ani.y)^2 + (flyingPlayer.x - closestPlatform.ani.x)^2))
+                        if(Math.sqrt((flyingPlayer.y - platformArray[i].ani.y)^2 + (flyingPlayer.x - platformArray[i].ani.x)^2) <
+                            Math.sqrt((flyingPlayer.y - closestPlatform.ani.y)^2 + (flyingPlayer.x - closestPlatform.ani.x)^2))
                         {
-                            closestPlatform = platformArray[4];
+                            closestPlatform = platformArray[i];
                         }
                     }
                 }
             }
+
                 goSpring = true;
 
             }
@@ -559,56 +571,23 @@ update = function()
         }
     }
 
-    if(goSpring == true)
+    if(sparkleStop == false)
     {
-
-        lockControls = true;
-        velocity-= springAcceleration;
-        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
-         if(xDist != 0)
-         {
-         xDist = xDist / 10;
-
-         }
-         if(closestPlatform.ani.x > flyingPlayer.x)
-         {
-         xVelocity = xVelocity + (xDist *.5);
-         flyingPlayer.x += xVelocity;
-         }
-         else if(closestPlatform.ani.x == flyingPlayer.x)
-         {
-         flyingPlayer.x = closestPlatform.ani.x;
-         }
-         else
-         {
-         xVelocity = xVelocity + (xDist *.5);
-         flyingPlayer.x += xVelocity;
-         }*/
-        if(flyingPlayer.x < closestPlatform.ani.x)
-        {
-            flyingPlayer.x += 10;
-        }
-        if(flyingPlayer.x > closestPlatform.ani.x)
-        {
-            flyingPlayer.x -= 10;
-        }
-        //Collide with platform for further propelling
-        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
-        {
-            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)) && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
-            {
-
-                upSpeed+= jumpStrength * 1.1;
-                velocity = -upSpeed;
-                xVelocity = 0;
-                goSpring = false;
-                lockControls = false;
-                closestPlatform.smash(false);
-
-            }
-        }
-
+        sparkle1.gotoAndPlay("1");
     }
+    if(sparkleStop == true)
+    {
+        sparkle1.stop();
+        sparkle1.x = -100;
+        sparkle1.y = -100;
+        sparkle1.currentAnimationFrame = 1;
+    }
+    if(sparkle1.currentAnimationFrame >= 11)
+    {
+        sparkle1.currentAnimationFrame = 1;
+        sparkleStop = true;
+    }
+
 
     if(flyingPlayer.y <= 120)
     {
@@ -740,33 +719,120 @@ update = function()
         }
     }
                       //Collision code for platforms, as well as code that removes them should they move offscreen
-
+ /*   if(!leftKeyDown)
+    {
+        if(playerSpeed < 0)
+        {
+            playerSpeed++;
+        }
+    }
+    if(!rightKeyDown)
+    {
+        if(playerSpeed > 0)
+        {
+            playerSpeed--;
+        }
+    }
+   */
     if(upSpeed < 0)
     {
         upSpeed = 0;
     }
+    if(goSpring == true)
+    {
+
+        lockControls = true;
+       // velocity-= springAcceleration;
+          velocity = -15;
+
+        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
+         if(xDist != 0)
+         {
+         xDist = xDist / 10;
+
+         }
+         if(closestPlatform.ani.x > flyingPlayer.x)
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }
+         else if(closestPlatform.ani.x == flyingPlayer.x)
+         {
+         flyingPlayer.x = closestPlatform.ani.x;
+         }
+         else
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }*/
+        if(flyingPlayer.x < closestPlatform.ani.x)
+        {
+            flyingPlayer.x += 8;
+        }
+        if(flyingPlayer.x > closestPlatform.ani.x)
+        {
+            flyingPlayer.x -= 8;
+        }
+        /*if(flyingPlayer.y < closestPlatform.ani.y)
+         {
+
+         xVelocity = 0;
+
+         goSpring = false;
+         lockControls = false;
+
+         //closestPlatform.smash(false);
+         }    */
+        /*   if(closestPlatform.ani.y > 300)
+         {
+         alert(closestPlatform.ani.x + "," + closestPlatform.ani.y + "  |Num: " + i);
+         }*/
+        //Collide with platform for further propelling
+        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
+        {
+
+            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)))// && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
+            {
+
+                upSpeed = jumpStrength ;
+                //velocity = 0;
+                velocity = -upSpeed;
+               // upSpeed = 0;
+                xVelocity = 0;
+                goSpring = false;
+
+
+                lockControls = false;
+                closestPlatform.smash(true);
+
+            }
+        }
+
+
+    }
+
     p1.collision(flyingPlayer.x, flyingPlayer.y);
     p2.collision(flyingPlayer.x, flyingPlayer.y);
     p3.collision(flyingPlayer.x, flyingPlayer.y);
     p4.collision(flyingPlayer.x, flyingPlayer.y);
     p5.collision(flyingPlayer.x, flyingPlayer.y);
-    if(p1.ani.y > 615)
+    if(p1.ani.y > 538)
     {
         p1.smash(false);
     }
-    if(p2.ani.y > 615)
+    if(p2.ani.y > 538)
     {
         p2.smash(false);
     }
-    if(p3.ani.y > 615)
+    if(p3.ani.y > 538)
     {
         p3.smash(false);
     }
-    if(p4.ani.y > 615)
+    if(p4.ani.y > 538)
     {
         p4.smash(false);
     }
-    if(p5.ani.y > 615)
+    if(p5.ani.y > 538)
     {
         p5.smash(false);
     }
@@ -818,6 +884,9 @@ function keyDownListener(e)
         //upSpeed += jumpStrength;
         //velocity = -upSpeed;
         //upKeyDown = true;
+        //alert("TEST PART 2");
+        //alert(closestPlatform.ani.x + "," + closestPlatform.ani.y);
+
     }
     //d and right
     if((e.keyCode == 68 || e.keyCode == 39))
@@ -897,7 +966,7 @@ function keyDownListener(e)
 			}
 			else if(cTime > 30)
 			{
-				playerSpeed  -6;
+				playerSpeed = -6;
 			}
 			else if(cTime > 10)
 			{
@@ -933,7 +1002,7 @@ function keyDownListener(e)
 			else
 			{
             	playerSpeed = -maxPlayerSpeed;
-         }
+            }
         }
         if(playerSpeed < -maxPlayerSpeed)
         {
@@ -947,21 +1016,21 @@ function keyUpListener(e)
 {
     if(lockControls == false)
     {
-    //w and up
-    if(e.keyCode == 87 || 38)
-    {
-        upKeyDown = false;
-    }
-    //d and right
-    if((e.keyCode == 68 || e.keyCode == 39))
-    {
-       rightKeyDown = false;
-    }
-    //a and left
-    else if((e.keyCode == 65 || e.keyCode == 37))
-    {
-       leftKeyDown = false;
-    }
+        //w and up
+        if(e.keyCode == 87 || 38)
+        {
+            upKeyDown = false;
+        }
+        //d and right
+        if((e.keyCode == 68 || e.keyCode == 39))
+        {
+           rightKeyDown = false;
+        }
+        //a and left
+        else if((e.keyCode == 65 || e.keyCode == 37))
+        {
+           leftKeyDown = false;
+        }
     }
 }
 
