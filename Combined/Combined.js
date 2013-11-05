@@ -1081,9 +1081,9 @@ function platform(platAni, num)
             bp2.resetVals();
         }
 
-        sparkle1.x = this.ani.x;
-        sparkle1.y = this.ani.y;
-        sparkle1.gotoAndPlay("1");
+ //       sparkle1.x = this.ani.x;
+  //      sparkle1.y = this.ani.y;
+  //      sparkle1.gotoAndPlay("1");
 
 		if(byPlayer)
 		{
@@ -1249,7 +1249,7 @@ update = function()
     }
 	
 	var i = 0;
-    if(flyingPlayer.y >= 450)
+    if(flyingPlayer.y >= 420)
     {
         if(gameOver == false)
         {
@@ -1300,57 +1300,6 @@ update = function()
 		//	dInit();
 	//		createjs.Ticker.removeEventListener("tick", mTick);
         }
-    }
-
-	if(goSpring == true)
-    {
-
-        lockControls = true;
-        velocity-= springAcceleration;
-        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
-         if(xDist != 0)
-         {
-         xDist = xDist / 10;
-
-         }
-         if(closestPlatform.ani.x > flyingPlayer.x)
-         {
-         xVelocity = xVelocity + (xDist *.5);
-         flyingPlayer.x += xVelocity;
-         }
-         else if(closestPlatform.ani.x == flyingPlayer.x)
-         {
-         flyingPlayer.x = closestPlatform.ani.x;
-         }
-         else
-         {
-         xVelocity = xVelocity + (xDist *.5);
-         flyingPlayer.x += xVelocity;
-         }*/
-        if(flyingPlayer.x < closestPlatform.ani.x)
-        {
-            flyingPlayer.x += 10;
-        }
-        if(flyingPlayer.x > closestPlatform.ani.x)
-        {
-            flyingPlayer.x -= 10;
-        }
-        //Collide with platform for further propelling
-        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
-        {
-            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)) && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
-            {
-
-                upSpeed+= jumpStrength * 1.1;
-                velocity = -upSpeed;
-                xVelocity = 0;
-                goSpring = false;
-                lockControls = false;
-                closestPlatform.smash(false);
-
-            }
-        }
-
     }
 
     if(flyingPlayer.y <= 120)
@@ -1476,6 +1425,79 @@ update = function()
     {
         upSpeed = 0;
     }
+    if(goSpring == true)
+    {
+
+        lockControls = true;
+       // velocity-= springAcceleration;
+          velocity = -15;
+
+        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
+         if(xDist != 0)
+         {
+         xDist = xDist / 10;
+
+         }
+         if(closestPlatform.ani.x > flyingPlayer.x)
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }
+         else if(closestPlatform.ani.x == flyingPlayer.x)
+         {
+         flyingPlayer.x = closestPlatform.ani.x;
+         }
+         else
+         {
+         xVelocity = xVelocity + (xDist *.5);
+         flyingPlayer.x += xVelocity;
+         }*/
+        if(flyingPlayer.x < closestPlatform.ani.x)
+        {
+            flyingPlayer.x += 8;
+        }
+        if(flyingPlayer.x > closestPlatform.ani.x)
+        {
+            flyingPlayer.x -= 8;
+        }
+        /*if(flyingPlayer.y < closestPlatform.ani.y)
+         {
+
+         xVelocity = 0;
+
+         goSpring = false;
+         lockControls = false;
+
+         //closestPlatform.smash(false);
+         }    */
+        /*   if(closestPlatform.ani.y > 300)
+         {
+         alert(closestPlatform.ani.x + "," + closestPlatform.ani.y + "  |Num: " + i);
+         }*/
+        //Collide with platform for further propelling
+        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
+        {
+
+            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)))// && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
+            {
+
+                upSpeed = jumpStrength ;
+                //velocity = 0;
+                velocity = -upSpeed;
+               // upSpeed = 0;
+                xVelocity = 0;
+                goSpring = false;
+
+
+                lockControls = false;
+                closestPlatform.smash(true);
+
+            }
+        }
+
+
+    }
+    
     p1.collision(flyingPlayer.x, flyingPlayer.y);
     p2.collision(flyingPlayer.x, flyingPlayer.y);
     p3.collision(flyingPlayer.x, flyingPlayer.y);
