@@ -268,15 +268,15 @@ var leftHeld, upHeld, rightHeld;
 //Initialize game variables
 var player;
 var glass, glassInst;
-var orbs, orbInst, orbAni, numOrbs = 0;
-var timerMsg;
+var orbs, orbInst, orbAni;
+var time = 30;
 var dBackgroundScroll1, dBackgroundScroll2, scrollSpeed = 0.5;
 var depthMeter, randDepth, depthAni;
 var SEEK = true;  //CHANGE THIS TO TURN SEEKING ON AND OFF
 
 var dGravity = 0.3;
 var playerAccel = 0;
-var accelSide = 0.03;
+var accelSide = 0.02;
 var colBoxSizeY = 25;
 var colBoxSizeX = 10;
 
@@ -284,7 +284,7 @@ var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var glassSpawnHeight = 275;
 var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
-var dBackgroundMusic;
+var dBackgroundMusic, instance;
 
 function dInit()
 {
@@ -301,7 +301,6 @@ function dInit()
         return;
     }
 
-    //canvas = document.getElementById("Canvas");
     dstage = new createjs.Stage(canvas);
 
     dBackgroundScroll1 = new createjs.Bitmap("scrollDepressionBackground.png");
@@ -322,11 +321,6 @@ function dInit()
     depthAni = new createjs.SpriteSheet({images: ["depthAni.png"], frames: [[0,0,355,237,0,177.45,114.5],[355,0,355,237,0,177.45,114.5],[710,0,355,237,0,177.45,114.5],[1065,0,355,237,0,177.45,114.5],[1420,0,355,237,0,177.45,114.5],[0,237,355,237,0,177.45,114.5],[355,237,355,237,0,177.45,114.5],[710,237,355,237,0,177.45,114.5],[1065,237,355,237,0,177.45,114.5],[1420,237,355,237,0,177.45,114.5],[0,474,355,237,0,177.45,114.5],[355,474,355,237,0,177.45,114.5],[710,474,355,237,0,177.45,114.5],[1065,474,355,237,0,177.45,114.5],[1420,474,355,237,0,177.45,114.5],[0,711,355,237,0,177.45,114.5],[355,711,355,237,0,177.45,114.5],[710,711,355,237,0,177.45,114.5],[1065,711,355,237,0,177.45,114.5],[1420,711,355,237,0,177.45,114.5]]});
 
     //Create the timer
-    timerMsg = new createjs.Text('30', 'Bold 25px Arial', 'black');
-    timerMsg.x = 20;
-    timerMsg.y = 20;
-    dstage.addChild(timerMsg);
-
     //This is for the event listener added to the Ticker for the timer.
     //Thus, it is put in the init() function as part of initializing the timer.
     var delay = 60;
@@ -334,7 +328,7 @@ function dInit()
     {
         if(delay <= 0)
         {
-            timerMsg.text = parseInt(timerMsg.text - 1);
+            time--;
             delay = 60;
         }
         delay--;
@@ -350,17 +344,11 @@ function dInit()
     var randDelay = 60;
     randDepth = 0;
 
-    randTimerMsg = new createjs.Text(randDepth, 'Bold 25px Arial', 'black');
-    randTimerMsg.x = 50;
-    randTimerMsg.y = 20;
-    dstage.addChild(randTimerMsg);
-
     var randTimer = function()
     {
         if(randDelay <= 0)
         {
             randDepth = Math.floor(Math.random() * 5);
-            randTimerMsg.text = randDepth;
             randDelay = Math.floor(Math.random() * 601);
         }
         randDelay--;
@@ -373,6 +361,9 @@ function dInit()
     orbs = new Array();
     createOrb();
 
+    createjs.Sound.registerSound("depressionBGMusic", "bgMusicDepression");
+    dBackgroundMusic = createjs.Sound.createInstance("bgMusicDepression");
+    instance = createjs.Sound.play(dBackgroundMusic);
 
     //Set the update loop
     createjs.Ticker.setFPS(60);
@@ -391,7 +382,7 @@ function dTick()
         createGlassWave();
     }
 
-    if(ticks % orbSpawnInterval == 0 && numOrbs < 3)
+    if(ticks % orbSpawnInterval == 0 && orbs.length < 3)
     {
         createOrb();
     }
@@ -507,7 +498,7 @@ function dTick()
         }
     }
 
-    for(var i = 0; i < orbs.length; i++)
+    for(var i = orbs.length - 1; i >= 0; i--)
     {
         if(player.x - colBoxSizeX < orbs[i].x
             && player.x + colBoxSizeX > orbs[i].x
@@ -515,6 +506,7 @@ function dTick()
             && player.y + colBoxSizeY > orbs[i].y)
         {
             knockBack();
+            orbs[i].visible = false;
             orbs.splice(i, 1);
         }
     }
@@ -524,7 +516,7 @@ function dTick()
 
     if(upHeld)
     {
-        player.y -= 0.5;
+        player.y -= 0.4;
         player.play();
     }
     else
@@ -580,7 +572,7 @@ function dTick()
             break;
     }
 
-    //dBackgroundMusic = createjs.Sound.play("dBackgroundMID", {loop:-1});
+    instance.play({loop:-1});
     scrollBackground();
     orbInst.play();
     dstage.update();
@@ -628,7 +620,6 @@ function createOrb()
     orbInst.y = (canvas.height / 2) + (Math.floor(Math.random()*3) *(canvas.height / 8) * ((Math.floor(Math.random()*2)*2)-1));
     dstage.addChild(orbInst);
     orbs.push(orbInst);
-    numOrbs++;
 }
 
 function distSq(a,b)
@@ -735,6 +726,14 @@ function scrollBackground()
     else if(dBackgroundScroll2.y > 479)
     {
         dBackgroundScroll2.y = -479;
+    }
+}
+
+function endDepression()
+{
+    if(time <= 0)
+    {
+        //PUT STUFF HERE!!
     }
 }
 
