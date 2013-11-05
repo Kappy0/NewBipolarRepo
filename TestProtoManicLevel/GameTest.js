@@ -114,7 +114,7 @@ var sparkle1;
 var sparkleStop = true;
 
 var testAni;
-var text;
+//var text;
 
 document.onkeydown = keyDownListener;
 document.onkeyup = keyUpListener;
@@ -243,8 +243,8 @@ function init()
     platformArray[4] = p5;
     goSpring = false;
 
-    text = new createjs.Text(cTime, "20px Arial", "#ff7700");
-    stage.addChild(text);
+    //text = new createjs.Text(cTime, "20px Arial", "#ff7700");
+    //stage.addChild(text);
 }
 
 
@@ -495,7 +495,7 @@ update = function()
 	//335-94 = height
 	//420 = end of player..
 	//720-420
-    text.text = cTime;
+    //text.text = cTime;
     bp1.updateFall();
     bp2.updateFall();
     platformArray[0] = p1;
@@ -571,9 +571,9 @@ update = function()
         }
     }
 
-    if(sparkleStop == false)
+    /*if(sparkleStop == false)
     {
-        sparkle1.gotoAndPlay("1");
+        sparkle1.play("1");
     }
     if(sparkleStop == true)
     {
@@ -587,7 +587,7 @@ update = function()
         sparkle1.currentAnimationFrame = 1;
         sparkleStop = true;
     }
-
+*/
 
     if(flyingPlayer.y <= 120)
     {
