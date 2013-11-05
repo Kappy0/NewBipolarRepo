@@ -1,10 +1,28 @@
 var canvas, stage, whichStage;
+var ga = 1.0;
+var context = 0;
+var timerId = 0;
 
 function init()
 {
 	canvas = document.getElementById("canvas");
+	context = canvas.getContext("2d");
 	pInit();
 }
+
+function fadeIn()
+            {
+                //context.clearRect(0,0, canvas.width,canvas.height);
+                context.globalAlpha = ga;
+				context.fillStyle = "rgba(0,0,0,ga)";
+				context.fillRect(0,0,canvas.width,canvas.height);
+                ga = ga - 0.01;
+                if (ga < 0.0)
+                {
+					//createjs.Ticker.removeEventListener("tick", dTick);
+                    clearInterval(timerId);
+                }
+            }
 
 /*
 *
@@ -575,6 +593,10 @@ function dTick()
     instance.play({loop:-1});
     scrollBackground();
     orbInst.play();
+	if(time < 0)
+    {
+		timerId = setInterval("fadeIn()", 1000);
+    }
     dstage.update();
 }
 
@@ -726,14 +748,6 @@ function scrollBackground()
     else if(dBackgroundScroll2.y > 479)
     {
         dBackgroundScroll2.y = -479;
-    }
-}
-
-function endDepression()
-{
-    if(time <= 0)
-    {
-        //PUT STUFF HERE!!
     }
 }
 
