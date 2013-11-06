@@ -806,10 +806,16 @@ var tempVel = 0;
 var tempPos = 0;
 var standstill = false;
 var acceleration = gravity/27;
-var jumpStrength = 13//7.25;
+var jumpStrength = 12//7.25;
 var friction = 1;
 var gameOver = false;
-
+var goSpring;
+var springAcceleration = 25/27;
+var lockControls = false;
+var xVelocity = 0;
+var xAcceleration = 0;
+var xFriction = 0;
+var xDist;
 //Broken Platforms
 //var brokenPlatformImg = new Image();
 //brokenPlatformImg.src = "Platforms/Fixed_Platform_Break_02.png"  ;
@@ -841,9 +847,17 @@ var platformAni05;
 var bplatformAni01;
 var bplatformAni02;
 
+var closestPlatform;
+var platformArray = new Array();
+
 var playerImg;
 var flyingPlayer;
 var childSheet;
+var childSheet2;
+var childSheet3;
+var childSheet4;
+var childSheet5;
+var cArray = new Array();
 
 var p1;
 var p2;
@@ -856,11 +870,13 @@ var bp2;
 
 var sparkleSheet;
 var sparkle1;
+var sparkleStop = true;
 
 var testAni;
 
 function mInit()
 {
+	
 	whichStage = 1;
 	if(!(!!document.createElement('canvas').getContext))
 	{
@@ -883,76 +899,83 @@ function mInit()
 	bgSprite = new createjs.Sprite(bgAnimation,0);
 	bgSprite.x = 360;
 	bgSprite.y = 240;
-	stage.addChild(bgSprite);
+	mstage.addChild(bgSprite);
 
 	bpNewSprite = new createjs.SpriteSheet({animations: {brokenplatform: [1,35]}, images: ["Fixed_Platform_Break.png"], frames: [[0,0,192,380,0,96,189.05],[192,0,192,380,0,96,189.05],[384,0,192,380,0,96,189.05],[576,0,192,380,0,96,189.05],[768,0,192,380,0,96,189.05],[960,0,192,380,0,96,189.05],[1152,0,192,380,0,96,189.05],[1344,0,192,380,0,96,189.05],[1536,0,192,380,0,96,189.05],[1728,0,192,380,0,96,189.05],[0,380,192,380,0,96,189.05],[192,380,192,380,0,96,189.05],[384,380,192,380,0,96,189.05],[576,380,192,380,0,96,189.05],[768,380,192,380,0,96,189.05],[960,380,192,380,0,96,189.05],[1152,380,192,380,0,96,189.05],[1344,380,192,380,0,96,189.05],[1536,380,192,380,0,96,189.05],[1728,380,192,380,0,96,189.05],[0,760,192,380,0,96,189.05],[192,760,192,380,0,96,189.05],[384,760,192,380,0,96,189.05],[576,760,192,380,0,96,189.05],[768,760,192,380,0,96,189.05],[960,760,192,380,0,96,189.05],[1152,760,192,380,0,96,189.05],[1344,760,192,380,0,96,189.05],[1536,760,192,380,0,96,189.05],[1728,760,192,380,0,96,189.05],[0,1140,192,380,0,96,189.05],[192,1140,192,380,0,96,189.05],[384,1140,192,380,0,96,189.05],[576,1140,192,380,0,96,189.05],[768,1140,192,380,0,96,189.05],[960,1140,192,380,0,96,189.05]]});
 	bpSprite = new createjs.Sprite(bpNewSprite);
-	stage.addChild(bpSprite);
+	mstage.addChild(bpSprite);
 	
 	platformSheet = new createjs.SpriteSheet({images: ["Platforms/Small Platform Break Animation.png"], frames: [[0,0,132,191,0,65,94.5],[132,0,132,191,0,65,94.5],[264,0,132,191,0,65,94.5],[396,0,132,191,0,65,94.5],[528,0,132,191,0,65,94.5],[660,0,132,191,0,65,94.5],[792,0,132,191,0,65,94.5],[924,0,132,191,0,65,94.5],[1056,0,132,191,0,65,94.5],[1188,0,132,191,0,65,94.5],[1320,0,132,191,0,65,94.5],[1452,0,132,191,0,65,94.5],[1584,0,132,191,0,65,94.5],[1716,0,132,191,0,65,94.5],[1848,0,132,191,0,65,94.5],[0,191,132,191,0,65,94.5],[132,191,132,191,0,65,94.5],[264,191,132,191,0,65,94.5],[396,191,132,191,0,65,94.5],[528,191,132,191,0,65,94.5],[660,191,132,191,0,65,94.5],[792,191,132,191,0,65,94.5],[924,191,132,191,0,65,94.5],[1056,191,132,191,0,65,94.5],[1188,191,132,191,0,65,94.5],[1320,191,132,191,0,65,94.5],[1452,191,132,191,0,65,94.5],[1584,191,132,191,0,65,94.5],[1716,191,132,191,0,65,94.5],[1848,191,132,191,0,65,94.5],[0,382,132,191,0,65,94.5],[132,382,132,191,0,65,94.5],[264,382,132,191,0,65,94.5],[396,382,132,191,0,65,94.5],[528,382,132,191,0,65,94.5],[660,382,132,191,0,65,94.5]]});
     platformAni01 = new createjs.Sprite(platformSheet);
 	platformAni01.x = 400;
 	platformAni01.y = 270;
-    stage.addChild(platformAni01);
+    mstage.addChild(platformAni01);
 	
     platformAni02 = new createjs.Sprite(platformSheet);
 	platformAni02.x = 100;
 	platformAni02.y = 100;
-    stage.addChild(platformAni02);
+    mstage.addChild(platformAni02);
 	
     platformAni03 = new createjs.Sprite(platformSheet);
 	platformAni03.x = 600;
 	platformAni03.y = 410;
-    stage.addChild(platformAni03);
+    mstage.addChild(platformAni03);
 	
     platformAni04 = new createjs.Sprite(platformSheet);
 	platformAni04.x = 3;
 	platformAni04.y = 350;
-    stage.addChild(platformAni04);
+    mstage.addChild(platformAni04);
 	
     platformAni05 = new createjs.Sprite(platformSheet);
 	platformAni05.x = 500;
 	platformAni05.y = 50;
-    stage.addChild(platformAni05);
+    mstage.addChild(platformAni05);
 	
     bplatformAni01 = new createjs.Sprite(platformSheet);
 	bplatformAni01.x = -100;
 	bplatformAni01.y = -100;
-    stage.addChild(bplatformAni01);
+    mstage.addChild(bplatformAni01);
 	
     bplatformAni02 = new createjs.Sprite(platformSheet);
 	bplatformAni02.x = -100;
 	bplatformAni02.y = -100;
-    stage.addChild(bplatformAni02);
+    mstage.addChild(bplatformAni02);
 
     playerImg = new createjs.SpriteSheet({images: ["Manic_Fly/Small ManicFly Animation.png"], frames: [[0,0,141,94,0,72.95,41.55],[141,0,141,94,0,72.95,41.55],[282,0,141,94,0,72.95,41.55],[423,0,141,94,0,72.95,41.55],[564,0,141,94,0,72.95,41.55],[705,0,141,94,0,72.95,41.55],[846,0,141,94,0,72.95,41.55],[0,94,141,94,0,72.95,41.55],[141,94,141,94,0,72.95,41.55],[282,94,141,94,0,72.95,41.55],[423,94,141,94,0,72.95,41.55],[564,94,141,94,0,72.95,41.55],[705,94,141,94,0,72.95,41.55],[846,94,141,94,0,72.95,41.55],[0,188,141,94,0,72.95,41.55],[141,188,141,94,0,72.95,41.55],[282,188,141,94,0,72.95,41.55],[423,188,141,94,0,72.95,41.55],[564,188,141,94,0,72.95,41.55],[705,188,141,94,0,72.95,41.55]]});
     flyingPlayer = new createjs.Sprite(playerImg);
 	flyingPlayer.x = 360-32;
 	flyingPlayer.y = 240;
-    stage.addChild(flyingPlayer);
+    mstage.addChild(flyingPlayer);
 
     childsheet =  new createjs.SpriteSheet({images: ["Platforms/Small Person 01 Animation.png"], frames: [[0,0,124,83,0,66,38.1],[124,0,124,83,0,66,38.1],[248,0,124,83,0,66,38.1],[372,0,124,83,0,66,38.1],[0,83,124,83,0,66,38.1],[124,83,124,83,0,66,38.1],[248,83,124,83,0,66,38.1],[372,83,124,83,0,66,38.1],[0,166,124,83,0,66,38.1],[124,166,124,83,0,66,38.1],[248,166,124,83,0,66,38.1],[372,166,124,83,0,66,38.1],[0,249,124,83,0,66,38.1],[124,249,124,83,0,66,38.1],[248,249,124,83,0,66,38.1],[372,249,124,83,0,66,38.1],[0,332,124,83,0,66,38.1],[124,332,124,83,0,66,38.1],[248,332,124,83,0,66,38.1],[372,332,124,83,0,66,38.1],[0,415,124,83,0,66,38.1],[124,415,124,83,0,66,38.1]]});
     person1s = new createjs.Sprite(childsheet);
 	person1s.x = -200;
 	person1s.y = 500;
-    stage.addChild(person1s);
+    mstage.addChild(person1s);
 
     childSheet2 = new createjs.SpriteSheet({images: ["Platforms/Person 02.png"], frames: [[0,0,283,189,0,153.5,79.55],[283,0,283,189,0,153.5,79.55],[566,0,283,189,0,153.5,79.55],[849,0,283,189,0,153.5,79.55],[1132,0,283,189,0,153.5,79.55],[1415,0,283,189,0,153.5,79.55],[1698,0,283,189,0,153.5,79.55],[0,189,283,189,0,153.5,79.55],[283,189,283,189,0,153.5,79.55],[566,189,283,189,0,153.5,79.55],[849,189,283,189,0,153.5,79.55],[1132,189,283,189,0,153.5,79.55],[1415,189,283,189,0,153.5,79.55],[1698,189,283,189,0,153.5,79.55],[0,378,283,189,0,153.5,79.55],[283,378,283,189,0,153.5,79.55]]});
     childSheet3 = new createjs.SpriteSheet({images: ["Platforms/Person 03.png"], frames: [[0,0,295,197,0,153,94.6],[295,0,295,197,0,153,94.6],[590,0,295,197,0,153,94.6],[885,0,295,197,0,153,94.6],[1180,0,295,197,0,153,94.6],[1475,0,295,197,0,153,94.6],[0,197,295,197,0,153,94.6],[295,197,295,197,0,153,94.6],[590,197,295,197,0,153,94.6],[885,197,295,197,0,153,94.6],[1180,197,295,197,0,153,94.6],[1475,197,295,197,0,153,94.6],[0,394,295,197,0,153,94.6],[295,394,295,197,0,153,94.6],[590,394,295,197,0,153,94.6],[885,394,295,197,0,153,94.6],[1180,394,295,197,0,153,94.6],[1475,394,295,197,0,153,94.6],[0,591,295,197,0,153,94.6],[295,591,295,197,0,153,94.6],[590,591,295,197,0,153,94.6],[885,591,295,197,0,153,94.6],[1180,591,295,197,0,153,94.6],[1475,591,295,197,0,153,94.6],[0,788,295,197,0,153,94.6],[295,788,295,197,0,153,94.6]]});
     childSheet4 = new createjs.SpriteSheet({images: ["Platforms/Person 04.png"], frames: [[0,0,267,178,0,131.5,88.75],[267,0,267,178,0,131.5,88.75],[534,0,267,178,0,131.5,88.75],[801,0,267,178,0,131.5,88.75],[1068,0,267,178,0,131.5,88.75],[1335,0,267,178,0,131.5,88.75],[1602,0,267,178,0,131.5,88.75],[0,178,267,178,0,131.5,88.75],[267,178,267,178,0,131.5,88.75],[534,178,267,178,0,131.5,88.75],[801,178,267,178,0,131.5,88.75],[1068,178,267,178,0,131.5,88.75],[1335,178,267,178,0,131.5,88.75],[1602,178,267,178,0,131.5,88.75],[0,356,267,178,0,131.5,88.75],[267,356,267,178,0,131.5,88.75],[534,356,267,178,0,131.5,88.75],[801,356,267,178,0,131.5,88.75],[1068,356,267,178,0,131.5,88.75],[1335,356,267,178,0,131.5,88.75],[1602,356,267,178,0,131.5,88.75],[0,534,267,178,0,131.5,88.75],[267,534,267,178,0,131.5,88.75],[534,534,267,178,0,131.5,88.75]]});
     childSheet5 = new createjs.SpriteSheet({images: ["Platforms/Person 05.png"], frames: [[0,0,265,177,0,132,88.6],[265,0,265,177,0,132,88.6],[530,0,265,177,0,132,88.6],[795,0,265,177,0,132,88.6],[1060,0,265,177,0,132,88.6],[1325,0,265,177,0,132,88.6],[1590,0,265,177,0,132,88.6],[0,177,265,177,0,132,88.6],[265,177,265,177,0,132,88.6],[530,177,265,177,0,132,88.6],[795,177,265,177,0,132,88.6],[1060,177,265,177,0,132,88.6],[1325,177,265,177,0,132,88.6],[1590,177,265,177,0,132,88.6],[0,354,265,177,0,132,88.6],[265,354,265,177,0,132,88.6],[530,354,265,177,0,132,88.6],[795,354,265,177,0,132,88.6],[1060,354,265,177,0,132,88.6],[1325,354,265,177,0,132,88.6],[1590,354,265,177,0,132,88.6],[0,531,265,177,0,132,88.6],[265,531,265,177,0,132,88.6]]});
-    cArray[1] = childsheet;
+    //alert("init has run");
+	cArray[1] = childsheet;
     cArray[2] = childSheet2;
     cArray[3] = childSheet3;
     cArray[4] = childSheet4;
     cArray[5] = childSheet5;
-
     sparkleSheet = new createjs.SpriteSheet({images: ["VFX_Sparkle/Sparkle Animation.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55]]});
     sparkle1 = new createjs.Sprite(sparkleSheet);
     sparkle1.x = -100;
     sparkle1.y = -100;
-    stage.addChild(sparkle1);
-
+    mstage.addChild(sparkle1);
+	sparkle1.scaleX = .5;
+    sparkle1.scaleY = .5;
+    sparkle2 = new createjs.Sprite(sparkleSheet);
+    sparkle2.x = -200;
+    sparkle2.y = -200;
+    mstage.addChild(sparkle2);
+    sparkle2.scaleX = .5;
+    sparkle2.scaleY = .5;
 	
 	//Create all the platforms
 	p1 = new platform(platformAni01, 1);
@@ -964,14 +987,16 @@ function mInit()
 	bp1 = new brokenPlatform(bplatformAni01);
 	bp2 = new brokenPlatform(bplatformAni02);
 	
+	closestPlatform = p5;
+	
 	//Create the person
 	person1 = new person(person1s, 2);
-		
-    createjs.Ticker.setFPS(60);
-    createjs.Ticker.addEventListener("tick", tick);
 	
-	circle = new createjs.Shape();
-	stage.addChild(circle);
+    createjs.Ticker.setFPS(60);
+    createjs.Ticker.addEventListener("tick", mTick);
+
+	//circle = new createjs.Shape();
+	//mstage.addChild(circle);
     platformArray[0] = p1;
     platformArray[1] = p2;
     platformArray[2] = p3;
