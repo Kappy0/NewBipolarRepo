@@ -1293,7 +1293,7 @@ update = function()
     }
 
 	var i = 0;
-    if(flyingPlayer.y >= 540)
+    if(flyingPlayer.y >= 620)
     {
         if(gameOver == false)
         {
