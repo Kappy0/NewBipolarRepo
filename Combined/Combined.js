@@ -891,6 +891,7 @@ var sparkle1;
 var sparkleStop = true;
 
 var testAni;
+var targetDist;
 
 function mInit()
 {
@@ -1020,7 +1021,7 @@ function mInit()
     platformArray[2] = p3;
     platformArray[3] = p4;
     platformArray[4] = p5;
-    goSpring = false;
+  //  goSpring = false;
 }
 
 //Runs once per second.
@@ -1290,12 +1291,65 @@ update = function()
     {
         flyingPlayer.x = 720-9;//playerWidth;
     }
-	
+
 	var i = 0;
-    if(flyingPlayer.y >= 420)
+    if(flyingPlayer.y >= 540)
     {
         if(gameOver == false)
         {
+            velocity = -20;
+          //  var target = p1;
+          //  if(distSq(flyingPlayer.y,p2.y) < distSq(flyingPlayer.y,p1.y))
+          //  {
+          //      target = p2;
+          //  }
+        /*    if(!goSpring)
+            {
+                targetDist = distSq(flyingPlayer,p1.ani);
+                var target = p1;
+                for(var i = 1; i < 5; i++)
+                {
+                    var dist = distSq(flyingPlayer,platformArray[i].ani);
+                    if(dist < targetDist && platformArray[i].ani.y < flyingPlayer.y)
+                    {
+                        target = platformArray[i];
+                        targetDist = dist;
+                    }
+                }
+
+                if(target.ani.y < flyingPlayer.y)
+                {
+                    flyingPlayer.x += (flyingPlayer.x - target.ani.x);
+                    upSpeed = jumpStrength;
+                    velocity = -upSpeed;
+                    lockControls = true;
+                }
+                else
+                {
+            //        upSpeed = jumpStrength;
+              //      velocity = -upSpeed;
+                //    lockControls = false;
+                }
+                goSpring = true;
+            }
+
+
+
+            if(goSpring)
+            {
+                if(flyingPlayer.x - 52 < target.ani.x - 6 && flyingPlayer.x - 52 > target.ani.x -90)
+                {
+                    if(flyingPlayer.y - 125 < target.ani.y - 171)
+                    {
+                        upSpeed = jumpStrength;
+                        velocity = -upSpeed;
+                        lockControls = false;
+                        target.smash(true);
+                    }
+                }
+            }
+                                         */
+            //upSpeed = 209;
             /////////////////////////////////Old Controls for offscreen///////////////////////Re-engage if spring effect is not working///////////////////////////////
             /*upSpeed += jumpStrength * 0.8;
             velocity = -upSpeed;
@@ -1306,35 +1360,6 @@ update = function()
             //////////////////////////////////////////////Note: The platform grab controls seem strange now, it's because the player reacts strangely when the old left/right controls kick in.
             ////////////////////////////////////////////// I will adjust this when I have time, as I am currently needing to work on other projects
             ////////////////////////////////////////////// ---Mitch
-            if(goSpring == false)
-            {
-            for(i; i<5; i++)
-            {
-                if(platformArray[i].ani.y < 270)
-                {
-                    if(i != 4)
-                    {
-                        if(Math.sqrt((flyingPlayer.y - platformArray[i].ani.y)^2 + (flyingPlayer.x - platformArray[i].ani.x)^2) < Math.sqrt((flyingPlayer.y - platformArray[i+1].ani.y)^2 + (flyingPlayer.x - platformArray[i+1].ani.x)^2))
-                        {
-                            closestPlatform = platformArray[i];
-                        }
-                        else
-                        {
-                            closestPlatform = platformArray[i+1];
-                        }
-                    }
-                    else
-                    {
-                        if(Math.sqrt((flyingPlayer.y - platformArray[4].ani.y)^2 + (flyingPlayer.x - platformArray[4].ani.x)^2) < Math.sqrt((flyingPlayer.y - closestPlatform.ani.y)^2 + (flyingPlayer.x - closestPlatform.ani.x)^2))
-                        {
-                            closestPlatform = platformArray[4];
-                        }
-                    }
-                }
-            }
-                goSpring = true;
-
-            }
         }
         else
         {
@@ -1369,10 +1394,7 @@ update = function()
             }
         if(standstill == true)
         {
-
                 platformGravity = -tempVel * 2;
-
-
         }
     }
     else
@@ -1463,82 +1485,16 @@ update = function()
         }
     }
                       //Collision code for platforms, as well as code that removes them should they move offscreen
+    //James Safeguard
+ /*   if(goSpring && ((flyingPlayer.y <= 120)))
+    {
+        goSpring = false;
+        lockControls = false;
+    }*/
 
     if(upSpeed < 0)
     {
         upSpeed = 0;
-    }
-    if(goSpring == true)
-    {
-
-        lockControls = true;
-       // velocity-= springAcceleration;
-          velocity = -15;
-
-        /* xDist = closestPlatform.ani.x - flyingPlayer.x;
-         if(xDist != 0)
-         {
-         xDist = xDist / 10;
-
-         }
-         if(closestPlatform.ani.x > flyingPlayer.x)
-         {
-         xVelocity = xVelocity + (xDist *.5);
-         flyingPlayer.x += xVelocity;
-         }
-         else if(closestPlatform.ani.x == flyingPlayer.x)
-         {
-         flyingPlayer.x = closestPlatform.ani.x;
-         }
-         else
-         {
-         xVelocity = xVelocity + (xDist *.5);
-         flyingPlayer.x += xVelocity;
-         }*/
-        if(flyingPlayer.x < closestPlatform.ani.x)
-        {
-            flyingPlayer.x += 8;
-        }
-        if(flyingPlayer.x > closestPlatform.ani.x)
-        {
-            flyingPlayer.x -= 8;
-        }
-        /*if(flyingPlayer.y < closestPlatform.ani.y)
-         {
-
-         xVelocity = 0;
-
-         goSpring = false;
-         lockControls = false;
-
-         //closestPlatform.smash(false);
-         }    */
-        /*   if(closestPlatform.ani.y > 300)
-         {
-         alert(closestPlatform.ani.x + "," + closestPlatform.ani.y + "  |Num: " + i);
-         }*/
-        //Collide with platform for further propelling
-        if((flyingPlayer.x - 52 < (closestPlatform.ani.x - 6)) && (flyingPlayer.x - 52 > closestPlatform.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
-        {
-
-            if(((flyingPlayer.y-125) < (closestPlatform.ani.y -171)))// && ((flyingPlayer.y-29) > (closestPlatform.ani.y-135)))
-            {
-
-                upSpeed = jumpStrength ;
-                //velocity = 0;
-                velocity = -upSpeed;
-               // upSpeed = 0;
-                xVelocity = 0;
-                goSpring = false;
-
-
-                lockControls = false;
-                closestPlatform.smash(true);
-
-            }
-        }
-
-
     }
     
     p1.collision(flyingPlayer.x, flyingPlayer.y);
@@ -1697,7 +1653,7 @@ function keyDownListener(e)
 			}
 			else if(cTime > 30)
 			{
-				playerSpeed  -6;
+				playerSpeed = -6;
 			}
 			else if(cTime > 10)
 			{
