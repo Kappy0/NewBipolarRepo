@@ -1194,6 +1194,8 @@ var p5;
 var bp1;
 var bp2;
 
+var clawgrab;
+
 var sparkleSheet;
 var sparkle1;
 var sparkleStop = true;
@@ -1329,6 +1331,10 @@ function mInit()
     platformArray[2] = p3;
     platformArray[3] = p4;
     platformArray[4] = p5;
+
+
+    clawgrab = false;
+
   //  goSpring = false;
 }
 
@@ -1588,7 +1594,11 @@ update = function()
     {
         if(flyingPlayer.x - 9 + playerSpeed * friction > 0)
         {
-            flyingPlayer.x += playerSpeed * friction;
+            if(clawgrab == false)
+            {
+                flyingPlayer.x += playerSpeed * friction;
+            }
+
         }
         else
         {
@@ -1605,7 +1615,8 @@ update = function()
     {
         if(gameOver == false)
         {
-            velocity = -20;
+            clawgrab = true;
+            //velocity = -20;
           //  var target = p1;
           //  if(distSq(flyingPlayer.y,p2.y) < distSq(flyingPlayer.y,p1.y))
           //  {
@@ -1675,6 +1686,15 @@ update = function()
 			//Should fade out before this, but for now instant transfer...
 		//	dInit();
 	//		createjs.Ticker.removeEventListener("tick", mTick);
+        }
+    }
+    if(clawgrab == true)
+    {
+        velocity = - 15;
+        if(flyingPlayer.y < 240)
+        {
+            clawgrab = false;
+            velocity = -8;
         }
     }
 
