@@ -83,20 +83,26 @@ function menuInit()
     backButton.y = 385;
     menuStage.addChild(backButton);
     backButton.addEventListener("click", back);
+    backButton.addEventListener("mouseover", back);
+    backButton.addEventListener("mouseout", back);
 
     beginBtnSheet =  new createjs.SpriteSheet({images: ["MenuArt/BeginButton/beginbutton.png"], frames: [[0,0,721,481,0,210.5,416.45],[0,481,721,481,0,210.5,416.45]]});
     beginButton = new createjs.Sprite(beginBtnSheet);
     beginButton.x = 210;
     beginButton.y = 415;
-    beginButton.addEventListener("click", beginGame);
     menuStage.addChild(beginButton);
+    beginButton.addEventListener("click", beginGame);
+    beginButton.addEventListener("mouseover", beginGame);
+    beginButton.addEventListener("mouseout", beginGame);
 
     creditsBtnSheet = new createjs.SpriteSheet({images: ["MenuArt/Title Screen Buttons/Credits.png"], frames: [[0,0,721,480,0,351.5,216],[0,480,721,480,0,351.5,216]]});
     creditsButton = new createjs.Sprite(creditsBtnSheet);
     creditsButton.x = 342;
     creditsButton.y = 186;
-    creditsButton.addEventListener("click",credits);
     menuStage.addChild(creditsButton);
+    creditsButton.addEventListener("click",credits);
+    creditsButton.addEventListener("mouseover", credits);
+    creditsButton.addEventListener("mouseout", credits);
 
     helpBtnSheet = new createjs.SpriteSheet({images: ["MenuArt/Title Screen Buttons/help.png"], frames: [[0,0,720,481,0,349,217.5],[0,481,720,481,0,349,217.5]]});
     helpButton = new createjs.Sprite(helpBtnSheet);
