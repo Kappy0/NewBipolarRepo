@@ -7,22 +7,264 @@ function init()
 {
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");
-	pInit();
+	menuInit();
 }
 
 function fadeIn()
-            {
-                //context.clearRect(0,0, canvas.width,canvas.height);
-                context.globalAlpha = ga;
-				context.fillStyle = "rgba(0,0,0,ga)";
-				context.fillRect(0,0,canvas.width,canvas.height);
-                ga = ga - 0.01;
-                if (ga < 0.0)
-                {
-					//createjs.Ticker.removeEventListener("tick", dTick);
-                    clearInterval(timerId);
-                }
-            }
+{
+    //context.clearRect(0,0, canvas.width,canvas.height);
+    context.globalAlpha = ga;
+    context.fillStyle = "rgba(0,0,0,ga)";
+    context.fillRect(0,0,canvas.width,canvas.height);
+    ga = ga - 0.01;
+    if (ga < 0.0)
+    {
+        //createjs.Ticker.removeEventListener("tick", dTick);
+        clearInterval(timerId);
+    }
+}
+
+/*
+*
+* Menus
+*
+ */
+var menuStage;
+
+var menuBackground;
+var creditsBackground;
+var helpBackground;
+
+var beginBtnSheet;
+var backBtnSheet;
+var creditsBtnSheet;
+var helpBtnSheet;
+
+var beginButton;
+var creditsButton;
+var helpButton;
+var backButton;
+
+var menuState = 0;//main menu, help, credits
+var optionSelected = 0;//Begin, Help, Credits
+
+function menuInit()
+{
+    document.onkeydown = menuKeyDown;
+    document.onkeyup = menuKeyUp;
+
+    if(!(!!document.createElement('canvas').getContext))
+    {
+        var wrapper = document.getElementById("canvasWrapper");
+        wrapper.innerHTML = "Your browser does not appear to support " +
+            "the HTML5 Canvas element";
+        return;
+    }
+    menuStage = new createjs.Stage(canvas);
+
+    menuBackground = new createjs.Bitmap("MenuArt/New Title Screen.png");
+    menuBackground.y = 0;
+    menuBackground.x = 0;
+    menuStage.addChild(menuBackground);
+
+    creditsBackground = new createjs.Bitmap("MenuArt/Intro Screens/Credits Screen.png");
+    creditsBackground.y = 0;
+    creditsBackground.x = 0;
+    menuStage.addChild(creditsBackground);
+
+    helpBackground = new createjs.Bitmap("MenuArt/Intro Screens/Help Screen.png");
+    helpBackground.x = 0;
+    helpBackground.y = 0;
+    menuStage.addChild(helpBackground);
+
+    backBtnSheet = new createjs.SpriteSheet({images: ["MenuArt/BackButton/backbutton.png"], frames: [[0,0,720,481,0,78,387.45],[0,481,720,481,0,78,387.45]]});
+    backButton = new createjs.Sprite(backBtnSheet);
+    backButton.x = 78;
+    backButton.y = 385;
+    menuStage.addChild(backButton);
+    backButton.addEventListener("click", back);
+
+    beginBtnSheet =  new createjs.SpriteSheet({images: ["MenuArt/BeginButton/beginbutton.png"], frames: [[0,0,721,481,0,210.5,416.45],[0,481,721,481,0,210.5,416.45]]});
+    beginButton = new createjs.Sprite(beginBtnSheet);
+    beginButton.x = 210;
+    beginButton.y = 415;
+    beginButton.addEventListener("click", beginGame);
+    menuStage.addChild(beginButton);
+
+    creditsBtnSheet = new createjs.SpriteSheet({images: ["MenuArt/Title Screen Buttons/Credits.png"], frames: [[0,0,721,480,0,351.5,216],[0,480,721,480,0,351.5,216]]});
+    creditsButton = new createjs.Sprite(creditsBtnSheet);
+    creditsButton.x = 342;
+    creditsButton.y = 186;
+    creditsButton.addEventListener("click",credits);
+    menuStage.addChild(creditsButton);
+
+    helpBtnSheet = new createjs.SpriteSheet({images: ["MenuArt/Title Screen Buttons/help.png"], frames: [[0,0,720,481,0,349,217.5],[0,481,720,481,0,349,217.5]]});
+    helpButton = new createjs.Sprite(helpBtnSheet);
+    helpButton.x = 83;
+    helpButton.y = 313;
+ //   var hit = new Shape();
+ //   hit.graphics.ss(2).s('#222222').dr(83,313,53,26);
+  //  helpButton.hitArea = hit;
+    menuStage.addChild(helpButton);
+    helpButton.addEventListener("click", help);
+    helpButton.addEventListener("mouseover", help);
+    helpButton.addEventListener("mouseout", help);
+    //322,202
+    //375,228
+                                                 //135,395
+
+    //Test Circle
+ //   var circle = new createjs.Shape();
+ //   circle.graphics.beginFill("red").drawCircle(0, 0, 50);
+ //   circle.x = circle.y = 100;
+ //   circle.name = "circle";
+ //   menuStage.addChild(circle);
+ //   circle.addEventListener("click", help);
+  // circle.addEventListener("dblclick", help);
+  //  circle.addEventListener("mouseover", help);
+  //  circle.addEventListener("mouseout", help);
+
+    //Update loop
+    createjs.Ticker.setFPS(60);
+    createjs.Ticker.addEventListener("tick", menuTick);
+}
+
+function menuTick()
+{
+    switch(menuState)
+    {
+        case 0://Main Menu
+            creditsBackground.visible = false;
+            helpBackground.visible = false;
+            backButton.visible = false;
+            menuBackground.visible = true;
+            beginButton.visible = true;
+            creditsButton.visible = true;
+            helpButton.visible = true;
+            break;
+        case 1://Help
+            menuBackground.visible = false;
+            beginButton.visible = false;
+            creditsButton.visible = false;
+            helpButton.visible = false;
+            creditsBackground.visible = false;
+
+            helpBackground.visible = true;
+            backButton.visible = true;
+            break;
+        case 2://Credits
+            menuBackground.visible = false;
+            beginButton.visible = false;
+            creditsButton.visible = false;
+            helpButton.visible = false;
+            helpBackground.visible = false;
+
+            creditsBackground.visible = true;
+            backButton.visible = true;
+            break;
+    }
+    menuStage.update();
+}
+
+function beginGame(e)
+{
+    if(e.type == "mouseover")
+    {
+        beginButton.gotoAndStop(1);
+    }
+    if(e.type == "mouseout")
+    {
+        beginButton.gotoAndStop(0);
+    }
+    if(e.type == "click")
+    {
+        menuStage.removeAllChildren();
+        createjs.Ticker.removeEventListener("tick", menuTick);
+        pInit();
+    }
+}
+
+function credits(e)
+{
+    if(e.type == "mouseover")
+    {
+        creditsButton.gotoAndStop(1);
+    }
+    if(e.type == "mouseout")
+    {
+        creditsButton.gotoAndStop(0);
+    }
+    if(e.type == "click")
+    {
+        menuState = 2;
+    }
+}
+
+function help(e)
+{
+    if(e.type == "mouseover")
+    {
+        helpButton.gotoAndStop(1);
+    }
+    if(e.type == "mouseout")
+    {
+        helpButton.gotoAndStop(0);
+    }
+    if(e.type == "click")
+    {
+        menuState = 1;
+    }
+}
+
+function back(e)
+{
+    if(e.type == "mouseover")
+    {
+        backButton.gotoAndStop(1);
+    }
+    if(e.type == "mouseout")
+    {
+        backButton.gotoAndStop(0);
+    }
+    if(e.type == "click")
+    {
+        menuState = 0;
+    }
+}
+
+function menuKeyDown(e)
+{
+    //w and up
+    if(e.keyCode == 87 || e.keyCode == 38)
+    {
+    }
+
+    //d and right
+    if((e.keyCode == 68 || e.keyCode == 39))
+    {
+    }
+    //a and left
+    else if((e.keyCode == 65 || e.keyCode == 37))
+    {
+    }
+}
+
+function menuKeyUp(e)
+{
+    //w and up
+    if(e.keyCode == 87 || e.keyCode == 38)
+    {
+    }
+
+    //d and right
+    if((e.keyCode == 68 || e.keyCode == 39))
+    {
+    }
+    //a and left
+    else if((e.keyCode == 65 || e.keyCode == 37))
+    {
+    }
+}
 
 /*
 *
