@@ -321,9 +321,17 @@ var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var glassSpawnHeight = 275;
 var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
 var dBackgroundMusic, instance;
+var dQueue;
 
 function dInit()
 {
+    dQueue = new createjs.LoadQueue(true);
+    dQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
+    dQueue.loadFile({id:"depressionMusic", src:"depressionBGMusic.mp3", type:createjs.LoadQueue.SOUND});
+    dQueue.loadFile({id:"flashSound", src:"Flashlight Sound.mp3", type:createjs.LoadQueue.SOUND});
+
+    createjs.Sound.play("depressionMusic", {loop:-1});
+
 	whichStage = 2;
     //Key event initialization
     document.onkeydown = handleKeyDown;
@@ -415,9 +423,20 @@ function dInit()
     orbs = new Array();
     createOrb();
 
-    createjs.Sound.registerSound("depressionBGMusic", "bgMusicDepression");
-    dBackgroundMusic = createjs.Sound.createInstance("bgMusicDepression");
-    instance = createjs.Sound.play(dBackgroundMusic);
+//    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashPlugin]);
+//    createjs.Sound.registerSound("depressionBGMusic", "bgMusicDepression");
+//    dBackgroundMusic = createjs.Sound.createInstance("bgMusicDepression");
+//    instance = createjs.Sound.play(dBackgroundMusic);
+
+//    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashPlugin]);
+//    createjs.Sound.addEventListener("fileload", createjs.proxy(this.loadHandler, this));
+//    createjs.Sound.registerSound("depressionBGMusic", "bgMusicDepression");
+//    function loadHandler(event) {
+//        // This is fired for each sound that is registered.
+//        instance = createjs.Sound.play("bgMusicDepression");  // play using id.  Could also use full sourcepath or event.src.
+//        instance.addEventListener("complete", createjs.proxy(this.handleComplete, this));
+//        instance.volume = 1.0;
+//    }
 
     //Set the update loop
     createjs.Ticker.setFPS(60);
@@ -626,7 +645,7 @@ function dTick()
             break;
     }
 
-    instance.play({loop:-1});
+//    instance.play({loop:-1});
     scrollBackground();
     orbInst.play();
     personFlash1.play();
@@ -678,6 +697,7 @@ function createGlassWave()
 
 function createOrb()
 {
+    createjs.Sound.play("flashSound");
     orbInst = new createjs.Sprite(orbAni);
 
     var personChoice = Math.floor(Math.random() * 3);
