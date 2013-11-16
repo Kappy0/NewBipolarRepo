@@ -933,7 +933,9 @@ function createGlassWave()
         {
             glassInst = new createjs.Bitmap("Shard05.png");
         }
-        glassInst.x = (canvas.width / 2) + (Math.floor(Math.random()*4.5) *(canvas.width / 8) * ((Math.floor(Math.random()*2)*2)-1));
+        //glassInst.x = (canvas.width / 2) + (Math.floor(Math.random()*4.5) *(canvas.width / 8) * ((Math.floor(Math.random()*2)*2)-1));
+		glassInst.x = (canvas.width / 2) + ((Math.random()*canvas.width/2) * ((Math.floor(Math.random()*2)*2)-1));
+		
         glassInst.y = canvas.height / 2 - glassSpawnHeight;
         glassInst.targetFound = false;
         glassInst.frozen = false;
