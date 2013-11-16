@@ -1222,6 +1222,14 @@ function mInit()
 	mstage = new createjs.Stage(canvas);
 	
 	cTime = startTime;
+	mQueue = new createjs.LoadQueue(true);
+	mQueue.installPlugin(createjs.Sound);
+	mQueue.loadFile({id: "crash1", src:"Glass Break 1.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash2", src:"Glass Break 2.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash3", src:"Glass Break 3.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash4", src:"Glass Break 4.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "rainbow", src:"Rainbow vfx.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "mBackground", src:"Fractal Reveal.mp3", type:createjs.LoadQueue.SOUND});
 	
 	//Sprites
 	bgAnimation = new createjs.SpriteSheet({images: ["Fractal Animation/Fractal_SpriteSheet.png"], frames: [[0,0,720,481,0,360,239.55],[720,0,720,481,0,360,239.55],[1440,0,720,481,0,360,239.55],[2160,0,720,481,0,360,239.55],[2880,0,720,481,0,360,239.55],[0,481,720,481,0,360,239.55],[720,481,720,481,0,360,239.55],[1440,481,720,481,0,360,239.55],[2160,481,720,481,0,360,239.55],[2880,481,720,481,0,360,239.55],[0,962,720,481,0,360,239.55],[720,962,720,481,0,360,239.55],[1440,962,720,481,0,360,239.55],[2160,962,720,481,0,360,239.55],[2880,962,720,481,0,360,239.55],[0,1443,720,481,0,360,239.55],[720,1443,720,481,0,360,239.55],[1440,1443,720,481,0,360,239.55],[2160,1443,720,481,0,360,239.55],[2880,1443,720,481,0,360,239.55],[0,1924,720,481,0,360,239.55],[720,1924,720,481,0,360,239.55],[1440,1924,720,481,0,360,239.55],[2160,1924,720,481,0,360,239.55],[2880,1924,720,481,0,360,239.55],[0,2405,720,481,0,360,239.55],[720,2405,720,481,0,360,239.55],[1440,2405,720,481,0,360,239.55],[2160,2405,720,481,0,360,239.55],[2880,2405,720,481,0,360,239.55],[0,2886,720,481,0,360,239.55]]});
@@ -1334,7 +1342,9 @@ function mInit()
 
 
     clawgrab = false;
-
+	
+	
+	
   //  goSpring = false;
 }
 
@@ -1360,6 +1370,10 @@ mTick = function()
     bp1.bplatform.play();
     bp2.bplatform.play();
     sparkle1.play();
+	/*if(cTime == 60)
+	{
+	createjs.Sound.play("mBackground", {loop:-1});
+	}*/
     if(sparkle1.currentAnimationFrame == 11)
     {
         sparkle1.x = -100;
@@ -1450,6 +1464,26 @@ function platform(platAni, num)
 			{
 				bgAnimationFrame = 30;
 			}
+			var randnum = Math.floor(Math.random() * 5) + 1;
+			//alert(randnum);
+			
+			switch (this.numba)
+			{
+			case 1: createjs.Sound.play("crash1");
+				break;
+			case 2: createjs.Sound.play("crash2");
+				break;
+			case 3: createjs.Sound.play("crash3");
+				break;
+			//case 4: createjs.Sound.play("crash4");
+				//break;
+			default: createjs.Sound.play("crash4");
+				break;
+			}
+			
+			
+			
+			
 		}
 		
         if(this.nullify == false)
@@ -1477,7 +1511,7 @@ function platform(platAni, num)
             {
                 person1.broken = 0;
                 this.personCheck = false;
-
+				createjs.Sound.play("rainbow");
                 //alert("HIT");
             }
         }
@@ -1494,6 +1528,7 @@ function platform(platAni, num)
             }
         }
 
+		
     }
     this.collision = function()
     {
@@ -1543,6 +1578,7 @@ function person(sparite, num)
             this.broken = 2;
             if(this.change == false)
             {
+				
                 this.change = true;
                 this.i ++;
                 if(this.i > 5)
@@ -1873,6 +1909,7 @@ update = function()
     if(person1.broken == 0)
     {
         person1.fall();
+		
     }
 
     /*bp1.frame += .25;
