@@ -30,6 +30,7 @@ function fadeIn()
 *
  */
 var menuStage;
+var menuQueue;
 
 var menuBackground;
 var creditsBackground;
@@ -61,6 +62,11 @@ function menuInit()
         return;
     }
     menuStage = new createjs.Stage(canvas);
+
+    menuQueue = new createjs.LoadQueue(true);
+    menuQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
+    menuQueue.loadFile({id:"menuMusic", src:"A New Leaf.mp3", type:createjs.LoadQueue.SOUND});
+    createjs.Sound.play("menuMusic", {loop:-1});
 
     menuBackground = new createjs.Bitmap("MenuArt/New Title Screen.png");
     menuBackground.y = 0;
@@ -185,6 +191,7 @@ function beginGame(e)
     if(e.type == "click")
     {
         menuStage.removeAllChildren();
+        createjs.Sound.stop("menuMusic");
         createjs.Ticker.removeEventListener("tick", menuTick);
         pInit();
     }
@@ -567,9 +574,12 @@ var colBoxSizeX = 10;
 var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var glassSpawnHeight = 275;
-var orbSpawnInterval = 600;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
+var orbSpawnInterval = 800;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
 var dBackgroundMusic, instance;
 var dQueue;
+var person1Swim = false;
+var person2Swim = false;
+var person3Swim = false;
 
 function dInit()
 {
@@ -664,33 +674,78 @@ function dInit()
         randDelay--;
     }
 
+    var person1SwimDelay = Math.floor((Math.random() * 60) + 30);
+    var person1Delay = person1SwimDelay;
+    var person1Timer = function()
+    {
+        if(person1SwimDelay <= 0)
+        {
+            person1SwimDelay = person1Delay;
+            if(person1Swim == true)
+            {
+                person1Swim = false;
+            }
+            else
+            {
+                person1Swim = true;
+            }
+        }
+        person1SwimDelay--;
+    }
+
+    var person2SwimDelay = Math.floor((Math.random() * 60) + 30);
+    var person2Delay = person2SwimDelay;
+    var person2Timer = function()
+    {
+        if(person2SwimDelay <= 0)
+        {
+            person2SwimDelay = person2Delay;
+            if(person2Swim == true)
+            {
+                person2Swim = false;
+            }
+            else
+            {
+                person2Swim = true;
+            }
+        }
+        person2SwimDelay--;
+    }
+
+    var person3SwimDelay = Math.floor((Math.random() * 60) + 30);
+    var person3Delay = person3SwimDelay;
+    var person3Timer = function()
+    {
+        if(person3SwimDelay <= 0)
+        {
+            person3SwimDelay = person3Delay;
+            if(person3Swim == true)
+            {
+                person3Swim = false;
+            }
+            else
+            {
+                person3Swim = true;
+            }
+        }
+        person3SwimDelay--;
+    }
+
     //Create the glass
     glass = new Array();
     createGlassWave();
 
     orbs = new Array();
-    createOrb();
-
-//    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashPlugin]);
-//    createjs.Sound.registerSound("depressionBGMusic", "bgMusicDepression");
-//    dBackgroundMusic = createjs.Sound.createInstance("bgMusicDepression");
-//    instance = createjs.Sound.play(dBackgroundMusic);
-
-//    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashPlugin]);
-//    createjs.Sound.addEventListener("fileload", createjs.proxy(this.loadHandler, this));
-//    createjs.Sound.registerSound("depressionBGMusic", "bgMusicDepression");
-//    function loadHandler(event) {
-//        // This is fired for each sound that is registered.
-//        instance = createjs.Sound.play("bgMusicDepression");  // play using id.  Could also use full sourcepath or event.src.
-//        instance.addEventListener("complete", createjs.proxy(this.handleComplete, this));
-//        instance.volume = 1.0;
-//    }
+    //createOrb();
 
     //Set the update loop
     createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", dTick);
     createjs.Ticker.addEventListener("tick", timer);
     createjs.Ticker.addEventListener("tick", randTimer);
+    createjs.Ticker.addEventListener("tick", person1Timer);
+    createjs.Ticker.addEventListener("tick", person2Timer);
+    createjs.Ticker.addEventListener("tick", person3Timer);
 }
 
 //Game Loop
@@ -895,10 +950,17 @@ function dTick()
 
 //    instance.play({loop:-1});
     scrollBackground();
-    orbInst.play();
+
+    if(orbs.length > 0)
+    {
+        orbInst.play();
+    }
+
     personFlash1.play();
     personFlash2.play();
     personFlash3.play();
+
+    personBob(personFlash1, personFlash2, personFlash3);
 
 	if(time < 0)
     {
@@ -972,6 +1034,35 @@ function createOrb()
     orbs.push(orbInst);
 }
 
+function personBob(person1, person2, person3)
+{
+    if(person1Swim == true)
+    {
+        person1.y -= 0.1;
+    }
+    else
+    {
+        person1.y += 0.1;
+    }
+
+    if(person2Swim == true)
+    {
+        person2.y -= 0.1;
+    }
+    else
+    {
+        person2.y += 0.1;
+    }
+
+    if(person3Swim == true)
+    {
+        person3.y -= 0.1;
+    }
+    else
+    {
+        person3.y += 0.1;
+    }
+}
 function distSq(a,b)
 {
     var distance = ((b.x - a.x) * (b.x - a.x)) + ((b.y - a.y) * (b.y - a.y));
