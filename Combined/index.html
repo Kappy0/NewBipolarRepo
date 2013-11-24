@@ -7,16 +7,30 @@
     <link type="text/css" rel="stylesheet" href="stylesheet.css"/>
     <title>Bipolar</title>
     <script src = "http://code.createjs.com/createjs-2013.09.25.min.js"></script>
-    <!--<script type = "text/javascript" src = "easeljs-0.7.0.min.js"></script>-->
-    <!--<script type = "text/javascript" src = "tweenjs-0.5.0.min.js"></script>-->
-    <!--<script type = "text/javascript" src = "soundjs-0.5.0.min"></script>-->
-    <!--<script type = "text/javascript" src = "flashplugin-0.5.0.min"></script>-->
-    <!--<script type = "text/javascript" src = "preloadjs-0.4.0.min"></script>-->
+    <script type = "text/javascript" src = "jquery-2.0.3.min"></script>
     <script type = "text/javascript" src = "Combined.js"></script>
+    <script type="text/javascript" src="swfobject.js"></script>
+    <script type="text/javascript">
+        swfobject.registerObject("endAni", "9.0.0");
+    </script>
 </head>
 <body onload = "init()">
     <div id = "wrapper" width = "720" height = "480">
         <canvas id = "canvas" width = "720" height = "480"></canvas>
+    </div>
+    <div id = "video" width = "720" height = "480" hidden = "true">
+        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="720" height="480" id="endAni" onended = "init()" loop = "false">
+            <param name="movie" value="TheEnd.swf">
+            <!--[if !IE]>-->
+            <object type="application/x-shockwave-flash" data="TheEnd.swf" width="720" height="480" onended = "init()" loop = "false">
+                <!--<![endif]-->
+                <a href="http://www.adobe.com/go/getflashplayer">
+                    <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player">
+                </a>
+                <!--[if !IE]>-->
+            </object>
+            <!--<![endif]-->
+        </object>
     </div>
 	<button onclick = "pInit()">Click for Party</button>
 	<button onclick="mInit()">Click for Manic</button>

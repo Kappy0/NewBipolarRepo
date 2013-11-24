@@ -61,6 +61,7 @@ function menuInit()
             "the HTML5 Canvas element";
         return;
     }
+
     menuStage = new createjs.Stage(canvas);
 
     menuQueue = new createjs.LoadQueue(true);
@@ -560,7 +561,8 @@ var leftHeld, upHeld, rightHeld;
 var player, personFlash1, personFlash2, personFlash3;
 var glass, glassInst;
 var orbs, orbInst, orbAni;
-var time = 80;
+var time = 84;
+var col = true;
 var dBackgroundScroll1, dBackgroundScroll2, scrollSpeed = 0.5;
 var depthMeter, randDepth, depthAni;
 var SEEK = true;  //CHANGE THIS TO TURN SEEKING ON AND OFF
@@ -854,7 +856,10 @@ function dTick()
             && player.y - colBoxSizeY < glass[i].y + 35
             && player.y + colBoxSizeY > glass[i].y)
         {
-            knockBack();
+            if(col)
+            {
+                knockBack();
+            }
         }
     }
 
@@ -881,7 +886,10 @@ function dTick()
             && player.y - colBoxSizeY < orbs[i].y
             && player.y + colBoxSizeY > orbs[i].y)
         {
-            knockBack();
+            if(col)
+            {
+                knockBack();
+            }
             orbs[i].visible = false;
             orbs.splice(i, 1);
         }
@@ -892,7 +900,7 @@ function dTick()
 
     if(upHeld)
     {
-        player.y -= 0.4;
+        player.y -= 0.5;
         player.play();
     }
     else
@@ -962,9 +970,16 @@ function dTick()
 
     personBob(personFlash1, personFlash2, personFlash3);
 
+    if(time <= 3)
+    {
+        timerId = setInterval("fadeIn()", 1000);
+    }
+
 	if(time < 0)
     {
-		timerId = setInterval("fadeIn()", 1000);
+        document.getElementById("video").hidden = false;
+        createjs.Sound.stop("depressionMusic");
+        col = false;
     }
 
     dstage.update();
