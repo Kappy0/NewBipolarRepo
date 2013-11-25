@@ -16,7 +16,7 @@ function fadeIn()
     context.globalAlpha = ga;
     context.fillStyle = "rgba(0,0,0,ga)";
     context.fillRect(0,0,canvas.width,canvas.height);
-    ga = ga - 0.01;
+    ga = ga - 0.1;
     if (ga < 0.0)
     {
         //createjs.Ticker.removeEventListener("tick", dTick);
@@ -589,6 +589,7 @@ function dInit()
     dQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
     dQueue.loadFile({id:"depressionMusic", src:"depressionBGMusic.mp3", type:createjs.LoadQueue.SOUND});
     dQueue.loadFile({id:"flashSound", src:"Flashlight Sound.mp3", type:createjs.LoadQueue.SOUND});
+    dQueue.loadFile({id:"mMusic", src:"A New Leaf.mp3", type:createjs.LoadQueue.SOUND});
 
     createjs.Sound.play("depressionMusic", {loop:-1});
 
@@ -956,7 +957,6 @@ function dTick()
             break;
     }
 
-//    instance.play({loop:-1});
     scrollBackground();
 
     if(orbs.length > 0)
@@ -975,10 +975,14 @@ function dTick()
         timerId = setInterval("fadeIn()", 1000);
     }
 
-	if(time < 0)
+    if(time == 1)
     {
-        document.getElementById("video").hidden = false;
         createjs.Sound.stop("depressionMusic");
+        createjs.Sound.play("mMusic");
+        document.getElementById("video").hidden = false;
+    }
+	if(time <= 0)
+    {
         col = false;
     }
 
