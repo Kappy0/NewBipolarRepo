@@ -25,6 +25,45 @@ function fadeIn()
 }
 
 /*
+* Between stage text
+*/
+var betweenBackground;
+var betweenStage;
+var text;
+
+function betweenScene()
+{
+	betweenStage = new createjs.Stage(canvas);
+	betweenBackground = new createjs.Bitmap("Blackscreen.png");
+    betweenBackground.y = 0;
+    betweenBackground.x = 0;
+    betweenStage.addChild(betweenBackground);
+	switch(whichStage)
+	{
+		case 0:
+			//display text between party and manic
+			break;
+		case 1:
+			//display text between manic and depressive
+			break;
+	}
+	setTimeout(switchScenes,3000);
+}
+
+function switchScenes()
+{
+	switch(whichStage)
+	{
+		case 0:
+			mInit();
+			break;
+		case 1:
+			dInit();
+			break;
+	}
+}
+
+/*
 *
 * Menus
 *
@@ -454,7 +493,9 @@ function partyTick()
 		if(partyJump.y <= -200)
 		{
 			createjs.Ticker.removeEventListener("tick", partyTick);
-			mInit();
+			pStage.removeAllChildren();
+			betweenScene();
+			//mInit();
 		}
 	//	velocity = -5;
 	}
@@ -2323,7 +2364,8 @@ update = function()
         //Be sure to play transition before doing this.
 	//	if(whichStage != 1)
 	//	{
-		dInit();
+		betweenScene();
+	//	dInit();
 	//	}
 		createjs.Ticker.removeEventListener("tick", mTick);
 		mstage.removeAllChildren();
