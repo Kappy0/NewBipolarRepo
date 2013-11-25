@@ -1254,6 +1254,8 @@ var xVelocity = 0;
 var xAcceleration = 0;
 var xFriction = 0;
 var xDist;
+
+var oneCheck;
 //Broken Platforms
 //var brokenPlatformImg = new Image();
 //brokenPlatformImg.src = "Platforms/Fixed_Platform_Break_02.png"  ;
@@ -1266,6 +1268,7 @@ var plY = 360;
 var platwidth = 96;
 var platheight = 32;
 var offset = 40;
+var endOffset;
 var gravcheck = 0;
 
 //Person
@@ -1284,6 +1287,15 @@ var platformAni05;
 
 var bplatformAni01;
 var bplatformAni02;
+
+var fPlat1;
+var fPlat2;
+var fPlat3;
+
+var ePlat1;
+var ePlat2;
+var ePlat3;
+var ePlat4;
 
 var closestPlatform;
 var platformArray = new Array();
@@ -1306,6 +1318,15 @@ var p5;
 var bp1;
 var bp2;
 
+var fP1;
+var fP2;
+var fP3;
+
+var fakePlat1;
+var fakePlat2;
+var fakePlat3;
+var fakePlat4;
+
 var clawgrab;
 
 var sparkleSheet;
@@ -1314,6 +1335,9 @@ var sparkleStop = true;
 
 var testAni;
 var targetDist;
+
+var endTimeCheck;
+var endFall;
 
 function mInit()
 {
@@ -1390,6 +1414,41 @@ function mInit()
 	bplatformAni02.y = -100;
     mstage.addChild(bplatformAni02);
 
+    fPlat1 = new createjs.Sprite(platformSheet);
+    fPlat1.x = 365;
+    fPlat1.y = 5000;
+    mstage.addChild(fPlat1);
+
+    fPlat2 = new createjs.Sprite(platformSheet);
+    fPlat2.x = 355;
+    fPlat2.y = 6300;
+    mstage.addChild(fPlat2);
+
+    fPlat3 = new createjs.Sprite(platformSheet);
+    fPlat3.x = 360;
+    fPlat3.y = 7800;
+    mstage.addChild(fPlat3);
+
+    ePlat1 = new createjs.Sprite(platformSheet);
+    ePlat1.x = 200;
+    ePlat1.y = 700;
+    mstage.addChild(ePlat1);
+
+    ePlat2 = new createjs.Sprite(platformSheet);
+    ePlat2.x = 600;
+    ePlat2.y = 1200;
+    mstage.addChild(ePlat2);
+
+    ePlat3 = new createjs.Sprite(platformSheet);
+    ePlat3.x = 100;
+    ePlat3.y = 1000;
+    mstage.addChild(ePlat3);
+
+    ePlat4 = new createjs.Sprite(platformSheet);
+    ePlat4.x = 700;
+    ePlat4.y = 1100;
+    mstage.addChild(ePlat4);
+
     playerImg = new createjs.SpriteSheet({images: ["Manic_Fly/Small ManicFly Animation.png"], frames: [[0,0,141,94,0,72.95,41.55],[141,0,141,94,0,72.95,41.55],[282,0,141,94,0,72.95,41.55],[423,0,141,94,0,72.95,41.55],[564,0,141,94,0,72.95,41.55],[705,0,141,94,0,72.95,41.55],[846,0,141,94,0,72.95,41.55],[0,94,141,94,0,72.95,41.55],[141,94,141,94,0,72.95,41.55],[282,94,141,94,0,72.95,41.55],[423,94,141,94,0,72.95,41.55],[564,94,141,94,0,72.95,41.55],[705,94,141,94,0,72.95,41.55],[846,94,141,94,0,72.95,41.55],[0,188,141,94,0,72.95,41.55],[141,188,141,94,0,72.95,41.55],[282,188,141,94,0,72.95,41.55],[423,188,141,94,0,72.95,41.55],[564,188,141,94,0,72.95,41.55],[705,188,141,94,0,72.95,41.55]]});
     flyingPlayer = new createjs.Sprite(playerImg);
 	flyingPlayer.x = 360-32;
@@ -1435,8 +1494,21 @@ function mInit()
 	
 	bp1 = new brokenPlatform(bplatformAni01);
 	bp2 = new brokenPlatform(bplatformAni02);
-	
-	closestPlatform = p5;
+
+    fP1 = new platform(fPlat1, 6);
+    fP2 = new platform(fPlat2, 7);
+    fP3 = new finalPlatform(fPlat3);
+
+    fakePlat1 = new fakePlatform(ePlat1);
+    fakePlat2 = new fakePlatform(ePlat2);
+    fakePlat3 = new fakePlatform(ePlat3);
+    fakePlat4 = new fakePlatform(ePlat4);
+    fakePlat1.setpos(200, 700);
+    fakePlat2.setpos(600, 1200);
+    fakePlat3.setpos(100, 1000);
+    fakePlat4.setpos(700, 1100);
+
+    closestPlatform = p5;
 	
 	//Create the person
 	person1 = new person(person1s, 2);
@@ -1455,7 +1527,10 @@ function mInit()
 
     clawgrab = false;
 	
-	
+	oneCheck = false;
+    endTimeCheck = false;
+    endFall = false;
+    endOffset = 40;
 	
   //  goSpring = false;
 }
@@ -1496,6 +1571,7 @@ mTick = function()
 //	circle.graphics.beginFill("blue").drawCircle(50,50,2);
 	bgSprite.gotoAndStop(bgAnimationFrame);
 	mstage.update();
+    setInterval(timerTick,1000);
 }
 
 function brokenPlatform(bplat)
@@ -1664,6 +1740,89 @@ function platform(platAni, num)
     }
 }
 
+function finalPlatform(platAni)
+{
+    this.ani = platAni;
+    this.stop = false;
+
+    this.setY = function(l)
+    {
+        if(this.stop == false)
+        {
+            this.ani.y = l;
+        }
+        else
+        {
+            this.ani.y -= 15;
+        }
+    }
+
+    this.collision = function()
+    {
+        //check for collision between player and platform
+        if((flyingPlayer.x - 52 < (this.ani.x - 6)) && (flyingPlayer.x - 52 > this.ani.x - 90))// || (((flyingPlayer.x+71) < (this.ani.x + 50)) && ((flyingPlayer.x + 71) > this.ani.x + 10)))
+        {
+            if(((flyingPlayer.y-125) < (this.ani.y -171)) && ((flyingPlayer.y-29) > (this.ani.y-135)))
+            {
+                this.stop = true;
+                this.ani.play();
+                endFall = true;
+                if(this.ani.currentAnimationFrame >= 19)
+                {
+                    mstage.removeChild(this);
+                }
+            }
+        }
+
+    }
+}
+
+function fakePlatform(platAni)
+{
+    this.ani = platAni;
+    this.personCheck = false;
+
+    this.nullify = false;
+
+
+    this.setY = function(l)
+    {
+        this.ani.y = l;
+
+    }
+    this.setpos = function(a, b)
+    {
+        this.ani.x = a;
+        this.ani.y = b;
+    }
+    this.resetPos = function()
+    {
+
+
+        //       sparkle1.x = this.ani.x;
+        //      sparkle1.y = this.ani.y;
+        //      sparkle1.gotoAndPlay("1");
+
+
+
+        if(this.ani.y < -10)
+        {
+            if(this.ani.x > 360)
+            {
+                this.setpos(((260 * Math.random() + 104)), 490 + endOffset);
+            }
+            else if(this.ani.x < 360)
+            {
+
+                this.setpos(((460 * (1 + Math.random()))-96), 490 + endOffset);          //96= width
+            }
+
+            endOffset += 40;
+        }
+
+    }
+}
+
 //Establishes the person "class"
 function person(sparite, num)
 {
@@ -1738,6 +1897,8 @@ update = function()
     platformArray[2] = p3;
     platformArray[3] = p4;
     platformArray[4] = p5;
+    if(lockControls == false)
+    {
     if(flyingPlayer.x - 9 + playerSpeed * friction < 720 - playerWidth)
     {
         if(flyingPlayer.x - 9 + playerSpeed * friction > 0)
@@ -1757,6 +1918,8 @@ update = function()
     {
         flyingPlayer.x = 720-9;//playerWidth;
     }
+    }
+
 
 	var i = 0;
     if(flyingPlayer.y >= 620)
@@ -1830,11 +1993,117 @@ update = function()
         }
         else
         {
-            endManic = true;
+
+            //endManic = true;
 			//Should fade out before this, but for now instant transfer...
 		//	dInit();
 	//		createjs.Ticker.removeEventListener("tick", mTick);
         }
+    }
+    if(gameOver == true)
+    {
+
+        if(flyingPlayer.y >= 360 && velocity > 0)
+        {
+            if(endTimeCheck == false)
+            {
+                endTimeCheck = true;
+                //cTime = 16;
+
+            }
+
+            if(oneCheck == false)
+            {
+                tempVel = velocity;
+                oneCheck = true;
+            }
+            if(endFall == false)
+            {
+                velocity = 0;
+                flyingPlayer.y = 360;
+            }
+            else
+            {
+                velocity = 1;
+                if(flyingPlayer.y >= 520)
+                {
+                    endManic = true;
+                }
+            }
+            lockControls = true;
+
+
+            platformGravity -= tempVel;
+            tempVel += acceleration;
+
+            if(flyingPlayer.x > 380)
+            {
+                flyingPlayer.x -= 10;
+
+            }
+            if(flyingPlayer.x < 340)
+            {
+
+                flyingPlayer.x += 10;
+
+            }
+            if(flyingPlayer.x >= 340 && flyingPlayer.x <= 380)
+            {
+                if(flyingPlayer.x < 360)
+                {
+                    flyingPlayer.x ++;
+                }
+                if(flyingPlayer.x > 360)
+                {
+                    flyingPlayer.x --;
+                }
+
+            }
+            p1.sety(platformAni01.y + platformGravity);
+            p2.sety(platformAni02.y + platformGravity);
+            p3.sety(platformAni03.y + platformGravity);
+            p4.sety(platformAni04.y + platformGravity);
+            p5.sety(platformAni05.y + platformGravity);
+
+
+            fP1.sety(fPlat1.y + platformGravity);
+            fP2.sety(fPlat2.y + platformGravity);
+            fP3.setY(fPlat3.y + platformGravity);
+            fP3.collision();
+
+            fakePlat1.setY(fakePlat1.y + platformGravity);
+            fakePlat2.setY(fakePlat2.y + platformGravity);
+            fakePlat3.setY(fakePlat3.y + platformGravity);
+            fakePlat4.setY(fakePlat4.y + platformGravity);
+            fakePlat1.resetPos();
+            fakePlat2.resetPos();
+            fakePlat3.resetPos();
+            fakePlat4.resetPos();
+
+            if(fP1.ani.y < -10)
+            {
+                fP1.nullify = true;
+            }
+            if(fP2.ani.y < -10)
+            {
+                fP2.nullify = true;
+            }
+            if( endOffset > 40)
+            {
+                endOffset -= platformGravity;
+            }
+            else
+            {
+                endOffset = 40;
+            }
+
+        }
+
+
+
+
+
+
     }
     if(clawgrab == true)
     {
@@ -1956,6 +2225,23 @@ update = function()
                         //p4.setpos(-96, -32);
                         p4.nullify = true;
                     }
+                    if(cTime < 0)
+                    {
+                        if(p5.numba > 0)
+                        {
+                            /*if(p4.personCheck == true)
+                             {
+                             person1.broken = 0;
+                             } */
+
+                            p5.numba = 0;
+                        }
+                        else
+                        {
+                            //p4.setpos(-96, -32);
+                            p5.nullify = true;
+                        }
+                    }
                 }
             }
         }
@@ -1978,6 +2264,11 @@ update = function()
     p3.collision(flyingPlayer.x, flyingPlayer.y);
     p4.collision(flyingPlayer.x, flyingPlayer.y);
     p5.collision(flyingPlayer.x, flyingPlayer.y);
+    if(gameOver == true)
+    {
+        fP1.collision(flyingPlayer.x, flyingPlayer.y);
+        fP2.collision(flyingPlayer.x, flyingPlayer.y);
+    }
     if(p1.ani.y > 615)
     {
         p1.smash(false);
@@ -2198,4 +2489,3 @@ function keyUpListener(e)
     }
 }
 
-setInterval(timerTick,1000);
