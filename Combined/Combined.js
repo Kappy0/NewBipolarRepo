@@ -1216,8 +1216,8 @@ var bgSprite;// = new createjs.Sprite(bgAnimation,1);
 
 //Timer/Phase Ending
 var endManic = false;
-var startTime = 60;
-var cTime = startTime;
+var startTime;
+var cTime;
 //var lastTime;
 
 //Player
@@ -1246,7 +1246,7 @@ var standstill = false;
 var acceleration = gravity/27;
 var jumpStrength = 12//7.25;
 var friction = 1;
-var gameOver = false;
+var gameOver;
 var goSpring;
 var springAcceleration = 25/27;
 var lockControls = false;
@@ -1531,6 +1531,9 @@ function mInit()
     endTimeCheck = false;
     endFall = false;
     endOffset = 40;
+    gameOver = false;
+    startTime = 60;
+    cTime = startTime;
 	
   //  goSpring = false;
 }
@@ -1543,6 +1546,7 @@ timerTick = function()
 	if(cTime < 0)
 	{
 		//Transition to depression phase.
+       // alert("HIT");
 		gameOver = true;
 		//When transition is done set the following variables below.
 		//cTime = startTime;
@@ -1571,7 +1575,7 @@ mTick = function()
 //	circle.graphics.beginFill("blue").drawCircle(50,50,2);
 	bgSprite.gotoAndStop(bgAnimationFrame);
 	mstage.update();
-    setInterval(timerTick,1000);
+
 }
 
 function brokenPlatform(bplat)
@@ -1690,7 +1694,9 @@ function platform(platAni, num)
         }
         else
         {
-            mstage.removeChild(this);
+            this.ani.x = -1000;
+            this.ani.y = -1000;
+            delete this;
         }
         if(person1.broken == 1)
         {
@@ -1729,6 +1735,7 @@ function platform(platAni, num)
                 {
                     if(standstill == false)
                     {
+                        //alert(this.numba);
                         upSpeed+= jumpStrength * 1.1;
                         velocity = -upSpeed;
                         this.smash(true);
@@ -2008,6 +2015,7 @@ update = function()
             if(endTimeCheck == false)
             {
                 endTimeCheck = true;
+                mstage.removeChild(person1);
                 //cTime = 16;
 
             }
@@ -2488,4 +2496,5 @@ function keyUpListener(e)
 		}
     }
 }
+setInterval(timerTick,1000);
 //extracomment
