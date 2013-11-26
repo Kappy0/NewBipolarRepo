@@ -2080,6 +2080,8 @@ update = function()
                 }
             }
             lockControls = true;
+            person1.sprite.x = -1000;
+            person1.sprite.y = -1000;
 
 
             platformGravity -= tempVel;
