@@ -1857,12 +1857,12 @@ function fakePlatform(platAni)
         {
             if(this.ani.x > 360)
             {
-                this.setpos(((260 * Math.random() + 104)), 490 + endOffset);
+                this.setpos(((100 * Math.random() + 104)), 490 + endOffset);
             }
             else if(this.ani.x < 360)
             {
 
-                this.setpos(((460 * (1 + Math.random()))-96), 490 + endOffset);          //96= width
+                this.setpos(((600 * (1 + Math.random()))-96), 490 + endOffset);          //96= width
             }
 
             endOffset += 40;
@@ -2122,10 +2122,10 @@ update = function()
             fP3.setY(fPlat3.y + platformGravity);
             fP3.collision();
 
-            fakePlat1.setY(fakePlat1.y + platformGravity);
-            fakePlat2.setY(fakePlat2.y + platformGravity);
-            fakePlat3.setY(fakePlat3.y + platformGravity);
-            fakePlat4.setY(fakePlat4.y + platformGravity);
+            fakePlat1.setY(fakePlat1.ani.y + platformGravity);
+            fakePlat2.setY(fakePlat2.ani.y + platformGravity);
+            fakePlat3.setY(fakePlat3.ani.y + platformGravity);
+            fakePlat4.setY(fakePlat4.ani.y + platformGravity);
             fakePlat1.resetPos();
             fakePlat2.resetPos();
             fakePlat3.resetPos();
