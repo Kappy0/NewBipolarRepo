@@ -1069,7 +1069,11 @@ function createGlassWave()
 
 function createOrb()
 {
-    createjs.Sound.play("flashSound");
+    if(time > 1)
+    {
+        createjs.Sound.play("flashSound");
+    }
+
     orbInst = new createjs.Sprite(orbAni);
 
     var personChoice = Math.floor(Math.random() * 3);
