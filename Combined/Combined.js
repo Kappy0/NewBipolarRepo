@@ -1520,6 +1520,8 @@ var targetDist;
 var endTimeCheck;
 var endFall;
 
+var fComplete;
+
 function mInit()
 {
 	
@@ -1625,8 +1627,11 @@ function mInit()
     endFall = false;
     endOffset = 40;
     gameOver = false;
-    startTime = 60;
+    startTime = 10;
     cTime = startTime;
+	
+	
+	fComplete = false;
 	
   //  goSpring = false;
 }
@@ -1634,15 +1639,18 @@ function mInit()
 //Runs once per second.
 timerTick = function()
 {
-	cTime--;
-
-	if(cTime < 0)
+	if(fComplete == true)
 	{
-		//Transition to depression phase.
-       // alert("HIT");
-		gameOver = true;
-		//When transition is done set the following variables below.
-		//cTime = startTime;
+		cTime--;
+
+		if(cTime < 0)
+		{
+			//Transition to depression phase.
+			// alert("HIT");
+			gameOver = true;
+			//When transition is done set the following variables below.
+			//cTime = startTime;
+		}
 	}
 }
 
@@ -1748,6 +1756,7 @@ function platform(platAni, num)
 			if(bgAnimationFrame > 30)
 			{
 				bgAnimationFrame = 30;
+				fComplete = true;
 			}
 			var randnum = Math.floor(Math.random() * 5) + 1;
 			//alert(randnum);
