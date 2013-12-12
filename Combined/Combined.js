@@ -200,7 +200,9 @@ function preload()
 	
     orbAni = new createjs.SpriteSheet({images: ["Art/Depression/art_flashlight.png"], frames: [[0,0,721,481,0,355.5,230.5],[721,0,721,481,0,355.5,230.5],[1442,0,721,481,0,355.5,230.5],[2163,0,721,481,0,355.5,230.5],[2884,0,721,481,0,355.5,230.5],[3605,0,721,481,0,355.5,230.5],[4326,0,721,481,0,355.5,230.5],[5047,0,721,481,0,355.5,230.5],[5768,0,721,481,0,355.5,230.5],[6489,0,721,481,0,355.5,230.5],[7210,0,721,481,0,355.5,230.5],[0,481,721,481,0,355.5,230.5],[721,481,721,481,0,355.5,230.5],[1442,481,721,481,0,355.5,230.5],[2163,481,721,481,0,355.5,230.5],[2884,481,721,481,0,355.5,230.5],[3605,481,721,481,0,355.5,230.5],[4326,481,721,481,0,355.5,230.5],[5047,481,721,481,0,355.5,230.5],[5768,481,721,481,0,355.5,230.5],[6489,481,721,481,0,355.5,230.5],[7210,481,721,481,0,355.5,230.5],[0,962,721,481,0,355.5,230.5],[721,962,721,481,0,355.5,230.5],[1442,962,721,481,0,355.5,230.5],[2163,962,721,481,0,355.5,230.5],[2884,962,721,481,0,355.5,230.5],[3605,962,721,481,0,355.5,230.5],[4326,962,721,481,0,355.5,230.5],[5047,962,721,481,0,355.5,230.5],[5768,962,721,481,0,355.5,230.5],[6489,962,721,481,0,355.5,230.5],[7210,962,721,481,0,355.5,230.5],[0,1443,721,481,0,355.5,230.5],[721,1443,721,481,0,355.5,230.5],[1442,1443,721,481,0,355.5,230.5],[2163,1443,721,481,0,355.5,230.5],[2884,1443,721,481,0,355.5,230.5],[3605,1443,721,481,0,355.5,230.5],[4326,1443,721,481,0,355.5,230.5],[5047,1443,721,481,0,355.5,230.5],[5768,1443,721,481,0,355.5,230.5],[6489,1443,721,481,0,355.5,230.5],[7210,1443,721,481,0,355.5,230.5],[0,1924,721,481,0,355.5,230.5],[721,1924,721,481,0,355.5,230.5],[1442,1924,721,481,0,355.5,230.5],[2163,1924,721,481,0,355.5,230.5]]});
     depthAni = new createjs.SpriteSheet({images: ["Art/Depression/art_depthMeter.png"], frames: [[0,0,355,237,0,177.45,114.5],[355,0,355,237,0,177.45,114.5],[710,0,355,237,0,177.45,114.5],[1065,0,355,237,0,177.45,114.5],[1420,0,355,237,0,177.45,114.5],[0,237,355,237,0,177.45,114.5],[355,237,355,237,0,177.45,114.5],[710,237,355,237,0,177.45,114.5],[1065,237,355,237,0,177.45,114.5],[1420,237,355,237,0,177.45,114.5],[0,474,355,237,0,177.45,114.5],[355,474,355,237,0,177.45,114.5],[710,474,355,237,0,177.45,114.5],[1065,474,355,237,0,177.45,114.5],[1420,474,355,237,0,177.45,114.5],[0,711,355,237,0,177.45,114.5],[355,711,355,237,0,177.45,114.5],[710,711,355,237,0,177.45,114.5],[1065,711,355,237,0,177.45,114.5],[1420,711,355,237,0,177.45,114.5]]});
-
+	depthBack = new createjs.Bitmap("Art/Depression/art_depthBack.png");
+	depthPerson = new createjs.Bitmap("Art/Depression/art_depthPerson.png");
+	
 	//Initialize the menu now that we are done preloading the stages
 	menuInit();
 }
@@ -770,7 +772,7 @@ var orbs, orbInst, orbAni;
 var time = 84;
 var col = true;
 var dBackgroundScroll1, dBackgroundScroll2, scrollSpeed = 0.5;
-var depthMeter, randDepth, depthAni;
+var depthMeter, randDepth, depthAni, depthBack, depthPerson, depthPers, depth, depthDir;
 var SEEK = true;  //CHANGE THIS TO TURN SEEKING ON AND OFF
 
 var dGravity = 0.3;
@@ -835,12 +837,28 @@ function dInit()
     }
 
     //Initialize the Depth Meter
-    depthMeter = new createjs.Sprite(depthAni);
+	/*/
+	var depthMeter = new Shape();
+	depthMeter.graphics.beginStroke("#C1272D");
+	depthMeter.graphics.setStrokeStyle(2); // 2 pixel
+	depthMeter.drawRect(0,0,640,480); // Change size as-needed
+	stage.addChild(depthMeter); // Add the shape to the same container as the Bitmap.
+	//*/
+	
+	//*/
+    depthMeter = depthBack;
     depthMeter.x = 700;
-    depthMeter.y = 100;
+    depthMeter.y = 175;
     depthMeter.rotation = 180;
     dstage.addChild(depthMeter);
+	
+	depthPers = depthPerson
+	depthPers.x = 630;
+	depthPers.y = 175;
+	dstage.addChild(depthPers);
+	depthDir = 0;
 
+	//*/
     var randDelay = 60;
     randDepth = 0;
 
@@ -1115,6 +1133,7 @@ function dTick()
     }
 
     //For the depth meter simulation
+	/*/
     switch(randDepth)
     {
         case 0:
@@ -1133,7 +1152,44 @@ function dTick()
             depthMeter.gotoAndStop(17);
             break;
     }
-
+	//*/
+	//DEPTHMETERSET
+	if(time > 41)
+	{
+		depth = 150 - ((83/time) * 50);
+		
+		if(depth < 50)
+		{
+			depth = 50;
+		}
+		else if(depth > 150)
+		{
+			depth = 150;
+		}
+	}
+	else
+	{
+		if(depth < 0)
+		{
+			depth += 2.5;
+			depthDir = 1;
+		}
+		else if(depth > 100)
+		{
+			depth -= 2.5;
+			depthDir = 0;
+		}
+		else if(depthDir == 1)
+		{
+			depth += 0.25;
+		}
+		else
+		{
+			depth -= 0.25;
+		}
+	}
+	 depthPers.y = depth;
+	 
     scrollBackground();
 
     if(orbs.length > 0)
