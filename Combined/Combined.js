@@ -1794,7 +1794,7 @@ function brokenPlatform(bplat)
             this.used = false;
             this.bplatform.x = -100;
             this.bplatform.y = -100;
-			alert(sparkle1.currentAnimationFrame);
+			//alert(sparkle1.currentAnimationFrame);
         }
     }
 }
