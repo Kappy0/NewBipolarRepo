@@ -204,8 +204,7 @@ function preload()
 	depthPerson = new createjs.Bitmap("Art/Depression/art_depthPerson.png");
 	
 	//Initialize the menu now that we are done preloading the stages
-	dInit();
-	//menuInit();
+	menuInit();
 }
 
 /*
