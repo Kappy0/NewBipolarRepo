@@ -1568,6 +1568,7 @@ var clawgrab;
 
 var sparkleSheet;
 var sparkle1;
+var sparkle2;
 var sparkleStop = true;
 
 var testAni;
@@ -1577,6 +1578,7 @@ var endTimeCheck;
 var endFall;
 
 var fComplete;
+var tSparkle;
 
 function mInit()
 {
@@ -1626,6 +1628,13 @@ function mInit()
     mstage.addChild(ePlat4);
     mstage.addChild(flyingPlayer);
     mstage.addChild(person1s);
+	
+	tSparkle = new createjs.Sprite(sparkleSheet);
+    tSparkle.x = -200;
+    tSparkle.y = -300;
+	tSparkle.scaleX = .5;
+    tSparkle.scaleY = .5;
+	mstage.addChild(tSparkle);
 	
     //alert("init has run");
 	cArray[1] = childsheet;
@@ -1718,14 +1727,25 @@ mTick = function()
     bp1.bplatform.play();
     bp2.bplatform.play();
     sparkle1.play();
+	sparkle2.play();
+	tSparkle.play();
 	/*if(cTime == 60)
 	{
 	createjs.Sound.play("mBackground", {loop:-1});
 	}*/
-    if(sparkle1.currentAnimationFrame == 11)
+    if(sparkle1.currentAnimationFrame >= 9)
     {
         sparkle1.x = -100;
         sparkle1.y = -100;
+		sparkle1.currentAnimationFrame == 1;
+		
+    }
+	
+	if(sparkle2.currentAnimationFrame >= 9)
+    {
+        sparkle2.x = -200;
+        sparkle2.y = -200;
+		sparkle2.currentAnimationFrame == 1;
     }
 //	circle.x =/* platformAni01.x - 90;*/flyingPlayer.x - 52;
 //	circle.y = /*platformAni01.y - 135;*/flyingPlayer.y - 29;
@@ -1763,7 +1783,7 @@ function brokenPlatform(bplat)
             this.used = false;
             this.bplatform.x = -100;
             this.bplatform.y = -100;
-
+			alert(sparkle1.currentAnimationFrame);
         }
     }
 }
@@ -1802,9 +1822,9 @@ function platform(platAni, num)
             bp2.resetVals();
         }
 
- //       sparkle1.x = this.ani.x;
-  //      sparkle1.y = this.ani.y;
-  //      sparkle1.gotoAndPlay("1");
+        sparkle1.x = this.ani.x;
+        sparkle1.y = this.ani.y;
+        sparkle1.gotoAndPlay("1");
 
 		if(byPlayer)
 		{
@@ -1964,9 +1984,9 @@ function fakePlatform(platAni)
     {
 
 
-        //       sparkle1.x = this.ani.x;
-        //      sparkle1.y = this.ani.y;
-        //      sparkle1.gotoAndPlay("1");
+               sparkle1.x = this.ani.x;
+               sparkle1.y = this.ani.y;
+               sparkle1.gotoAndPlay("1");
 
 
 
