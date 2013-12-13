@@ -204,7 +204,8 @@ function preload()
 	depthPerson = new createjs.Bitmap("Art/Depression/art_depthPerson.png");
 	
 	//Initialize the menu now that we are done preloading the stages
-	menuInit();
+	dInit();
+	//menuInit();
 }
 
 /*
@@ -250,7 +251,7 @@ function betweenScene()
 	}
 	createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", betweenTick);
-	setTimeout(switchScenes,3000);
+	setTimeout(switchScenes,6000);
 }
 
 function betweenTick()
@@ -267,6 +268,9 @@ function switchScenes()
 			break;
 		case 1:
 			dInit();
+			break;
+		case 2:
+			document.getElementById("video").hidden = false;
 			break;
 	}
 	betweenStage.removeAllChildren();
@@ -1212,11 +1216,19 @@ function dTick()
     {
         createjs.Sound.stop("depressionMusic");
 //        createjs.Sound.play("mMusic");
-        document.getElementById("video").hidden = false;
+        //document.getElementById("video").hidden = false;
     }
 	if(time <= 0)
     {
         col = false;
+		betweenScene();
+		dstage.removeAllChildren();
+		createjs.Ticker.removeEventListener("tick", dTick);
+    	createjs.Ticker.removeEventListener("tick", timer);
+  	    createjs.Ticker.removeEventListener("tick", randTimer);
+  	    createjs.Ticker.removeEventListener("tick", person1Timer);
+  	    createjs.Ticker.removeEventListener("tick", person2Timer);
+    	createjs.Ticker.removeEventListener("tick", person3Timer);
     }
 
     dstage.update();
