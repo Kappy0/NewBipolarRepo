@@ -7,7 +7,7 @@
     <file path="$USER_HOME$/AppData/Local/ATI/ACE/Profiles.xml" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1381078834692" ignored="false" />
     <file path="/script.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1382214790784" ignored="false" />
     <file path="/stylesheet.css" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1385275593468" ignored="false" />
-    <file path="/Combined.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1386613584604" ignored="false" />
+    <file path="/Combined.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1387131306769" ignored="false" />
     <file path="/index.html" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1386029434145" ignored="false" />
     <file path="/videoTEST.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1386029555560" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,7 +32,7 @@
       <file leaf-file-name="Combined.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Combined.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="49" selection-start="1930" selection-end="1930" vertical-scroll-proportion="0.5059289">
+            <state line="595" column="51" selection-start="42526" selection-end="42526" vertical-scroll-proportion="0.762069">
               <folding />
             </state>
           </provider>
@@ -77,10 +77,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="31" />
-    <option name="y" value="12" />
+    <option name="x" value="27" />
+    <option name="y" value="33" />
     <option name="width" value="1323" />
-    <option name="height" value="704" />
+    <option name="height" value="701" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -226,14 +226,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="31" y="12" width="1323" height="704" extended-state="0" />
-    <editor active="true" />
+    <frame x="27" y="33" width="1323" height="701" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2538941" sideWeight="0.6055046" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39449543" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2538941" sideWeight="0.6070111" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39298892" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -409,7 +409,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Combined.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="49" selection-start="1930" selection-end="1930" vertical-scroll-proportion="0.5059289">
+        <state line="595" column="51" selection-start="42526" selection-end="42526" vertical-scroll-proportion="0.762069">
           <folding />
         </state>
       </provider>

@@ -540,6 +540,7 @@ function menuKeyUp(e)
 */
 
 var pStage;
+var pQueue;
 var timesJumped = 0;
 
 var partyBackground;
@@ -588,6 +589,12 @@ function pInit()
         return;
     }
     pStage = new createjs.Stage(canvas);
+
+    pQueue = new createjs.LoadQueue(true);
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
+    pQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
+    pQueue.loadFile({id:"partyMusic", src:"Sound/Party/snd_partyBGM.mp3", type:createjs.LoadQueue.SOUND});
+    createjs.Sound.play("partyMusic", {loop:-1});
 	
     pStage.addChild(partyBackground);
 	pStage.addChild(breakingGlass);
@@ -664,6 +671,7 @@ function partyTick()
 		{
 			createjs.Ticker.removeEventListener("tick", partyTick);
 			pStage.removeAllChildren();
+            createjs.Sound.stop("partyMusic");
 			betweenScene();
 			//mInit();
 		}
