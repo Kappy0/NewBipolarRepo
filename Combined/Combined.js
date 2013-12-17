@@ -210,6 +210,25 @@ function preload()
     orbAni = new createjs.SpriteSheet({images: ["Art/Depression/Orbs/art_flashlight.png"], frames: [[0,0,721,480,0,355.5,230],[721,0,721,480,0,355.5,230],[1442,0,721,480,0,355.5,230],[2163,0,721,480,0,355.5,230],[2884,0,721,480,0,355.5,230],[0,480,721,480,0,355.5,230],[721,480,721,480,0,355.5,230],[1442,480,721,480,0,355.5,230],[2163,480,721,480,0,355.5,230],[2884,480,721,480,0,355.5,230],[0,960,721,480,0,355.5,230],[721,960,721,480,0,355.5,230],[1442,960,721,480,0,355.5,230],[2163,960,721,480,0,355.5,230],[2884,960,721,480,0,355.5,230],[0,1440,721,480,0,355.5,230],[721,1440,721,480,0,355.5,230],[1442,1440,721,480,0,355.5,230],[2163,1440,721,480,0,355.5,230],[2884,1440,721,480,0,355.5,230],[0,1920,721,480,0,355.5,230]]});
     depthAni = new createjs.SpriteSheet({images: ["Art/Depression/DepthMeter/art_depthMeterAni.png"], frames: [[0,0,721,481,0,359.9,232.5],[721,0,721,481,0,359.9,232.5],[1442,0,721,481,0,359.9,232.5],[2163,0,721,481,0,359.9,232.5],[2884,0,721,481,0,359.9,232.5],[0,481,721,481,0,359.9,232.5],[721,481,721,481,0,359.9,232.5],[1442,481,721,481,0,359.9,232.5],[2163,481,721,481,0,359.9,232.5],[2884,481,721,481,0,359.9,232.5],[0,962,721,481,0,359.9,232.5],[721,962,721,481,0,359.9,232.5],[1442,962,721,481,0,359.9,232.5],[2163,962,721,481,0,359.9,232.5],[2884,962,721,481,0,359.9,232.5],[0,1443,721,481,0,359.9,232.5],[721,1443,721,481,0,359.9,232.5],[1442,1443,721,481,0,359.9,232.5],[2163,1443,721,481,0,359.9,232.5],[2884,1443,721,481,0,359.9,232.5],[0,1924,721,481,0,359.9,232.5],[721,1924,721,481,0,359.9,232.5],[1442,1924,721,481,0,359.9,232.5],[2163,1924,721,481,0,359.9,232.5],[2884,1924,721,481,0,359.9,232.5],[0,2405,721,481,0,359.9,232.5],[721,2405,721,481,0,359.9,232.5],[1442,2405,721,481,0,359.9,232.5]]});	depthBack = new createjs.Bitmap("Art/Depression/art_depthBack.png");
 	depthPerson = new createjs.Bitmap("Art/Depression/art_depthPerson.png");
+	/////////
+	//Menu//
+	////////
+	menuBackground = new createjs.Bitmap("Art/Menu/MenuArt/art_titleBG.png");
+    menuBackground.y = 0;
+    menuBackground.x = 0;
+
+    creditsBackground = new createjs.Bitmap("Art/Menu/MenuArt/Intro Screens/art_credits.png");
+    creditsBackground.y = 0;
+    creditsBackground.x = 0;
+
+    helpBackground = new createjs.Bitmap("Art/Menu/MenuArt/Intro Screens/art_help.png");
+    helpBackground.x = 0;
+    helpBackground.y = 0;
+
+    backBtnSheet = new createjs.SpriteSheet({images: ["Art/Menu/MenuArt/BackButton/art_backButton.png"], frames: [[0,0,720,481,0,78,387.45],[0,481,720,481,0,78,387.45]]});
+    backButton = new createjs.Sprite(backBtnSheet);
+    backButton.x = 78;
+    backButton.y = 385;
 	
 	//Initialize the menu now that we are done preloading the stages
 	menuInit();
@@ -223,6 +242,7 @@ var betweenStage;
 var text01;
 var text02;
 var text03;
+var controls;
 
 function betweenScene()
 {
@@ -235,20 +255,26 @@ function betweenScene()
 	switch(whichStage)
 	{
 		case 0:
+			controls = new createjs.Bitmap("Art/Menu/MenuArt/Intro Screens/art_help.png");
+			controls.x = 0;
+			controls.y = 0;
+			betweenStage.addChild(controls);
+			break;
+		case 1:
 			//display text between party and manic
 			text01 = new createjs.Bitmap("Art/Transitions/Text 01.png");
 			text01.y = 0;
 			text01.x = 0;
 			betweenStage.addChild(text01);
 			break;
-		case 1:
+		case 2:
 			//display text between manic and depressive
 			text02 = new createjs.Bitmap("Art/Transitions/Text 02.png");
 			text02.y = 0;
 			text02.x = 0;
 			betweenStage.addChild(text02);
 			break;
-		case 2:
+		case 3:
 			//display text between manic and the ending video
 			text03 = new createjs.Bitmap("Art/Transitions/Text 03.png");
 			text03.y = 0;
@@ -271,12 +297,15 @@ function switchScenes()
 	switch(whichStage)
 	{
 		case 0:
-			mInit();
+			pInit();
 			break;
 		case 1:
-			dInit();
+			mInit();
 			break;
 		case 2:
+			dInit();
+			break;
+		case 3:
 			document.getElementById("video").hidden = false;
 			break;
 	}
@@ -311,6 +340,7 @@ var optionSelected = 0;//Begin, Help, Credits
 
 function menuInit()
 {
+	whichStage = 0;
     document.onkeydown = menuKeyDown;
     document.onkeyup = menuKeyUp;
 
@@ -330,26 +360,11 @@ function menuInit()
     menuQueue.loadFile({id:"menuMusic", src:"Sound/Menu/snd_titleMusic.mp3", type:createjs.LoadQueue.SOUND});
     createjs.Sound.play("menuMusic", {loop:-1});
 
-    menuBackground = new createjs.Bitmap("Art/Menu/MenuArt/art_titleBG.png");
-    menuBackground.y = 0;
-    menuBackground.x = 0;
     menuStage.addChild(menuBackground);
-
-    creditsBackground = new createjs.Bitmap("Art/Menu/MenuArt/Intro Screens/art_credits.png");
-    creditsBackground.y = 0;
-    creditsBackground.x = 0;
     menuStage.addChild(creditsBackground);
-
-    helpBackground = new createjs.Bitmap("Art/Menu/MenuArt/Intro Screens/art_help.png");
-    helpBackground.x = 0;
-    helpBackground.y = 0;
     menuStage.addChild(helpBackground);
-
-    backBtnSheet = new createjs.SpriteSheet({images: ["Art/Menu/MenuArt/BackButton/art_backButton.png"], frames: [[0,0,720,481,0,78,387.45],[0,481,720,481,0,78,387.45]]});
-    backButton = new createjs.Sprite(backBtnSheet);
-    backButton.x = 78;
-    backButton.y = 385;
     menuStage.addChild(backButton);
+	
     backButton.addEventListener("click", back);
     backButton.addEventListener("mouseover", back);
     backButton.addEventListener("mouseout", back);
@@ -455,7 +470,8 @@ function beginGame(e)
         menuStage.removeAllChildren();
         createjs.Sound.stop("menuMusic");
         createjs.Ticker.removeEventListener("tick", menuTick);
-        pInit();
+		betweenScene();
+      //  pInit();
     }
 }
 
@@ -585,7 +601,7 @@ var isBreaking = false;
 
 function pInit()
 {
-	whichStage = 0;
+	whichStage = 1;
 	document.onkeydown = keyDown;
     document.onkeyup = keyUp;
 	
@@ -820,7 +836,7 @@ function dInit()
 
     createjs.Sound.play("depressionMusic", {loop:-1});
 
-	whichStage = 2;
+	whichStage = 3;
     //Key event initialization
     document.onkeydown = handleKeyDown;
     document.onkeyup = handleKeyUp;
@@ -1616,7 +1632,7 @@ var finalSound;
 function mInit()
 {
 	
-	whichStage = 1;
+	whichStage = 2;
 	if(!(!!document.createElement('canvas').getContext))
 	{
 		var wrapper = document.getElementById("canvasWrapper");
