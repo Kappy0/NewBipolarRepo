@@ -26,6 +26,7 @@ function fadeIn()
 
 function preload()
 {
+
 	/*
 	*Load Party graphics
 	*/
@@ -100,12 +101,20 @@ function preload()
 	platformAni03.y = 410;
 	
     platformAni04 = new createjs.Sprite(platformSheet);
-	platformAni04.x = 3;
+	platformAni04.x = 30;
 	platformAni04.y = 350;
 	
     platformAni05 = new createjs.Sprite(platformSheet);
 	platformAni05.x = 500;
 	platformAni05.y = 50;
+	
+	platformAni06 = new createjs.Sprite(platformSheet);
+	platformAni06.x = 550;
+	platformAni06.y = 350;
+	
+	platformAni07 = new createjs.Sprite(platformSheet);
+	platformAni07.x = 200;
+	platformAni07.y = 60;
 	
     bplatformAni01 = new createjs.Sprite(platformSheet);
 	bplatformAni01.x = -100;
@@ -1539,6 +1548,8 @@ var platformAni02;
 var platformAni03;
 var platformAni04;
 var platformAni05;
+var platformAni06;
+var platformAni07;
 
 var bplatformAni01;
 var bplatformAni02;
@@ -1569,6 +1580,8 @@ var p2;
 var p3;
 var p4;
 var p5;
+var p6;
+var p7;
 
 var bp1;
 var bp2;
@@ -1597,7 +1610,9 @@ var endFall;
 
 var fComplete;
 var tSparkle;
-
+var sparkleTime;
+var sTimerStart;
+var finalSound;
 function mInit()
 {
 	
@@ -1625,6 +1640,7 @@ function mInit()
 	mQueue.loadFile({id: "crash3", src:"Sound/Manic/snd_glassBreak3.mp3", type:createjs.LoadQueue.SOUND});
 	mQueue.loadFile({id: "crash4", src:"Sound/Manic/snd_glassBreak4.mp3", type:createjs.LoadQueue.SOUND});
 	mQueue.loadFile({id: "rainbow", src:"Sound/Manic/snd_rainbow.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "sRainbow", src:"Sound/Manic/snd_rainbowShortened.mp3", type:createjs.LoadQueue.SOUND});
 	mQueue.loadFile({id: "mBackground", src:"Sound/Manic/snd_fractal.mp3", type:createjs.LoadQueue.SOUND});
 	
 	//Sprites
@@ -1635,6 +1651,8 @@ function mInit()
     mstage.addChild(platformAni03);
     mstage.addChild(platformAni04);
     mstage.addChild(platformAni05);
+	mstage.addChild(platformAni06);
+	mstage.addChild(platformAni07);
     mstage.addChild(bplatformAni01);
     mstage.addChild(bplatformAni02);
     mstage.addChild(fPlat1);
@@ -1669,6 +1687,10 @@ function mInit()
 	p3 = new platform(platformAni03, 3);
 	p4 = new platform(platformAni04, 4);
 	p5 = new platform(platformAni05, 5);
+	p6 = new platform(platformAni06, 6);
+	p7 = new platform(platformAni07, 7);
+	//p6.numba = 6;
+	//p7.numba = 7;
 	
 	bp1 = new brokenPlatform(bplatformAni01);
 	bp2 = new brokenPlatform(bplatformAni02);
@@ -1701,6 +1723,8 @@ function mInit()
     platformArray[2] = p3;
     platformArray[3] = p4;
     platformArray[4] = p5;
+	//platformArray[5] = p6;
+	//platformArray[6] = p7;
 
 
     clawgrab = false;
@@ -1712,10 +1736,10 @@ function mInit()
     gameOver = false;
     startTime = 10;
     cTime = startTime;
-	
-	
+	sparkleTime = 0;
+	sTimerStart = false;
 	fComplete = false;
-	
+	finalSound = false;
   //  goSpring = false;
 }
 
@@ -1746,25 +1770,23 @@ mTick = function()
     bp2.bplatform.play();
     sparkle1.play();
 	sparkle2.play();
+	if(sTimerStart == true)
+	{
+	sparkleTime ++;
+	if(sparkleTime >= 14)
+	{
+	sparkle1.x = -100;
+	sparkle1.y = -100;
+	sTimerStart = false;
+	sparkleTime = 0;
+	}
+	}
 	tSparkle.play();
 	/*if(cTime == 60)
 	{
 	createjs.Sound.play("mBackground", {loop:-1});
 	}*/
-    if(sparkle1.currentAnimationFrame >= 9)
-    {
-        sparkle1.x = -100;
-        sparkle1.y = -100;
-		sparkle1.currentAnimationFrame == 1;
-		
-    }
-	
-	if(sparkle2.currentAnimationFrame >= 9)
-    {
-        sparkle2.x = -200;
-        sparkle2.y = -200;
-		sparkle2.currentAnimationFrame == 1;
-    }
+    
 //	circle.x =/* platformAni01.x - 90;*/flyingPlayer.x - 52;
 //	circle.y = /*platformAni01.y - 135;*/flyingPlayer.y - 29;
 //	circle.graphics.beginFill("blue").drawCircle(50,50,2);
@@ -1813,6 +1835,7 @@ function platform(platAni, num)
     this.personCheck = false;
     this.numba =   num;
     this.nullify = false;
+	
 
     this.setpos = function(a, b)
     {
@@ -1840,9 +1863,7 @@ function platform(platAni, num)
             bp2.resetVals();
         }
 
-        sparkle1.x = this.ani.x;
-        sparkle1.y = this.ani.y;
-        sparkle1.gotoAndPlay("1");
+        
 
 		if(byPlayer)
 		{
@@ -1901,7 +1922,11 @@ function platform(platAni, num)
             {
                 person1.broken = 0;
                 this.personCheck = false;
-				createjs.Sound.play("rainbow");
+				sparkle1.x = person1.sprite.x;
+				sparkle1.y = person1.sprite.y;
+				sparkle1.gotoAndPlay("1");
+				sTimerStart = true;
+				createjs.Sound.play("sRainbow");
                 //alert("HIT");
             }
         }
@@ -1970,6 +1995,7 @@ function finalPlatform(platAni)
                 this.stop = true;
                 this.ani.play();
                 endFall = true;
+				createjs.Sound.play("crash2");
                 if(this.ani.currentAnimationFrame >= 19)
                 {
                     mstage.removeChild(this);
@@ -2100,6 +2126,8 @@ update = function()
     platformArray[2] = p3;
     platformArray[3] = p4;
     platformArray[4] = p5;
+	//platformArray[5] = p6;
+	//platformArray[6] = p7;
     if(lockControls == false)
     {
     if(flyingPlayer.x - 9 + playerSpeed * friction < 720 - playerWidth)
@@ -2270,6 +2298,8 @@ update = function()
             p3.sety(platformAni03.y + platformGravity);
             p4.sety(platformAni04.y + platformGravity);
             p5.sety(platformAni05.y + platformGravity);
+			p6.sety(platformAni06.y + platformGravity);
+			p7.sety(platformAni07.y + platformGravity);
 
 
             fP1.sety(fPlat1.y + platformGravity);
@@ -2366,7 +2396,7 @@ update = function()
 
     }
     //Remove platforms as time ticks on
-    if(cTime < 40)
+    if(bgAnimationFrame > 5)
     {
         if(p1.numba > 0)
         {
@@ -2382,7 +2412,7 @@ update = function()
             p1.nullify = true;
             //p1.setpos(-96, -32);
         }
-        if(cTime < 20)
+        if(bgAnimationFrame > 10)
         {
             if(p2.numba > 0)
             {
@@ -2399,7 +2429,7 @@ update = function()
                 p2.nullify = true;
             }
 
-            if(cTime < 7)
+            if(bgAnimationFrame > 20)
             {
                 if(p3.numba > 0)
                 {
@@ -2415,7 +2445,7 @@ update = function()
                     //p3.setpos(-96, -32);
                     p3.nullify = true;
                 }
-                if(cTime < 2)
+                if(bgAnimationFrame >28)
                 {
                     if(p4.numba > 0)
                     {
@@ -2470,6 +2500,8 @@ update = function()
     p3.collision(flyingPlayer.x, flyingPlayer.y);
     p4.collision(flyingPlayer.x, flyingPlayer.y);
     p5.collision(flyingPlayer.x, flyingPlayer.y);
+	p6.collision(flyingPlayer.x, flyingPlayer.y);
+	p7.collision(flyingPlayer.x, flyingPlayer.y);
     if(gameOver == true)
     {
         fP1.collision(flyingPlayer.x, flyingPlayer.y);
@@ -2495,6 +2527,29 @@ update = function()
     {
         p5.smash(false);
     }
+	if(p6.ani.y > 615)
+    {
+        p6.smash(false);
+    }
+	if(p7.ani.y > 615)
+    {
+        p7.smash(false);
+    }
+	/*if(sparkle1.currentAnimationFrame >= 9)
+    {
+        sparkle1.x = -100;
+        sparkle1.y = -100;
+		sparkle1.currentAnimationFrame == 1;
+		
+    }
+	
+	if(sparkle2.currentAnimationFrame >= 9)
+    {
+        sparkle2.x = -200;
+        sparkle2.y = -200;
+		sparkle2.currentAnimationFrame == 1;
+    }*/
+	
     //Gravity adjusters for platforms, as well as offset adjusters
     if(platformGravity > 0)
     {
@@ -2503,6 +2558,8 @@ update = function()
         p3.sety(platformAni03.y + platformGravity);
         p4.sety(platformAni04.y + platformGravity);
         p5.sety(platformAni05.y + platformGravity);
+		p6.sety(platformAni06.y + platformGravity);
+		p7.sety(platformAni07.y + platformGravity);
         if(person1.broken == 1)
         {
             person1.sprite.y += platformGravity;
@@ -2558,15 +2615,15 @@ function keyDownListener(e)
         {
            // playerSpeed = maxPlayerSpeed
           //  playerSpeed ++;
-			if(cTime > 40)
+			if(bgAnimationFrame < 10)
 			{
             	playerSpeed = 4;
 			}
-			else if(cTime > 30)
+			else if(bgAnimationFrame < 18)
 			{
 				playerSpeed = 6;
 			}
-			else if(cTime > 10)
+			else if(bgAnimationFrame < 25)
 			{
 				playerSpeed = 8;
 			}
@@ -2587,15 +2644,15 @@ function keyDownListener(e)
 		//	{
 		//		playerSpeed = 2;
 		//	}
-			if(cTime >= 30)
+			if(bgAnimationFrame < 10)
 			{
 				playerSpeed = 4;
 			}
-			else if(cTime >= 20)
+			else if(bgAnimationFrame < 18)
 			{
 				playerSpeed = 6;
 			}
-			else if(cTime >= 10)
+			else if(bgAnimationFrame < 25)
 			{
 				playerSpeed = 8;
 			}
@@ -2622,15 +2679,15 @@ function keyDownListener(e)
        if(playerSpeed > 0)
         {
             //playerSpeed = -maxPlayerSpeed;
-			if(cTime > 40)
+			if(bgAnimationFrame < 10)
 			{
             	playerSpeed = -4;
 			}
-			else if(cTime > 30)
+			else if(bgAnimationFrame < 18)
 			{
 				playerSpeed = -6;
 			}
-			else if(cTime > 10)
+			else if(bgAnimationFrame < 25)
 			{
 				playerSpeed = -8;
 			}
@@ -2649,15 +2706,15 @@ function keyDownListener(e)
 		//	{
 		//		playerSpeed = -2;
 		//	}
-			if(cTime >= 30)
+			if(bgAnimationFrame < 10)
 			{
 				playerSpeed = -4;
 			}
-			else if(cTime >= 20)
+			else if(bgAnimationFrame < 18)
 			{
 				playerSpeed = -6;
 			}
-			else if(cTime >= 10)
+			else if(bgAnimationFrame < 25)
 			{
 				playerSpeed = -8;
 			}
@@ -2676,6 +2733,8 @@ function keyDownListener(e)
 
 function keyUpListener(e)
 {
+//p4.ani = playerAni;
+
     if(lockControls == false)
     {
 		//w and up
