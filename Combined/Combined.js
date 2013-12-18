@@ -832,7 +832,7 @@ function dInit()
     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
     dQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
     dQueue.loadFile({id:"depressionMusic", src:"Sound/Depression/snd_depressionBGM.mp3", type:createjs.LoadQueue.SOUND});
-    dQueue.loadFile({id:"flashSound", src:"Sound/Depression/snd_flashlight.mp3", type:createjs.LoadQueue.SOUND});
+//    dQueue.loadFile({id:"flashSound", src:"Sound/Depression/snd_flashlight.mp3", type:createjs.LoadQueue.SOUND});
 
     createjs.Sound.play("depressionMusic", {loop:-1});
 
@@ -1304,10 +1304,10 @@ function createGlassWave()
 
 function createOrb()
 {
-    if(time > 1)
-    {
-        createjs.Sound.play("flashSound");
-    }
+//    if(time > 1)
+//    {
+//        createjs.Sound.play("flashSound");
+//    }
 
     orbInst = new createjs.Sprite(orbAni);
 
