@@ -7,7 +7,7 @@
     <file path="$USER_HOME$/AppData/Local/ATI/ACE/Profiles.xml" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1381078834692" ignored="false" />
     <file path="/script.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1382214790784" ignored="false" />
     <file path="/stylesheet.css" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1385275593468" ignored="false" />
-    <file path="/Combined.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1387221519737" ignored="false" />
+    <file path="/Combined.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1387475366636" ignored="false" />
     <file path="/index.html" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1387324669490" ignored="false" />
     <file path="/videoTEST.js" changelist="206ec411-4b7b-41a8-ab31-7e78e6ca3303" time="1386029555560" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -29,46 +29,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Combined.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Combined.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Combined.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1306" column="6" selection-start="58624" selection-end="58697" vertical-scroll-proportion="0.0">
+            <state line="203" column="29" selection-start="29386" selection-end="29386" vertical-scroll-proportion="0.6448276">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="New Fractal Reveal.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Art/Manic/Fractal Animation/New Fractal Reveal.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="24" selection-start="65" selection-end="1125" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Orbs.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Art/Depression/Orbs/Orbs.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4" column="36" selection-start="71" selection-end="780" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="70" selection-start="600" selection-end="600" vertical-scroll-proportion="0.2494759">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="videoTEST.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Art/Menu/videoTEST.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="12" column="70" selection-start="600" selection-end="600" vertical-scroll-proportion="-0.65384614">
               <folding />
             </state>
           </provider>
@@ -89,14 +62,14 @@
         <option value="code.createjs.com/createjs-2013.09.25.min.js" />
         <option value="$PROJECT_DIR$/stylesheet.css" />
         <option value="$PROJECT_DIR$/Art/Menu/videoTEST.js" />
-        <option value="$PROJECT_DIR$/Combined.js" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/Combined.js" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="43" />
-    <option name="y" value="34" />
+    <option name="x" value="30" />
+    <option name="y" value="32" />
     <option name="width" value="1323" />
     <option name="height" value="701" />
   </component>
@@ -126,6 +99,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -178,19 +152,18 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="options.lastSelected" value="reference.idesettings.debugger.javascript" />
-    <property name="restartRequiresConfirmation" value="false" />
+    <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="FullScreen" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -244,14 +217,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="43" y="34" width="1323" height="701" extended-state="0" />
-    <editor active="false" />
+    <frame x="30" y="32" width="1323" height="701" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2538941" sideWeight="0.6070111" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39298892" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39298892" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -416,16 +389,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Combined.js">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1306" column="6" selection-start="58624" selection-end="58697" vertical-scroll-proportion="0.0">
+        <state line="12" column="70" selection-start="600" selection-end="600" vertical-scroll-proportion="-0.65384614">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
+    <entry file="file://$PROJECT_DIR$/Combined.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="70" selection-start="600" selection-end="600" vertical-scroll-proportion="0.2494759">
+        <state line="203" column="29" selection-start="29386" selection-end="29386" vertical-scroll-proportion="0.6448276">
           <folding />
         </state>
       </provider>

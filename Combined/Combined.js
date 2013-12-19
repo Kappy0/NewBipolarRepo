@@ -201,6 +201,7 @@ function preload()
     personFlash2 = new createjs.Sprite(person2Ani);
     personFlash2.x = 700;
     personFlash2.y = 240;
+    personFlash2.scaleX = -1;
 
     var person3Ani = new createjs.SpriteSheet({images: ["Art/Depression/art_person3Swim.png"], frames: [[0,0,197,132,0,100.5,57.25],[197,0,197,132,0,100.5,57.25],[394,0,197,132,0,100.5,57.25],[591,0,197,132,0,100.5,57.25],[788,0,197,132,0,100.5,57.25],[0,132,197,132,0,100.5,57.25],[197,132,197,132,0,100.5,57.25],[394,132,197,132,0,100.5,57.25],[591,132,197,132,0,100.5,57.25],[788,132,197,132,0,100.5,57.25],[0,264,197,132,0,100.5,57.25],[197,264,197,132,0,100.5,57.25],[394,264,197,132,0,100.5,57.25],[591,264,197,132,0,100.5,57.25],[788,264,197,132,0,100.5,57.25],[0,396,197,132,0,100.5,57.25],[197,396,197,132,0,100.5,57.25],[394,396,197,132,0,100.5,57.25],[591,396,197,132,0,100.5,57.25],[788,396,197,132,0,100.5,57.25],[0,528,197,132,0,100.5,57.25],[197,528,197,132,0,100.5,57.25],[394,528,197,132,0,100.5,57.25],[591,528,197,132,0,100.5,57.25],[788,528,197,132,0,100.5,57.25]]});
     personFlash3 = new createjs.Sprite(person3Ani);
@@ -1018,12 +1019,14 @@ function dTick()
         if(playerAccel < 0.3)
         {
             //Set player acceleration more right
+            player.scaleX = -1;
             playerAccel += accelSide;
         }
     }
     else //If not moving right
     {
         //Slowly come to a halt
+        player.scaleX = 1;
         playerAccel -= (playerAccel/60);
     }
 
@@ -1132,11 +1135,11 @@ function dTick()
     if(upHeld)
     {
         player.y -= 0.5;
-        player.play();
+        player.play("swim");
     }
     else
     {
-        player.stop();
+        player.stop("swim");
     }
 
     //Gravitate down
