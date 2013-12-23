@@ -358,7 +358,7 @@ function menuInit()
     menuQueue = new createjs.LoadQueue(true);
     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
     menuQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
-    menuQueue.loadFile({id:"menuMusic", src:"Sound/Menu/snd_titleMusic.mp3", type:createjs.LoadQueue.SOUND});
+    menuQueue.loadFile({id:"menuMusic", src:"Sound/Menu/snd_titleMusic.ogg", type:createjs.LoadQueue.SOUND});
     createjs.Sound.play("menuMusic", {loop:-1});
 
     menuStage.addChild(menuBackground);
@@ -618,7 +618,7 @@ function pInit()
     pQueue = new createjs.LoadQueue(true);
     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
     pQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
-    pQueue.loadFile({id:"partyMusic", src:"Sound/Party/snd_partyBGM.mp3", type:createjs.LoadQueue.SOUND});
+    pQueue.loadFile({id:"partyMusic", src:"Sound/Party/snd_partyBGM.ogg", type:createjs.LoadQueue.SOUND});
     createjs.Sound.play("partyMusic", {loop:-1});
 	
     pStage.addChild(partyBackground);
@@ -832,7 +832,7 @@ function dInit()
     dQueue = new createjs.LoadQueue(true);
     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
     dQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
-    dQueue.loadFile({id:"depressionMusic", src:"Sound/Depression/snd_depressionBGM.mp3", type:createjs.LoadQueue.SOUND});
+    dQueue.loadFile({id:"depressionMusic", src:"Sound/Depression/snd_depressionBGM.ogg", type:createjs.LoadQueue.SOUND});
 //    dQueue.loadFile({id:"flashSound", src:"Sound/Depression/snd_flashlight.mp3", type:createjs.LoadQueue.SOUND});
 
     createjs.Sound.play("depressionMusic", {loop:-1});
@@ -1654,12 +1654,12 @@ function mInit()
 	mQueue = new createjs.LoadQueue(true);
     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
 	mQueue.installPlugin(createjs.Sound);
-	mQueue.loadFile({id: "crash1", src:"Sound/Manic/snd_glassBreak1.mp3", type:createjs.LoadQueue.SOUND});
-	mQueue.loadFile({id: "crash2", src:"Sound/Manic/snd_glassBreak2.mp3", type:createjs.LoadQueue.SOUND});
-	mQueue.loadFile({id: "crash3", src:"Sound/Manic/snd_glassBreak3.mp3", type:createjs.LoadQueue.SOUND});
-	mQueue.loadFile({id: "crash4", src:"Sound/Manic/snd_glassBreak4.mp3", type:createjs.LoadQueue.SOUND});
-	mQueue.loadFile({id: "rainbow", src:"Sound/Manic/snd_rainbow.mp3", type:createjs.LoadQueue.SOUND});
-	mQueue.loadFile({id: "sRainbow", src:"Sound/Manic/snd_rainbowShortened.mp3", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash1", src:"Sound/Manic/snd_glassBreak1.ogg", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash2", src:"Sound/Manic/snd_glassBreak2.ogg", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash3", src:"Sound/Manic/snd_glassBreak3.ogg", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "crash4", src:"Sound/Manic/snd_glassBreak4.ogg", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "rainbow", src:"Sound/Manic/snd_rainbow.ogg", type:createjs.LoadQueue.SOUND});
+	mQueue.loadFile({id: "sRainbow", src:"Sound/Manic/snd_rainbow.ogg", type:createjs.LoadQueue.SOUND});
 	mQueue.loadFile({id: "mBackground", src:"Sound/Manic/snd_fractal.mp3", type:createjs.LoadQueue.SOUND});
 	
 	//Sprites
