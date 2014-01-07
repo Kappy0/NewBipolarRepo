@@ -261,6 +261,14 @@ function preload()
     menuQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
     menuQueue.addEventListener("complete", menuHandleComplete);
     menuQueue.loadFile({id:"menuMusic", src:"Sound/Menu/snd_titleMusic.ogg", type:createjs.LoadQueue.SOUND});
+
+    //QUEUE FOR ALL MUSIC HERE
+    musicQueue = new createjs.LoadQueue(true);
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
+    menuQueue.installPlugin(createjs.Sound);
+
+
+    //LOADING BAR HERE
 	
 	//Initialize the menu now that we are done preloading the stages
     function menuHandleComplete()
