@@ -1,4 +1,7 @@
 var canvas, stage, whichStage;
+var musicQueue, manifest;
+var progressBar, bar, loaderWidth, loaderColor, borderPadding;
+var preloadStage;
 var ga = 1.0;
 var context = 0;
 var timerId = 0;
@@ -7,6 +10,28 @@ function init()
 {
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");
+    preloadStage = new createjs.Stage(canvas);
+
+    borderPadding = 10;
+
+    var barHeight = 20;
+    loaderColor = createjs.Graphics.getRGB(247, 247, 247);
+    progressBar = new createjs.Container();
+
+    bar = new createjs.Shape();
+    bar.graphics.beginFill(loaderColor).drawRect(0, 0, 1, barHeight).endFill();
+
+    loaderWidth = 300;
+
+    var bgBar = new createjs.Shape();
+    var padding = 3
+    bgBar.graphics.setStrokeStyle(1).beginStroke(loaderColor).drawRect(-padding/2, -padding/2, loaderWidth+padding, barHeight+padding);
+
+    progressBar.x = canvas.width - loaderWidth>>1;
+    progressBar.y = canvas.height - barHeight>>1;
+    progressBar.addChild(bar, bgBar);
+
+    preloadStage.addChild(progressBar);
 	preload();
 }
 
@@ -235,44 +260,51 @@ function preload()
     MUSIC
      */
 
-    pQueue = new createjs.LoadQueue(true);
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
-    pQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
-    pQueue.loadFile({id:"partyMusic", src:"Sound/Party/snd_partyBGM.ogg", type:createjs.LoadQueue.SOUND});
+    //QUEUE FOR ALL SOUNDS HERE
+    manifest = [
+                    {src:"Sound/Menu/snd_titleMusic.ogg", id:"menuMusic"},
+                    {src:"Sound/Party/snd_partyBGM.ogg", id:"partyMusic"},
+                    {src:"Sound/Manic/snd_glassBreak1.ogg", id: "crash1"},
+                    {src:"Sound/Manic/snd_glassBreak2.ogg", id: "crash2"},
+                    {src:"Sound/Manic/snd_glassBreak3.ogg", id: "crash3"},
+                    {src:"Sound/Manic/snd_glassBreak4.ogg", id: "crash4"},
+                    {src:"Sound/Manic/snd_rainbow.ogg", id: "rainbow"},
+                    {src:"Sound/Manic/snd_rainbow.ogg", id: "sRainbow"},
+                    {src:"Sound/Depression/snd_depressionBGM.ogg", id: "mBackground"}
+                ];
 
-    mQueue = new createjs.LoadQueue(true);
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
-    mQueue.installPlugin(createjs.Sound);
-    mQueue.loadFile({id: "crash1", src:"Sound/Manic/snd_glassBreak1.ogg", type:createjs.LoadQueue.SOUND});
-    mQueue.loadFile({id: "crash2", src:"Sound/Manic/snd_glassBreak2.ogg", type:createjs.LoadQueue.SOUND});
-    mQueue.loadFile({id: "crash3", src:"Sound/Manic/snd_glassBreak3.ogg", type:createjs.LoadQueue.SOUND});
-    mQueue.loadFile({id: "crash4", src:"Sound/Manic/snd_glassBreak4.ogg", type:createjs.LoadQueue.SOUND});
-    mQueue.loadFile({id: "rainbow", src:"Sound/Manic/snd_rainbow.ogg", type:createjs.LoadQueue.SOUND});
-    mQueue.loadFile({id: "sRainbow", src:"Sound/Manic/snd_rainbow.ogg", type:createjs.LoadQueue.SOUND});
-    mQueue.loadFile({id: "mBackground", src:"Sound/Manic/snd_fractal.mp3", type:createjs.LoadQueue.SOUND});
-
-    dQueue = new createjs.LoadQueue(true);
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
-    dQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
-    dQueue.loadFile({id:"depressionMusic", src:"Sound/Depression/snd_depressionBGM.ogg", type:createjs.LoadQueue.SOUND});
-
-    menuQueue = new createjs.LoadQueue(true);
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
-    menuQueue.installPlugin(createjs.Sound); // Plug in SoundJS to handle browser-specific paths
-    menuQueue.addEventListener("complete", menuHandleComplete);
-    menuQueue.loadFile({id:"menuMusic", src:"Sound/Menu/snd_titleMusic.ogg", type:createjs.LoadQueue.SOUND});
-
-    //QUEUE FOR ALL MUSIC HERE
     musicQueue = new createjs.LoadQueue(true);
     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
-    menuQueue.installPlugin(createjs.Sound);
+    musicQueue.installPlugin(createjs.Sound);
+    musicQueue.addEventListener("complete", handleComplete);
+    musicQueue.addEventListener("fileload", fileComplete);
+    musicQueue.addEventListener("error", handleFileError);
+    musicQueue.addEventListener("progress", handleProgress);
+    musicQueue.loadManifest(manifest);
 
+    createjs.Ticker.setFPS(60);
 
-    //LOADING BAR HERE
-	
-	//Initialize the menu now that we are done preloading the stages
-    function menuHandleComplete()
+    function fileComplete()
     {
+        console.log("File loaded");
+        preloadStage.update();
+    }
+
+    function handleFileError()
+    {
+        console.log("ERROR: file not loaded");
+    }
+
+    function handleProgress(event)
+    {
+        bar.scaleX = event.loaded * loaderWidth;
+    }
+
+	//Initialize the menu now that we are done preloading the stages
+    function handleComplete()
+    {
+        console.log("Loading completed!");
+        preloadStage.removeAllChildren();
         menuInit();
     }
 }
@@ -362,7 +394,6 @@ function switchScenes()
 *
  */
 var menuStage;
-var menuQueue;
 
 var menuBackground;
 var creditsBackground;
