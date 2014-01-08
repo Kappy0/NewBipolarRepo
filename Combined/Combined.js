@@ -2574,6 +2574,9 @@ update = function()
     {
         fP1.collision(flyingPlayer.x, flyingPlayer.y);
         fP2.collision(flyingPlayer.x, flyingPlayer.y);
+        //BACKHERE
+        person1.sprite.x = -100;
+        person1.sprite.y = -100;
     }
     if(p1.ani.y > 615)
     {
@@ -2659,6 +2662,16 @@ update = function()
 	//	}
 		createjs.Ticker.removeEventListener("tick", mTick);
 		mstage.removeAllChildren();
+    }
+
+
+    if(playerSpeed > 0)
+    {
+        flyingPlayer.scaleX = -1;
+    }
+    else
+    {
+        flyingPlayer.scaleX = 1;
     }
 
 }
