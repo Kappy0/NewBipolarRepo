@@ -274,7 +274,6 @@ function preload()
                 ];
 
     musicQueue = new createjs.LoadQueue(true);
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
     createjs.Sound.alternateExtensions = ["mp3"];
     musicQueue.installPlugin(createjs.Sound);
     musicQueue.addEventListener("complete", handleComplete);
