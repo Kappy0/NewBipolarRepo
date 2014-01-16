@@ -950,7 +950,7 @@ function dInit()
 	
 	depthPers = depthPerson
 	depthPers.x = 630;
-	depthPers.y = 175;
+	depthPers.y = 150;
 	dstage.addChild(depthPers);
 	depthDir = 0;
 
@@ -1254,7 +1254,7 @@ function dTick()
 	//DEPTHMETERSET
 	if(time > 41)
 	{
-		depth = 150 - ((83/time) * 50);
+		depth = 50 + (100 * (player.y / canvas.height));
 		
 		if(depth < 50)
 		{
