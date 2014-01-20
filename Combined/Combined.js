@@ -234,8 +234,8 @@ function preload()
     personFlash3.y = 400;
 
     orbAni = new createjs.SpriteSheet({images: ["Art/Depression/Orbs/art_flashlight.png"], frames: [[0,0,721,480,0,355.5,230],[721,0,721,480,0,355.5,230],[1442,0,721,480,0,355.5,230],[2163,0,721,480,0,355.5,230],[2884,0,721,480,0,355.5,230],[0,480,721,480,0,355.5,230],[721,480,721,480,0,355.5,230],[1442,480,721,480,0,355.5,230],[2163,480,721,480,0,355.5,230],[2884,480,721,480,0,355.5,230],[0,960,721,480,0,355.5,230],[721,960,721,480,0,355.5,230],[1442,960,721,480,0,355.5,230],[2163,960,721,480,0,355.5,230],[2884,960,721,480,0,355.5,230],[0,1440,721,480,0,355.5,230],[721,1440,721,480,0,355.5,230],[1442,1440,721,480,0,355.5,230],[2163,1440,721,480,0,355.5,230],[2884,1440,721,480,0,355.5,230],[0,1920,721,480,0,355.5,230]]});
-    depthAni = new createjs.SpriteSheet({images: ["Art/Depression/DepthMeter/art_depthMeterAni.png"], frames: [[0,0,721,481,0,359.9,232.5],[721,0,721,481,0,359.9,232.5],[1442,0,721,481,0,359.9,232.5],[2163,0,721,481,0,359.9,232.5],[2884,0,721,481,0,359.9,232.5],[0,481,721,481,0,359.9,232.5],[721,481,721,481,0,359.9,232.5],[1442,481,721,481,0,359.9,232.5],[2163,481,721,481,0,359.9,232.5],[2884,481,721,481,0,359.9,232.5],[0,962,721,481,0,359.9,232.5],[721,962,721,481,0,359.9,232.5],[1442,962,721,481,0,359.9,232.5],[2163,962,721,481,0,359.9,232.5],[2884,962,721,481,0,359.9,232.5],[0,1443,721,481,0,359.9,232.5],[721,1443,721,481,0,359.9,232.5],[1442,1443,721,481,0,359.9,232.5],[2163,1443,721,481,0,359.9,232.5],[2884,1443,721,481,0,359.9,232.5],[0,1924,721,481,0,359.9,232.5],[721,1924,721,481,0,359.9,232.5],[1442,1924,721,481,0,359.9,232.5],[2163,1924,721,481,0,359.9,232.5],[2884,1924,721,481,0,359.9,232.5],[0,2405,721,481,0,359.9,232.5],[721,2405,721,481,0,359.9,232.5],[1442,2405,721,481,0,359.9,232.5]]});	depthBack = new createjs.Bitmap("Art/Depression/art_depthBack.png");
-	depthPerson = new createjs.Bitmap("Art/Depression/art_depthPerson.png");
+    depthMeterArt = new createjs.Bitmap("Art/Depression/DepthMeter/art_depthMeter.png");
+	depthPerson = new createjs.Bitmap("Art/Depression/DepthMeter/art_depthMeterChar.png");
 	/////////
 	//Menu//
 	////////
@@ -270,7 +270,8 @@ function preload()
                     {src:"Sound/Manic/snd_glassBreak4.ogg", id: "crash4"},
                     {src:"Sound/Manic/snd_rainbow.ogg", id: "rainbow"},
                     {src:"Sound/Manic/snd_rainbow.ogg", id: "sRainbow"},
-                    {src:"Sound/Depression/snd_depressionBGM.ogg", id: "mBackground"}
+                    {src:"Sound/Depression/snd_depressionBGM.ogg", id: "mBackground"},
+                    {src:"Sound/Depression/snd_flashlight.ogg", id: "flashlight"}
                 ];
 
     musicQueue = new createjs.LoadQueue(true);
@@ -886,8 +887,6 @@ var glassNumber = 8;  //CHANGE THIS TO CHANGE THE AMOUNT OF GLASS
 var glassSpawnInterval = 300; //CHANGE THIS TO CHANGE HOW OFTEN GLASS SPAWNS
 var glassSpawnHeight = 275;
 var orbSpawnInterval = 800;  //CHANGE THIS TO CHANGE HOW OFTEN ORBS SPAWN
-var dBackgroundMusic, instance;
-var dQueue;
 var person1Swim = false;
 var person2Swim = false;
 var person3Swim = false;
@@ -941,14 +940,15 @@ function dInit()
 	//*/
 	
 	//*/
-    depthMeter = depthBack;
-    depthMeter.x = 700;
-    depthMeter.y = 175;
-    depthMeter.rotation = 180;
+    depthMeter = depthMeterArt;
+    depthMeter.x = 670;
+    depthMeter.y = 6.5;
+    depthMeter.scaleX = .5;
+    depthMeter.scaleY = .5;
     dstage.addChild(depthMeter);
 	
-	depthPers = depthPerson
-	depthPers.x = 630;
+	depthPers = depthPerson;
+	depthPers.x = 670;
 	depthPers.y = 150;
 	dstage.addChild(depthPers);
 	depthDir = 0;
@@ -1229,27 +1229,6 @@ function dTick()
         gravitate(glass[i]);
     }
 
-    //For the depth meter simulation
-	/*/
-    switch(randDepth)
-    {
-        case 0:
-            depthMeter.gotoAndStop(0);
-            break;
-        case 1:
-            depthMeter.gotoAndStop(4);
-            break;
-        case 2:
-            depthMeter.gotoAndStop(8);
-            break;
-        case 3:
-            depthMeter.gotoAndStop(12);
-            break;
-        case 4:
-            depthMeter.gotoAndStop(17);
-            break;
-    }
-	//*/
 	//DEPTHMETERSET
 	if(time > 41)
 	{
@@ -1308,8 +1287,6 @@ function dTick()
     if(time == 1)
     {
         createjs.Sound.stop("depressionMusic");
-//        createjs.Sound.play("mMusic");
-        //document.getElementById("video").hidden = false;
     }
 	if(time <= 0)
     {
@@ -1366,10 +1343,10 @@ function createGlassWave()
 
 function createOrb()
 {
-//    if(time > 1)
-//    {
-//        createjs.Sound.play("flashSound");
-//    }
+    if(time > 1)
+    {
+        createjs.Sound.play("flashlight");
+    }
 
     orbInst = new createjs.Sprite(orbAni);
 
