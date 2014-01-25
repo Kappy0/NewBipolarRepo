@@ -9,7 +9,7 @@ var timerId = 0;
 function init()
 {
 	canvas = document.getElementById("canvas");
-	context = canvas.getContext("2d");
+    context = canvas.getContext("2d");
     preloadStage = new createjs.Stage(canvas);
 
     borderPadding = 10;
@@ -27,8 +27,8 @@ function init()
     var padding = 3
     bgBar.graphics.setStrokeStyle(1).beginStroke(loaderColor).drawRect(-padding/2, -padding/2, loaderWidth+padding, barHeight+padding);
 
-    progressBar.x = canvas.width - loaderWidth>>1;
-    progressBar.y = canvas.height - barHeight>>1;
+    progressBar.x = canvas.width - loaderWidth >> 1;
+    progressBar.y = canvas.height - barHeight >> 1;
     progressBar.addChild(bar, bgBar);
 
     preloadStage.addChild(progressBar);
@@ -319,6 +319,7 @@ var text01;
 var text02;
 var text03;
 var controls;
+var partyProgressBar, partyBar, partyloaderWidth, partyloaderColor, partyBorderPadding;
 
 function betweenScene()
 {
@@ -360,12 +361,34 @@ function betweenScene()
 	}
 	createjs.Ticker.setFPS(60);
     createjs.Ticker.addEventListener("tick", betweenTick);
-	setTimeout(switchScenes,6000);
+
+    partyBorderPadding = 10;
+
+    var barHeight = 20;
+    partyloaderColor = createjs.Graphics.getRGB(0, 0, 0);
+    partyProgressBar = new createjs.Container();
+
+    partyBar = new createjs.Shape();
+    partyBar.graphics.beginFill(partyloaderColor).drawRect(0, 0, 1, barHeight).endFill();
+
+    partyloaderWidth = 300;
+
+    var bgBar = new createjs.Shape();
+    var padding = 3
+    bgBar.graphics.setStrokeStyle(1).beginStroke(partyloaderColor).drawRect(-padding/2, -padding/2, partyloaderWidth+padding, barHeight+padding);
+
+    partyProgressBar.x = canvas.width - partyloaderWidth >> 1;
+    partyProgressBar.y = canvas.height - barHeight >> 5;
+    partyProgressBar.addChild(partyBar, bgBar);
+
+    betweenStage.addChild(partyProgressBar);
+    setTimeout(switchScenes,6000);
 }
 
 function betweenTick()
 {
-	betweenStage.update();
+    partyBar.scaleX += .82;
+    betweenStage.update();
 }
 
 function switchScenes()
@@ -635,7 +658,6 @@ function menuKeyUp(e)
 */
 
 var pStage;
-var pQueue;
 var timesJumped = 0;
 
 var partyBackground;
