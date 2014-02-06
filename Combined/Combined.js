@@ -5,6 +5,8 @@ var preloadStage;
 var ga = 1.0;
 var context = 0;
 var timerId = 0;
+var clicked = false;
+var loaded = false;
 
 function init()
 {
@@ -32,6 +34,9 @@ function init()
     progressBar.addChild(bar, bgBar);
 
     preloadStage.addChild(progressBar);
+
+    preloadStage.addEventListener("click", handleClick);
+    createjs.Ticker.addEventListener("tick", preloadTick);
 	preload();
 }
 
@@ -49,6 +54,11 @@ function fadeIn()
     }
 }
 
+function handleClick()
+{
+    clicked = true;
+    console.log("Mouse Clicked!");
+}
 function preload()
 {
 
@@ -304,12 +314,26 @@ function preload()
 	//Initialize the menu now that we are done preloading the stages
     function handleComplete()
     {
-        console.log("Loading completed!");
-        preloadStage.removeAllChildren();
-        menuInit();
+        console.log("Loading Complete! Click to Continue.");
+        var text = new createjs.Text("Loading complete! Click to Continue.", "20px Arial", "#FFFFFF");
+        text.x = 200;
+        text.y = 200;
+        preloadStage.addChild(text);
+        loaded = true;
     }
 }
 
+function preloadTick()
+{
+    if(clicked && loaded)
+    {
+        createjs.Sound.play("menuMusic", {loop:-1});
+        preloadStage.removeAllChildren();
+        createjs.Ticker.removeEventListener("tick", preloadTick);
+        menuInit();
+    }
+    preloadStage.update();
+}
 /*
 * Between stage text
 */
@@ -451,8 +475,6 @@ function menuInit()
     }
 
     menuStage = new createjs.Stage(canvas);
-
-    createjs.Sound.play("menuMusic", {loop:-1});
 
     menuStage.addChild(menuBackground);
     menuStage.addChild(creditsBackground);
