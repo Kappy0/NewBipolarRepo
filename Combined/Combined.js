@@ -7,12 +7,42 @@ var context = 0;
 var timerId = 0;
 var clicked = false;
 var loaded = false;
+var browser;
+
+//For Safari Music Loading
+var menuMusic;
+var partyMusic;
+var crash1;
+var crash2;
+var crash3;
+var crash4;
+var rainbow;
+var sRainbow;
+var mBackground;
+var flashlight;
+
+function fileComplete()
+{
+    console.log("File loaded");
+    preloadStage.update();
+}
+
+function handleFileError()
+{
+    console.log("ERROR: file not loaded");
+}
+
+function handleProgress(event)
+{
+    bar.scaleX = event.loaded * loaderWidth;
+}
 
 function init()
 {
 	canvas = document.getElementById("canvas");
     context = canvas.getContext("2d");
     preloadStage = new createjs.Stage(canvas);
+    browser = get_browser();
 
     borderPadding = 10;
 
@@ -59,6 +89,7 @@ function handleClick()
     clicked = true;
     console.log("Mouse Clicked!");
 }
+
 function preload()
 {
 
@@ -271,28 +302,44 @@ function preload()
      */
 
     //QUEUE FOR ALL SOUNDS HERE
-    manifest = [
-                    {src:"Sound/Menu/snd_titleMusic.ogg", id:"menuMusic"},
-                    {src:"Sound/Party/snd_partyBGM.ogg", id:"partyMusic"},
-                    {src:"Sound/Manic/snd_glassBreak1.ogg", id: "crash1"},
-                    {src:"Sound/Manic/snd_glassBreak2.ogg", id: "crash2"},
-                    {src:"Sound/Manic/snd_glassBreak3.ogg", id: "crash3"},
-                    {src:"Sound/Manic/snd_glassBreak4.ogg", id: "crash4"},
-                    {src:"Sound/Manic/snd_rainbow.ogg", id: "rainbow"},
-                    {src:"Sound/Manic/snd_rainbow.ogg", id: "sRainbow"},
-                    {src:"Sound/Depression/snd_depressionBGM.ogg", id: "mBackground"},
-                    {src:"Sound/Depression/snd_flashlight.ogg", id: "flashlight"}
-                ];
+    if(browser != "safari")
+    {
+        manifest = [
+            {src:"Sound/Menu/snd_titleMusic.ogg", id:"menuMusic"},
+            {src:"Sound/Party/snd_partyBGM.ogg", id:"partyMusic"},
+            {src:"Sound/Manic/snd_glassBreak1.ogg", id: "crash1"},
+            {src:"Sound/Manic/snd_glassBreak2.ogg", id: "crash2"},
+            {src:"Sound/Manic/snd_glassBreak3.ogg", id: "crash3"},
+            {src:"Sound/Manic/snd_glassBreak4.ogg", id: "crash4"},
+            {src:"Sound/Manic/snd_rainbow.ogg", id: "rainbow"},
+            {src:"Sound/Manic/snd_rainbow.ogg", id: "sRainbow"},
+            {src:"Sound/Depression/snd_depressionBGM.ogg", id: "mBackground"},
+            {src:"Sound/Depression/snd_flashlight.ogg", id: "flashlight"}
+        ];
 
-    musicQueue = new createjs.LoadQueue(true);
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashPlugin, createjs.HTMLAudioPlugin]);
-    createjs.Sound.alternateExtensions = ["mp3"];
-    musicQueue.installPlugin(createjs.Sound);
-    musicQueue.addEventListener("complete", handleComplete);
-    musicQueue.addEventListener("fileload", fileComplete);
-    musicQueue.addEventListener("error", handleFileError);
-    musicQueue.addEventListener("progress", handleProgress);
-    musicQueue.loadManifest(manifest);
+        musicQueue = new createjs.LoadQueue(true);
+        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.FlashPlugin, createjs.HTMLAudioPlugin]);
+        createjs.Sound.alternateExtensions = ["mp3"];
+        musicQueue.installPlugin(createjs.Sound);
+        musicQueue.addEventListener("complete", handleComplete);
+        musicQueue.addEventListener("fileload", fileComplete);
+        musicQueue.addEventListener("error", handleFileError);
+        musicQueue.addEventListener("progress", handleProgress);
+        musicQueue.loadManifest(manifest);
+    }
+    else
+    {
+        menuMusic = loadAudio("Sound/Menu/snd_titleMusic.ogg");
+        partyMusic = loadAudio("Sound/Party/snd_partyBGM.ogg");
+        crash1 = loadAudio("Sound/Manic/snd_glassBreak1.ogg");
+        crash2 = loadAudio("Sound/Manic/snd_glassBreak2.ogg");
+        crash3 = loadAudio("Sound/Manic/snd_glassBreak3.ogg");
+        crash4 = loadAudio("Sound/Manic/snd_glassBreak4.ogg");
+        rainbow = loadAudio("Sound/Manic/snd_rainbow.ogg");
+        sRainbow = loadAudio("Sound/Manic/snd_rainbow.ogg");
+        mBackground = loadAudio("Sound/Depression/snd_depressionBGM.ogg");
+        flashlight = loadAudio("Sound/Depression/snd_flashlight.ogg");
+    }
 
     createjs.Ticker.setFPS(60);
 
@@ -328,7 +375,15 @@ function preloadTick()
 {
     if(clicked && loaded)
     {
-        createjs.Sound.play("menuMusic", {loop:-1});
+        if(browser != "safari")
+        {
+            createjs.Sound.play("menuMusic", {loop:-1});
+        }
+        else
+        {
+            menuMusic.play();
+        }
+
         preloadStage.removeAllChildren();
         createjs.Ticker.removeEventListener("tick", preloadTick);
         menuInit();
@@ -477,9 +532,9 @@ function menuInit()
 
     menuStage = new createjs.Stage(canvas);
 
-    menuStage.addChild(menuBackground);
     menuStage.addChild(creditsBackground);
     menuStage.addChild(helpBackground);
+    menuStage.addChild(menuBackground);
     menuStage.addChild(backButton);
 	
     backButton.addEventListener("click", back);
@@ -585,7 +640,15 @@ function beginGame(e)
     if(e.type == "click")
     {
         menuStage.removeAllChildren();
-        createjs.Sound.stop("menuMusic");
+
+        if(browser != "safari")
+        {
+            createjs.Sound.stop("menuMusic");
+        }
+        else
+        {
+            menuMusic.pause();
+        }
         createjs.Ticker.removeEventListener("tick", menuTick);
 		betweenScene();
       //  pInit();
@@ -730,7 +793,14 @@ function pInit()
     }
     pStage = new createjs.Stage(canvas);
 
-    createjs.Sound.play("partyMusic", {loop:-1});
+    if(browser != "safari")
+    {
+        createjs.Sound.play("partyMusic", {loop:-1});
+    }
+    else
+    {
+        partyMusic.play();
+    }
 	
     pStage.addChild(partyBackground);
 	pStage.addChild(breakingGlass);
@@ -807,7 +877,16 @@ function partyTick()
 		{
 			createjs.Ticker.removeEventListener("tick", partyTick);
 			pStage.removeAllChildren();
-            createjs.Sound.stop("partyMusic");
+
+            if(browser != "safari")
+            {
+                createjs.Sound.stop("partyMusic");
+            }
+            else
+            {
+                partyMusic.pause();
+            }
+
 			betweenScene();
 			//mInit();
 		}
@@ -938,7 +1017,14 @@ var person3Swim = false;
 
 function dInit()
 {
-    createjs.Sound.play("depressionMusic", {loop:-1});
+    if(browser != "safari")
+    {
+        createjs.Sound.play("mBackground", {loop:-1});
+    }
+    else
+    {
+        mBackground.play();
+    }
 
 	whichStage = 3;
     //Key event initialization
@@ -1331,7 +1417,14 @@ function dTick()
 
     if(time == 1)
     {
-        createjs.Sound.stop("depressionMusic");
+        if(browser != "safari")
+        {
+            createjs.Sound.stop("mBackground", {loop:-1});
+        }
+        else
+        {
+            mBackground.pause();
+        }
     }
 	if(time <= 0)
     {
@@ -1390,7 +1483,14 @@ function createOrb()
 {
     if(time > 1)
     {
-        createjs.Sound.play("flashlight");
+        if(browser != "safari")
+        {
+            createjs.Sound.play("flashlight");
+        }
+        else
+        {
+            flashlight.play();
+        }
     }
 
     orbInst = new createjs.Sprite(orbAni);
@@ -1968,15 +2068,47 @@ function platform(platAni, num)
 			
 			switch (this.numba)
 			{
-			case 1: createjs.Sound.play("crash1");
+			case 1:
+                if(browser != "safari")
+                {
+                    createjs.Sound.play("crash1");
+                }
+                else
+                {
+                    crash1.play();
+                }
 				break;
-			case 2: createjs.Sound.play("crash2");
+			case 2:
+                if(browser != "safari")
+                {
+                    createjs.Sound.play("crash2");
+                }
+                else
+                {
+                    crash2.play();
+                }
 				break;
-			case 3: createjs.Sound.play("crash3");
+			case 3:
+                if(browser != "safari")
+                {
+                    createjs.Sound.play("crash3");
+                }
+                else
+                {
+                    crash3.play();
+                }
 				break;
 			//case 4: createjs.Sound.play("crash4");
 				//break;
-			default: createjs.Sound.play("crash4");
+			default:
+                if(browser != "safari")
+                {
+                    createjs.Sound.play("crash4");
+                }
+                else
+                {
+                    crash4.play();
+                }
 				break;
 			}
 			
@@ -2016,7 +2148,15 @@ function platform(platAni, num)
 				sparkle1.y = person1.sprite.y;
 				sparkle1.gotoAndPlay("1");
 				sTimerStart = true;
-				createjs.Sound.play("sRainbow");
+
+                if(browser != "safari")
+                {
+                    createjs.Sound.play("sRainbow");
+                }
+				else
+                {
+                    sRainbow.play();
+                }
                 //alert("HIT");
             }
         }
@@ -2085,7 +2225,16 @@ function finalPlatform(platAni)
                 this.stop = true;
                 this.ani.play();
                 endFall = true;
-				createjs.Sound.play("crash2");
+
+                if(browser != "safari")
+                {
+                    createjs.Sound.play("crash2");
+                }
+				else
+                {
+                    crash2.play();
+                }
+
                 if(this.ani.currentAnimationFrame >= 19)
                 {
                     mstage.removeChild(this);
